@@ -1,0 +1,53 @@
+body {
+  background-color: #f1e3cb;
+}
+.top-container {
+  position: relative;
+  height: 300px;
+}
+
+.middle-container {
+  position: relative;
+  height: 100px;
+  text-align: center;
+}
+
+#logo {
+  position: relative;
+  left: 40px;
+  width: 5%;
+}
+
+.logo-font {
+  position: relative;
+  font-family: "MuseoModerno", cursive;
+  margin-top: 0;
+  left: 20px;
+}
+.search-bar {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.search-input {
+  height: 30px;
+}
+.search-btn {
+  height: 30px;
+}
+
+.login-bar {
+  position: absolute;
+  right: 100px;
+  margin-top: 20px;
+}
+.login-btn {
+  height: 30px;
+}
+.button {
+  width: 10%;
+  height: 100px;
+  font: 50px;
+}
