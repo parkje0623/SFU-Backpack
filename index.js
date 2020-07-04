@@ -7,16 +7,16 @@ const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
 pool = new Pool({
-    connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    //connectionString:process.env.DATABASE_URL
+    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
+    connectionString:process.env.DATABASE_URL
 })
 
 var app = express();
 app.use(session({
     store: new Psession({
         
-        conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        //connectionString:process.env.FOO_COOKIE_SECRET
+        //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+        conString: process.env.FOO_COOKIE_SECRET
 
     }),
     secret: '!@SDF$@#SDF',
