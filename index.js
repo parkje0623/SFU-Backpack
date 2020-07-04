@@ -16,7 +16,7 @@ app.use(session({
     store: new Psession({
         
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        conString: process.env.FOO_COOKIE_SECRET
+        conString: process.env.DATABASE_URL
 
     }),
     secret: '!@SDF$@#SDF',
