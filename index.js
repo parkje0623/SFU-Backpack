@@ -260,7 +260,7 @@ app.post('/upload', (req, res) => {
           file: `uploads/${req.file.filename}`,
 
         });
-        var path = 'google.com';
+        /*var path = 'google.com';
         var course = req.body.course;
         var bookName = req.body.title;
         var uid = req.body.uid;
@@ -273,7 +273,7 @@ app.post('/upload', (req, res) => {
           else{
               res.send(`IMAGE ADDED TO DATABASE PATH: ${path}`);
           }
-        })
+        })*/
       }
     }
   });
