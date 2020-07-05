@@ -165,7 +165,7 @@ app.post('/deleteuser', (req, res) => {
             }
             else{
 
-                var insertUsersQuery=`DELETE FROM backpack WHERE uid=$1`
+                var insertUsersQuery=`DELETE FROM backpack WHERE uid=$1`;
                 pool.query(insertUsersQuery, [uid], (error,result)=>{
                     if(error)
                         res.end(error);
@@ -185,7 +185,7 @@ app.post('/edituser', (req, res) => {
     var upassword = req.body.upassword;
     var values=[uid, uname, uemail, upassword];
     if(uid && uname && uemail && upassword){ //edited Jieung
-      //var editUsersQuery='UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE id=$1';
+      //MUST CHECK IF password = confirm password -> NOT DONE YET
       pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
           if(error)
               res.end(error);
