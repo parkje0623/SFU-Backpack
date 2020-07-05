@@ -16,8 +16,8 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
-    //connectionString:process.env.DATABASE_URL
+    //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
+    connectionString:process.env.DATABASE_URL
 })
 
 // Amazon web services (AWS) - Simple Storage Service
