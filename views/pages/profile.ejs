@@ -76,35 +76,37 @@
   </head>
   <body>
     <form>
-    <div class="top">
-      <nav class="username">
-        Username goes here!
-      </nav>
-      <img id="logo" src="logo.png" alt="logo" onclick="location.href='./mainpage.html'"/>
-      <p class="logo-font">sfu-backpack</p> <br><br><br>
-    </div>
+      <% rows.forEach(function(attr) { %>
+      <div class="top">
+        <nav class="username">
+          <%= attr.uname %>
+        </nav>
+        <img id="logo" src="logo.png" alt="logo" onclick="location.href='./mainpage.html'"/>
+        <p class="logo-font">sfu-backpack</p> <br><br><br>
+      </div>
 
-    <input type="file"  accept="image/*" name="image" id="file" onchange="getImage(event)"> </input>
-    <img id="profile_pic" src="logo.png" alt="logo"/>
-    <div class="info">
-      <h1> USERNAME <br></h1>
-      ID: from DB <br>
-      <p> Email: from DB <br></p>
-    </div>
-    <button formaction="/deleteuser" formmethod="post" type="submit" class="delete"> Permanently Delete </button>
+      <input type="file" accept="image/*" name="image" id="file" onchange="getImage(event)"> </input>
+      <img id="profile_pic" src="logo.png" alt="logo"/>
+      <div class="info">
+        <h1> USERNAME <br></h1>
+        ID: from DB <br>
+        <p> Email: from DB <br></p>
+      </div>
+      <button formaction="/deleteuser" formmethod="post" type="submit" class="delete"> Permanently Delete </button>
+      <br><br><br>
 
-    <br><br><br>
-    <div class="account">
-      <h1> Account <br></h1>
-      <p> ID:       <input id="userid" type="text" placeholder="USER ID here (unmodifiable)" name="uid" value="uid from db" readonly="readonly" size="40"></input><br></p> <!--makes sure its read-only later !-->
-      <p> Username: <input id="username" type="text" name="uname" placeholder="from DB" size="40"</input><br></p>
-      <p> Password: <input id="password" type="password" name="upassword" placeholder="from DB" size="40"</input><br></p>
-      <p> Confirm Password: <input id="confirm" type="password" name="confirm" placeholder="from DB" size="40"</input><br></p>
-      <p> Email:    <input id="email" type="text" name="uemail" placeholder="from DB" size="40"</input><br></p>
-      <!-- For input can use maxlength="5" to maximize the input value along with the size as well -->
-      <button formaction="/edituser" type="submit" formmethod="post" class="edit">Edit</button>
-    </div>
-  </form>
+      <div class="account">
+        <h1> Account <br></h1>
+        <p> ID:       <input id="userid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" size="40"></input><br></p> <!--makes sure its read-only later !-->
+        <p> Username: <input id="username" type="text" name="uname" placeholder="<%= attr.uname %>" size="40"</input><br></p>
+        <p> Password: <input id="password" type="password" name="upassword" placeholder="<%= attr.upassword %>" size="40"</input><br></p>
+        <p> Confirm Password: <input id="confirm" type="password" name="confirm" placeholder="<%= attr.upassword %>" size="40"</input><br></p>
+        <p> Email:    <input id="email" type="text" name="uemail" placeholder="<%= attr.uemail %>" size="40"</input><br></p>
+        <!-- For input can use maxlength="5" to maximize the input value along with the size as well -->
+        <button formaction="/edituser" type="submit" formmethod="post" class="edit">Edit</button>
+      </div>
+      <% }); %>
+    </form>
   </body>
   <script>
     function getImage(event) {

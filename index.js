@@ -8,13 +8,14 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
+    //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
     connectionString:process.env.DATABASE_URL
 })
 
 var app = express();
 app.use(session({
     store: new Psession({
-        
+
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
         conString: process.env.DATABASE_URL
 
@@ -75,7 +76,7 @@ app.post('/adduser', (req, res) => {
                 res.send(`USER ID or EMAIL is already taken!`);
             }
             else{
-                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{
+                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
                     if(error)
                         res.end(error);
                     else{
@@ -93,7 +94,7 @@ app.post('/deleteuser', (req, res) => {
     var upassword = req.body.upassword;
     var checking =[uid, upassword]
     if(uid && upassword){
-        pool.query('SELECT * FROM backpack WHERE uid=$1 AND upassword=$2', checking, (error,result)=>{
+        pool.query('SELECT * FROM backpack WHERE uid=$1 AND password=$2', checking, (error,result)=>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
@@ -120,14 +121,16 @@ app.post('/edituser', (req, res) => {
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
     var values=[uid, uname, uemail, upassword];
-    var editUsersQuery='UPDATE backpack SET name=$1, age=$2, size=$3, height=$4, type=$5 where id=$6';
-    pool.query(editUsersQuery, values, (error,result)=>{
-        if(error)
-            res.end(error);
-        else{
-            res.send(`USER ID: ${uid} HAS BEEN EDITED!`);
-        }
-    })
+    if(uid && uname && uemail && upassword){ //edited Jieung
+      //var editUsersQuery='UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE id=$1';
+      pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
+          if(error)
+              res.end(error);
+          else{
+              res.send(`USER ID: ${uid} HAS BEEN EDITED!`);
+          }
+      });
+    }
 });
 
 
@@ -150,11 +153,21 @@ app.post('/showpassword', (req, res) => {
     }
 });
 
-
-
-
-
-
-
+app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
+  var uid = req.body.uid;
+  var values=[uid];
+  if(uid){
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
+          if(error)
+              res.end(error);
+          else{
+              var results = {'rows':result.rows};
+              res.render('pages/profile', results);
+          }
+      });
+  } else {
+    res.send("Must log-in fisrt");
+  }
+});
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
