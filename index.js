@@ -16,8 +16,8 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
-    connectionString:process.env.DATABASE_URL
+    connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
+    //connectionString:process.env.DATABASE_URL
 })
 
 // Amazon web services (AWS) - Simple Storage Service
@@ -183,16 +183,21 @@ app.post('/edituser', (req, res) => {
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
+    var confirm_pwd = req.body.confirm;
     var values=[uid, uname, uemail, upassword];
-    if(uid && uname && uemail && upassword){ //edited Jieung
+    if(uid && uname && uemail && upassword && confirm_pwd){ //edited Jieung
       //MUST CHECK IF password = confirm password -> NOT DONE YET
-      pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
-          if(error)
-              res.end(error);
-          else{
-              res.send(`USER ID: ${uid} HAS BEEN EDITED!`);
-          }
-      });
+      if (confirm_pwd === upassword) {
+        pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
+            if(error)
+                res.end(error);
+            else{
+                res.send(`USER ID: ${uid} HAS BEEN EDITED!`);
+            }
+        });
+      } else {
+        res.send("Password do not match");
+      }
     }
 });
 

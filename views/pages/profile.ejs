@@ -89,8 +89,8 @@
       <img id="profile_pic" src="logo.png" alt="logo"/>
       <div class="info">
         <h1> USERNAME <br></h1>
-        ID: from DB <br>
-        <p> Email: from DB <br></p>
+        ID: <%= attr.uid %> <br>
+        <p> Email: <%= attr.uemail %> <br></p>
       </div>
       <button formaction="/deleteuser" formmethod="post" type="submit" class="delete"> Permanently Delete </button>
       <br><br><br>
