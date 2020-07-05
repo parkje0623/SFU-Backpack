@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path')
 const ejs = require('ejs');
 const multer = require('multer');
+const multerS3 = require('multer-s3')
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const AWS_ID = 'AKIAIP3KOLSW55YT432Q';
@@ -36,12 +37,23 @@ const storage = multer.diskStorage({
 // Init Upload
 
 const upload = multer({
-  storage: storage,
+  /*storage: storage,
   limits:{fileSize: 9000000},
   fileFilter: function(req, file, cb){
     checkFileType(file, cb);
-  }
-}).single('myImage');
+  }*/
+  storage: multerS3({
+    s3: s3,
+    bucket: BUCKET_NAME,
+    acl: 'public-read',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString())
+    }
+  })
+})
 
 
 // Check File Type
@@ -248,7 +260,7 @@ app.post('/upload', (req, res) => {
           file: `uploads/${req.file.filename}`,
 
         });
-        var path = uploadFile('uploads/' + req.file.filename);
+        var path = 'google.com';
         var course = req.body.course;
         var bookName = req.body.title;
         var uid = req.body.uid;
