@@ -192,9 +192,9 @@ app.post('/showpassword', (req, res) => {
 app.get('/upload',(req, res) =>{
 
       res.render('pages/imageUpload')
-  });
+});
 
-  app.post('/upload', (req, res) => {
+app.post('/upload', (req, res) => {
   upload(req, res, (err) => {
     if(err){
       res.render('pages/imageUpload', {
@@ -210,14 +210,27 @@ app.get('/upload',(req, res) =>{
       else {
         res.render('pages/imageUpload', {
           msg: 'File Uploaded!',
-          file: `uploads/${req.file.filename}`
+          file: `uploads/${req.file.filename}`,
+
         });
+        var course = req.body.course;
+        var path = 'uploads/' + req.file.filename
+        var bookName = req.body.title;
+        var uid = req.body.uid;
+        var values=[course, path, bookName, uid];
+
+        var getImageQuery='INSERT INTO img (course, path, bookname, uid) VALUES ($1,$2,$3,$4)';
+        pool.query(getImageQuery, values, (error,result)=>{
+          if(error)
+              res.end(error);
+          else{
+              res.send(`IMAGE ADDED TO DATABASE PATH: ${path}`);
+          }
+        })
       }
     }
   });
 });
-
-
 
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
