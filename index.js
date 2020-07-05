@@ -4,6 +4,11 @@ const bodyParser = require('body-parser');
 const path = require('path')
 const ejs = require('ejs');
 const multer = require('multer');
+const fs = require('fs');
+const AWS = require('aws-sdk');
+const AWS_ID = 'AKIAIP3KOLSW55YT432Q';
+const AWS_SECRET = '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';
+const BUCKET_NAME = 'cmpt276-uploads';
 const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
@@ -13,11 +18,18 @@ pool = new Pool({
     connectionString:process.env.DATABASE_URL
 })
 
+// Amazon web services (AWS) - Simple Storage Service
+const s3 = new AWS.S3({
+    accessKeyId: AWS_ID,
+    secretAccessKey: AWS_SECRET
+});
+
+
 // Set The Storage Engine
 const storage = multer.diskStorage({
   destination: './public/uploads/',
   filename: function(req, file, cb){
-    cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    cb(null,  Date.now() + path.extname(file.originalname));
   }
 });
 
@@ -189,6 +201,29 @@ app.post('/showpassword', (req, res) => {
     }
 });
 
+
+const uploadFile = (fileName) => {
+    // Read content from the file
+    const fileContent = fs.readFileSync(fileName);
+
+    // Setting up S3 upload parameters
+    const params = {
+      ACL: "public-read",
+        Bucket: BUCKET_NAME,
+        Key: fileName, // File name you want to save as in S3
+        Body: fileContent
+    };
+
+    // Uploading files to the bucket
+    s3.upload(params, function(err, data) {
+        if (err) {
+            throw err;
+        }
+        return data.Location
+    });
+};
+
+
 app.get('/upload',(req, res) =>{
 
       res.render('pages/imageUpload')
@@ -213,8 +248,8 @@ app.post('/upload', (req, res) => {
           file: `uploads/${req.file.filename}`,
 
         });
+        var path = uploadFile('uploads/' + req.file.filename);
         var course = req.body.course;
-        var path = 'uploads/' + req.file.filename
         var bookName = req.body.title;
         var uid = req.body.uid;
         var values=[course, path, bookName, uid];
