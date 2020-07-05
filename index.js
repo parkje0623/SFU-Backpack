@@ -1,10 +1,17 @@
-
-const express = require('express');
-const path = require('path');
-const ejs = require('ejs');
-const multer = require('multer');
+const express = require('express')
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const path = require('path')
+const ejs = require('ejs');
+const multer = require('multer');
+const PORT = process.env.PORT || 5000
+const Psession = require('connect-pg-simple')(session);
+const { Pool } = require('pg');
+var pool;
+pool = new Pool({
+    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
+    connectionString:process.env.DATABASE_URL
+})
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
@@ -42,15 +49,6 @@ function checkFileType(file, cb){
 }  
 
 
-const PORT = process.env.PORT || 5000
-const Psession = require('connect-pg-simple')(session);
-const { Pool } = require('pg');
-var pool;
-pool = new Pool({
-    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    connectionString:process.env.DATABASE_URL
-})
-
 var app = express();
 app.use(session({
     store: new Psession({
@@ -64,6 +62,7 @@ app.use(session({
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
@@ -221,7 +220,4 @@ app.get('/upload',(req, res) =>{
 
 
 
-
-
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
-
