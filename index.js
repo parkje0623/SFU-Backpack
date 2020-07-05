@@ -2,6 +2,14 @@ const express = require('express')
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path')
+const ejs = require('ejs');
+const multer = require('multer');
+const multerS3 = require('multer-s3')
+const fs = require('fs');
+const AWS = require('aws-sdk');
+const AWS_ID = 'AKIAIP3KOLSW55YT432Q';
+const AWS_SECRET = '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';
+const BUCKET_NAME = 'cmpt276-uploads';
 const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
@@ -11,6 +19,60 @@ pool = new Pool({
     //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
     connectionString:process.env.DATABASE_URL
 })
+
+// Amazon web services (AWS) - Simple Storage Service
+const s3 = new AWS.S3({
+    accessKeyId: AWS_ID,
+    secretAccessKey: AWS_SECRET
+});
+
+
+// Set The Storage Engine
+const storage = multer.diskStorage({
+  destination: './public/uploads/',
+  filename: function(req, file, cb){
+    cb(null,  Date.now() + path.extname(file.originalname));
+  }
+});
+
+// Init Upload
+
+const upload = multer({
+  /*storage: storage,
+  limits:{fileSize: 9000000},
+  fileFilter: function(req, file, cb){
+    checkFileType(file, cb);
+  }*/
+  storage: multerS3({
+    s3: s3,
+    bucket: BUCKET_NAME,
+    acl: 'public-read',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString())
+    }
+  })
+})
+
+
+// Check File Type
+function checkFileType(file, cb){
+  // Allowed ext
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if(mimetype && extname){
+    return cb(null,true);
+  } else {
+    cb('Error: Images Only please!');
+  }
+}
+
 
 var app = express();
 app.use(session({
@@ -25,6 +87,7 @@ app.use(session({
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
