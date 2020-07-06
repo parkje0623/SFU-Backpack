@@ -1,9 +1,9 @@
 const express = require('express')
-const session = require('express-session');
+// const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path')
 const PORT = process.env.PORT || 5000
-const Psession = require('connect-pg-simple')(session);
+// const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
 pool = new Pool({
@@ -12,18 +12,18 @@ pool = new Pool({
 })
 
 var app = express();
-app.use(session({
-    store: new Psession({
+// app.use(session({
+//     store: new Psession({
         
-        //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        conString: process.env.DATABASE_URL
+//         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+//         conString: process.env.DATABASE_URL
 
-    }),
-    secret: '!@SDF$@#SDF',
-    resave: false,
-    cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
-    saveUninitialized: true
-}));
+//     }),
+//     secret: '!@SDF$@#SDF',
+//     resave: false,
+//     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
+//     saveUninitialized: true
+// }));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
