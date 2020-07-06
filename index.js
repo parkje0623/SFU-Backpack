@@ -274,7 +274,7 @@ app.get("/buy", (req, res) => {
   pool.query(getUsersQuery, (error, result) => {
     if (error) res.end(error)
     var results = { rows: result.rows }
-    res.render("pages/buying", results)
+    res.render("pages/buyingpage", results)
   })
 })
 app.get("/post", (req, res) => {
@@ -282,7 +282,7 @@ app.get("/post", (req, res) => {
   pool.query(getUsersQuery, (error, result) => {
     if (error) res.end(error)
     var results = { rows: result.rows }
-    res.render("pages/buying", results)
+    res.render("pages/buyingpage", results)
   })
 })
 app.get("/post/:id", (req, res) => {
@@ -291,7 +291,7 @@ app.get("/post/:id", (req, res) => {
   pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
     if (error) res.end(error)
     var results = { rows: result.rows }
-    res.render("pages/page", results)
+    res.render("pages/buyingPageReload", results)
   })
 })
 ///////////////////////////////
