@@ -12,25 +12,19 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.4.4",
-    "aws": "0.0.3-2",
     "aws-sdk": "^2.709.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.0",
-    "ci": "^1.0.0",
     "connect-pg-simple": "^6.1.0",
     "ejs": "^2.7.4",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "jquery": "^3.5.1",
     "multer": "^1.4.2",
-    "<<<<<<<" "HEAD",
-    "pg": "^8.2.1",
-    "=======": null,
     "multer-s3": "^2.9.0",
     "nodemon": "^2.0.4",
     "pg": "^8.2.1",
-    "session": "^0.1.0",
-    ">>>>>>>" "89279fb5ec2c6837ec7b47724f84ee780d031cf2"
+    "session": "^0.1.0"
   },
   "devDependencies": {
     "got": "^11.3.0",

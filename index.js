@@ -21,20 +21,6 @@ pool = new Pool({
 })
 
 var app = express();
-<<<<<<< HEAD
-// app.use(session({
-//     store: new Psession({
-
-//         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-//         conString: process.env.DATABASE_URL
-
-//     }),
-//     secret: '!@SDF$@#SDF',
-//     resave: false,
-//     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
-//     saveUninitialized: true
-// }));
-=======
 app.use(session({
     store: new Psession({
 
@@ -48,7 +34,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
->>>>>>> 89279fb5ec2c6837ec7b47724f84ee780d031cf2
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
