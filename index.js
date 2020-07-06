@@ -180,6 +180,7 @@ app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
           }
       });
   } else {
+
     res.send("Must log-in first");
   }
 });

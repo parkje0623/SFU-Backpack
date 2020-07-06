@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Profile Page</title>
+    <style>
+      body {
+        background-color: #f1e3cb;
+      }
+      .username {
+        position: absolute;
+        right: 100px;
+        margin-top: 20px;
+      }
+      #profile_pic {
+        border: 1px solid black;
+        background-color: white;
+        position: absolute;
+        left: 150px;
+        width: 170px;
+      }
+      #logo {
+        position: relative;
+        left: 40px;
+        width: 5%;
+        cursor: pointer;
+      }
+      .logo-font {
+        position: relative;
+        font-family: "MuseoModerno", cursive;
+        margin-top: 0;
+        left: 20px;
+      }
+      .info {
+        font-size: 24px;
+        position: absolute;
+        left: 370px;
+      }
+      h1, p {
+        margin-top: 0px;
+      }
+      .account {
+        font-size: 24px;
+        position: absolute;
+        top: 450px;
+        left: 150px;
+      }
+      input {
+        line-height: 2em;
+        font-size: 18px;
+        position: absolute;
+        left: 250px;
+      }
+      .edit {
+        font-size: 28px;
+        position: absolute;
+        top: 400px;
+        width: 200px;
+        height: 50px;
+      }
+      .delete {
+        font-size: 28px;
+        color: red;
+        position: absolute;
+        top: 350px;
+        left: 900px;
+        width: 300px;
+        height: 50px;
+      }
+      #file {
+        position: absolute;
+        top: 400px;
+        left: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <% rows.forEach(function(attr) { %>
+      <div class="top">
+        <nav class="username">
+          <%= attr.uname %>
+        </nav>
+        <img id="logo" src="logo.png" alt="logo" onclick="location.href='./mainpage.html'"/>
+        <p class="logo-font">sfu-backpack</p> <br><br><br>
+      </div>
+
+      <input type="file" accept="image/*" name="image" id="file" onchange="getImage(event)"> </input>
+      <img id="profile_pic" src="logo.png" alt="logo"/>
+      <div class="info">
+        <h1> USERNAME <br></h1>
+        ID: <%= attr.uid %> <br>
+        <p> Email: <%= attr.uemail %> <br></p>
+      </div>
+      <button formaction="/deleteuser" formmethod="post" type="submit" class="delete"> Permanently Delete </button>
+      <br><br><br>
+
+      <div class="account">
+        <h1> Account <br></h1>
+        <p> ID:       <input id="userid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" size="40"></input><br></p> <!--makes sure its read-only later !-->
+        <p> Username: <input id="username" type="text" name="uname" placeholder="<%= attr.uname %>" size="40"</input><br></p>
+        <p> Password: <input id="password" type="password" name="upassword" placeholder="<%= attr.upassword %>" size="40"</input><br></p>
+        <p> Confirm Password: <input id="confirm" type="password" name="confirm" placeholder="<%= attr.upassword %>" size="40"</input><br></p>
+        <p> Email:    <input id="email" type="text" name="uemail" placeholder="<%= attr.uemail %>" size="40"</input><br></p>
+        <!-- For input can use maxlength="5" to maximize the input value along with the size as well -->
+        <button formaction="/edituser" type="submit" formmethod="post" class="edit">Edit</button>
+      </div>
+      <% }); %>
+    </form>
+  </body>
+  <script>
+    function getImage(event) {
+      var newImage = document.getElementById('profile_pic');
+      newImage.src = URL.createObjectURL(event.target.files[0]);
+    }
+  </script>
+</html>

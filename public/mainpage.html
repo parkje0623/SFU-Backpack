@@ -22,11 +22,14 @@
           <button class="search-btn" type="submit">Search</button>
         </form>
       </nav>
-      <nav class="login-bar">
-        <button class="login-btn" type="submit">Login</button>
-        <button class="login-btn" type="submit">Mypage</button>
-        <button class="login-btn circle" type="submit">Info</button>
-      </nav>
+      <form>
+        <nav class="login-bar">
+          <button class="login-btn" type="submit">Login</button>
+          <input style="display: none;" type="text" name="uid" value="123"> <!-- Jieung edit -->
+          <button class="login-btn" formaction="/mypage" formmethod="post" type="submit">Mypage</button> <!-- Jieung edit -->
+          <button class="login-btn circle" type="submit">Info</button>
+        </nav>
+      </form>
 
       <img id="logo" src="logo.png" alt="logo" />
       <p class="logo-font">sfu-backpack</p>
