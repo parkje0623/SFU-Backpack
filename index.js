@@ -99,7 +99,7 @@ function UIstatus(req,res){
 
 }
 
-app.get('/', (req, res)=>{
+app.get('/dbtest.html', (req, res)=>{
     var html =template.HTML(title, list, UIstatus(req,res));
 });
 
@@ -110,7 +110,7 @@ app.get('/', (req, res)=>{
 
 app.get('/auth/logout', (req, res)=>{
     req.session.destroy(function(err){
-        res.send(`log out`);
+        res.redirect('/');
     });
 });
 
