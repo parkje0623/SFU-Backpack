@@ -2,16 +2,26 @@ const express = require('express')
 // const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path')
+const ejs = require('ejs');
+const multer = require('multer');
+const multerS3 = require('multer-s3')
+const fs = require('fs');
+const AWS = require('aws-sdk');
+const AWS_ID = 'AKIAJW23KIMJQF66OE2Q';
+const AWS_SECRET = '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';
+const BUCKET_NAME = 'cmpt276-uploads';
 const PORT = process.env.PORT || 5000
 // const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
+    //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
     connectionString:process.env.DATABASE_URL
 })
 
 var app = express();
+<<<<<<< HEAD
 // app.use(session({
 //     store: new Psession({
         
@@ -24,6 +34,21 @@ var app = express();
 //     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
 //     saveUninitialized: true
 // }));
+=======
+app.use(session({
+    store: new Psession({
+
+        //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+        conString: process.env.DATABASE_URL
+
+    }),
+    secret: '!@SDF$@#SDF',
+    resave: false,
+    cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
+    saveUninitialized: true
+}));
+
+>>>>>>> 89279fb5ec2c6837ec7b47724f84ee780d031cf2
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
@@ -75,7 +100,7 @@ app.post('/adduser', (req, res) => {
                 res.send(`USER ID or EMAIL is already taken!`);
             }
             else{
-                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{
+                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
                     if(error)
                         res.end(error);
                     else{
@@ -93,7 +118,7 @@ app.post('/deleteuser', (req, res) => {
     var upassword = req.body.upassword;
     var checking =[uid, upassword]
     if(uid && upassword){
-        pool.query('SELECT * FROM backpack WHERE uid=$1 AND upassword=$2', checking, (error,result)=>{
+        pool.query('SELECT * FROM backpack WHERE uid=$1 AND password=$2', checking, (error,result)=>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
@@ -101,7 +126,7 @@ app.post('/deleteuser', (req, res) => {
             }
             else{
 
-                var insertUsersQuery=`DELETE FROM backpack WHERE uid=$1`
+                var insertUsersQuery=`DELETE FROM backpack WHERE uid=$1`;
                 pool.query(insertUsersQuery, [uid], (error,result)=>{
                     if(error)
                         res.end(error);
@@ -119,15 +144,22 @@ app.post('/edituser', (req, res) => {
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
+    var confirm_pwd = req.body.confirm;
     var values=[uid, uname, uemail, upassword];
-    var editUsersQuery='UPDATE backpack SET name=$1, age=$2, size=$3, height=$4, type=$5 where id=$6';
-    pool.query(editUsersQuery, values, (error,result)=>{
-        if(error)
-            res.end(error);
-        else{
-            res.send(`USER ID: ${uid} HAS BEEN EDITED!`);
-        }
-    })
+    if(uid && uname && uemail && upassword && confirm_pwd){ //edited Jieung
+      //MUST CHECK IF password = confirm password -> NOT DONE YET
+      if (confirm_pwd === upassword) {
+        pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
+            if(error)
+                res.end(error);
+            else{
+                res.send(`USER ID: ${uid} HAS BEEN EDITED!`);
+            }
+        });
+      } else {
+        res.send("Password do not match");
+      }
+    }
 });
 
 
@@ -150,11 +182,70 @@ app.post('/showpassword', (req, res) => {
     }
 });
 
+app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
+  var uid = req.body.uid;
+  var values=[uid];
+  if(uid){
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
+          if(error)
+              res.end(error);
+          else{
+              var results = {'rows':result.rows};
+              res.render('pages/profile', results);
+          }
+      });
+  } else {
 
+    res.send("Must log-in first");
+  }
+});
 
+// SETTING UP AMAZON STORAGE
+AWS.config.update({
+  accessKeyId:  AWS_ID,
+  secretAccessKey: AWS_SECRET,
+  region: 'us-west-2'
+})
 
+const S3 = new AWS.S3();
 
+var upload = multer({
+    // CREATE MULTER-S3 FUNCTION FOR STORAGE
+    storage: multerS3({
+        s3: S3,
+        acl: 'public-read',
+        bucket: BUCKET_NAME,
+      
+        // SET / MODIFY ORIGINAL FILE NAME. ///// to be done shiva
+        key: function (req, file, cb) {
+            cb(null, file.originalname); //set unique file name if you wise using Date.toISOString()
+            // EXAMPLE 1
+            // cb(null, Date.now() + '-' + file.originalname);
+            // EXAMPLE 2
+            // cb(null, new Date().toISOString() + '-' + file.originalname);
 
+        }
+    }),
+    // SET DEFAULT FILE SIZE UPLOAD LIMIT
+    limits: { fileSize: 1024 * 1024 * 50 }, // 50MB
+    // FILTER OPTIONS LIKE VALIDATING FILE EXTENSION
+    fileFilter: function(req, file, cb) {
+        const filetypes = /jpeg|jpg|png/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb("Error: Allow images only of extensions jpeg|jpg|png !");
+        }
+    }
+});
+app.post('/upload', upload.single('myImage'), function (req, res, next) {
+    res.send(`Done`)
+});
+app.get('/upload',(req, res) =>{
 
+      res.render('pages/imageUpload')
+});
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
