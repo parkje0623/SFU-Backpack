@@ -1,5 +1,5 @@
 const express = require('express')
-// const session = require('express-session');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path')
 const ejs = require('ejs');
@@ -11,7 +11,7 @@ const AWS_ID = 'AKIAJW23KIMJQF66OE2Q';
 const AWS_SECRET = '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';
 const BUCKET_NAME = 'cmpt276-uploads';
 const PORT = process.env.PORT || 5000
-// const Psession = require('connect-pg-simple')(session);
+const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
 pool = new Pool({
@@ -70,18 +70,48 @@ app.post('/auth/login', (req, res) =>{
             }
             else{
                 req.session.displayName = result.rows[0].uname;
+                req.session.is_logined=true;
+                req.session.ID=result.rows[0].uid;
+                req.session.save(function(){
                 res.send(`
                     <h1>hello, ${req.session.displayName} </h1>
-                    <a href="/auth/logout">logout</a>
-                    `);
+                    <a href="/auth/logout">logout</a> `);
+                });
             }
         });
     }
 });
 
+function isLogedin(req, res){
+    if(request.session.is_logined){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+function UIstatus(req,res){
+    var UI='<a href="/auth/login">login</a>'
+    if(isLogedin(req,res)){
+        UI='<a href="/auth/logout">logout</a>'
+    }
+    return UI
+
+}
+
+app.get('/', (req, res)=>{
+    var html =template.HTML(title, list, UIstatus(req,res));
+});
+
+
+
+
+
+
 app.get('/auth/logout', (req, res)=>{
-    delete req.session.displayName;
-    res.send(`log out`);
+    req.session.destroy(function(err){
+        res.send(`log out`);
+    });
 });
 
 app.post('/adduser', (req, res) => {
@@ -104,7 +134,7 @@ app.post('/adduser', (req, res) => {
                     if(error)
                         res.end(error);
                     else{
-                        res.send(`USER ID: ${uid} HAS BEEN SUBMITTED!`);
+                        res.send(`USER ID: ${ID} HAS BEEN SUBMITTED!`);
                     }
                 })
             }
@@ -140,13 +170,16 @@ app.post('/deleteuser', (req, res) => {
 });
 
 app.post('/edituser', (req, res) => {
-    var uid = req.body.uid;
+    if(!isLogedin(req,res)){
+        res.redirect('/');
+        return false;
+    }
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
     var confirm_pwd = req.body.confirm;
     var values=[uid, uname, uemail, upassword];
-    if(uid && uname && uemail && upassword && confirm_pwd){ //edited Jieung
+    if(uname && uemail && upassword && confirm_pwd){ //edited Jieung
       //MUST CHECK IF password = confirm password -> NOT DONE YET
       if (confirm_pwd === upassword) {
         pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
