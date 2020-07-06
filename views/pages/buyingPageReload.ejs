@@ -1,0 +1,396 @@
+<html>
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Buying</title>
+      <style>
+          body {
+  background-color: #f1e3cb;
+}
+.top-container {
+  position: relative;
+  height: 100px;
+}
+
+.middle-container {
+  position: relative;
+  height: 100px;
+  text-align: center;
+}
+
+#logo {
+  position: relative;
+  left: 40px;
+  width: 5%;
+}
+
+.logo-font {
+  position: relative;
+  font-family: "MuseoModerno", cursive;
+  margin-top: 0;
+  left: 20px;
+}
+.search-bar {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.search-input {
+  height: 30px;
+}
+.search-btn {
+  height: 30px;
+}
+
+.login-bar {
+  position: absolute;
+  right: 100px;
+  margin-top: 20px;
+}
+.login-btn {
+  height: 30px;
+}
+.button {
+  width: 10%;
+  height: 100px;
+  font: 50px;
+}
+
+/* buying page html */
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.buying-menu {
+  width: 100%;
+  position: relative;
+}
+
+.navigationDesktop {
+  text-align: center;
+}
+
+nav {
+  display: inline-block;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+nav a {
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 15pt;
+  color: #112233;
+}
+
+nav a:hover {
+  background: #223433;
+  color: #f0f1f5;
+}
+
+nav ul {
+  list-style: none;
+}
+
+nav ul li {
+  float: left;
+  width: 50px;
+  height: 40px;
+  line-height: 40px;
+  background: #fc575e;
+}
+
+nav ul ul li {
+  position: relative;
+  display: none;
+}
+
+nav ul ul ul {
+  display: none;
+}
+
+nav ul li:hover ul li {
+  display: block;
+  animation: navmenu 500ms forwards;
+}
+@keyframes navmenu {
+  0% {
+    opacity: 0;
+    top: 25px;
+  }
+  100% {
+    opacity: 1;
+    top: 0px;
+  }
+}
+nav ul ul li:hover ul {
+  display: block;
+  position: absolute;
+  width: 200px;
+  left: 140px;
+  top: 0px;
+}
+
+.course-name {
+  display: inline-block;
+  width: 200px;
+  text-align: right;
+}
+
+.course-heading-title {
+  text-align: center;
+  margin: 50px;
+}
+.display-image-books {
+  display: inline-block;
+  width: 500px;
+  height: 500px;
+}
+
+.image-book {
+  width: 100px;
+}
+
+      </style>
+      <link
+        href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
+        rel="stylesheet"
+    </head>
+    <body>
+        <div class="top-container">
+            <nav class="search-bar">
+              <form>
+                <input
+                  class="search-input"
+                  type="search"
+                  placeholder="Search"
+                  aria-label="Search.."
+                />
+                <button class="search-btn" type="submit">Search</button>
+              </form>
+            </nav>
+            <nav class="login-bar">
+              <button class="login-btn" type="submit">Login</button>
+              <button class="login-btn" type="submit">Mypage</button>
+              <button class="login-btn circle" type="submit">Info</button>
+            </nav>
+
+            <img id="logo" src="/logo.png" alt="logo" />
+            <p class="logo-font">sfu-backpack</p>
+          </div>
+
+
+          <!-- Drop-down menu -->
+          <div class="buying-menu">
+            <div class="navigationDesktop">
+              <nav>
+                <ul>
+                  <li>
+                    <a href="#">A</a>
+                    <ul>
+                      <li><a href="#">ACMA</a></li>
+                      <li><a href="#">ALS</a></li>
+                      <li><a href="#">ALS</a></li>
+                      <li><a href="#">APMA</a></li>
+                      <li><a href="#">ARAB</a></li>
+                      <li><a href="#">ARCH</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">B</a>
+                    <ul>
+                      <li><a href="#">BISC</a></li>
+                      <li><a href="#">BPK</a></li>
+                      <li><a href="#">BUS</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">C</a>
+                    <ul>
+                      <li><a href="#">CHEM</a></li>
+                      <li><a href="#">CHIN</a></li>
+                      <li><a href="#">COGS</a></li>
+                      <li><a href="#">CMNS</a></li>
+                      <li><a href="/post/cmpt">CMPT</a></li>
+                      <li><a href="#">CA</a></li>
+                      <li><a href="#">CRIM</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">D</a>
+                    <ul>
+                      <li><a href="#">DATA</a></li>
+                      <li><a href="#">DIAL</a></li>
+                      <li><a href="#">DMED</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">E</a>
+                    <ul>
+                      <li><a href="#">EASC</a></li>
+                      <li><a href="#">ECO</a></li>
+                      <li><a href="#">ECON</a></li>
+                      <li><a href="#">EDUC</a></li>
+                      <li><a href="#">EDPR</a></li>
+                      <li><a href="#">ETEC</a></li>
+                      <li><a href="#">ENCS</a></li>
+                      <li><a href="#">ENGL</a></li>
+                      <li><a href="#">EAS</a></li>
+                      <li><a href="#">ENV</a></li>
+                      <li><a href="#">EVCS</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">F</a>
+                    <ul>
+                      <li><a href="#">FASS</a></li>
+                      <li><a href="#">FNLG</a></li>
+                      <li><a href="#">FAL</a></li>
+                      <li><a href="#">FAN</a></li>
+                      <li><a href="#">FREN</a></li>
+                    </ul>
+                  </li>
+
+                  <li>
+                    <a href="#">G</a>
+                    <ul>
+                      <li><a href="#">GSWS</a></li>
+                      <li><a href="#">GS</a></li>
+                      <li><a href="#">GEOG</a></li>
+                      <li><a href="#">GERM</a></li>
+                      <li><a href="#">GA</a></li>
+                      <li><a href="#">GRK</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">H</a>
+                    <ul>
+                      <li><a href="#">HSCI</a></li>
+                      <li><a href="#">HS</a></li>
+                      <li><a href="#">HIST</a></li>
+                      <li><a href="#">HUM</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">I</a>
+                    <ul>
+                      <li><a href="#">INDG</a></li>
+                      <li><a href="#">INS</a></li>
+                      <li><a href="#">IAT</a></li>
+                      <li><a href="#">IS</a></li>
+                      <li><a href="#">ISPO</a></li>
+                      <li><a href="#">ITAL</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">J</a>
+                    <ul>
+                      <li><a href="#">JAPN</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">L</a>
+                    <ul>
+                      <li><a href="#">LBST</a></li>
+                      <li><a href="#">LANG</a></li>
+                      <li><a href="#">LAS</a></li>
+                      <li><a href="#">LBRL</a></li>
+                      <li><a href="#">LS</a></li>
+                      <li><a href="#">LING</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">M</a>
+                    <ul>
+                      <li><a href="#">MTEC</a></li>
+                      <li><a href="#">MASC</a></li>
+                      <li><a href="#">MATH</a></li>
+                      <li><a href="#">MACM</a></li>
+                      <li><a href="#">MSE</a></li>
+                      <li><a href="#">MBB</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">N</a>
+                    <ul>
+                      <li><a href="#">NEUR</a></li>
+                      <li><a href="#">NUSC</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">O</a>
+                    <ul>
+                      <li><a href="#">ONC</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">P</a>
+                    <ul>
+                      <li><a href="#">PERS</a></li>
+                      <li><a href="#">PHIL</a></li>
+                      <li><a href="#">PHYS</a></li>
+                      <li><a href="#">PLAN</a></li>
+                      <li><a href="#">POL</a></li>
+                      <li><a href="#">PSYC</a></li>
+                      <li><a href="#">PLCY</a></li>
+                      <li><a href="#">PUB</a></li>
+                      <li><a href="#">PUNJ</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">R</a>
+                    <ul>
+                      <li><a href="#">REM</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">S</a>
+                    <ul>
+                      <li><a href="#">SCI</a></li>
+                      <li><a href="#">SDA</a></li>
+                      <li><a href="#">SA</a></li>
+                      <li><a href="#">SPAN</a></li>
+                      <li><a href="#">STAT</a></li>
+                      <li><a href="#">SD</a></li>
+                      <li><a href="#">SEE</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">T</a>
+                    <ul>
+                      <li><a href="#">TEKX</a></li>
+                      <li><a href="#">TRSS</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">U</a>
+                    <ul>
+                      <li><a href="#">URB</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="#">W</a>
+                    <ul>
+                      <li><a href="#">WL</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+        <ul>
+            <% rows.forEach(function(r) { %>
+            <li><%= r.cname %></li>
+            <% }); %>
+        </ul>
+    <body>
+  </html>
+</html>

@@ -24,7 +24,7 @@ var app = express();
 <<<<<<< HEAD
 // app.use(session({
 //     store: new Psession({
-        
+
 //         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
 //         conString: process.env.DATABASE_URL
 
@@ -215,7 +215,7 @@ var upload = multer({
         s3: S3,
         acl: 'public-read',
         bucket: BUCKET_NAME,
-      
+
         // SET / MODIFY ORIGINAL FILE NAME. ///// to be done shiva
         key: function (req, file, cb) {
             cb(null, file.originalname); //set unique file name if you wise using Date.toISOString()
@@ -247,5 +247,8 @@ app.get('/upload',(req, res) =>{
 
       res.render('pages/imageUpload')
 });
+
+
+
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
