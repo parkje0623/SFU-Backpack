@@ -45,12 +45,18 @@ app.get('/', (req, res) => res.render('pages/index'));
 
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
-        res.render('pages/mainpage', {uname:req.session.displayName, uid:req.session.ID});
+        res.render('pages/mainpage', {uname:req.session.displayName});
     }
     else{
         res.render('pages/mainpage', {uname:false});
     }
 });
+
+/*<%if( uid ===admin){%>
+  <a href="/auth/logout">logout</a> 
+  <a href="/mypage"><%= uname %></a>
+  <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+<%}%>*/
 
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
     var getUsersQuery='SELECT * FROM backpack';
