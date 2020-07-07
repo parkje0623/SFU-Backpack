@@ -303,7 +303,7 @@ app.post('/upload', function (req, res){
       		} 
      		else {
         		//console.log(req.file)
-        		/*var path = req.file.location;
+        		var path = req.file.location;
          		var course = req.body.course;
          		var bookName = req.body.title;
          		var uid = req.body.uid;
@@ -313,13 +313,13 @@ app.post('/upload', function (req, res){
           			if(error){
               			res.end(error);
           			}
-              		else {*/
+              		else {
            				res.render('pages/imageUpload', {
           				msg: 'File Uploaded!',
           		
         				});
-           			//}
-         		//});
+           			}
+         		});
          
      		}
 
