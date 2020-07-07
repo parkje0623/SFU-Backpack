@@ -81,7 +81,7 @@ app.post('/auth/login', (req, res) =>{
 
 app.get('/auth/logout', (req, res)=>{
     req.session.destroy(function(err){
-        res.redirect('/mainpage.html');
+        res.redirect('/mainpage');
     });
 });
 
