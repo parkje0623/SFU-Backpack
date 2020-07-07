@@ -21,7 +21,7 @@ pool = new Pool({
 })
 
 var app = express();
-/*app.use(session({
+app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -33,7 +33,7 @@ var app = express();
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
-*/
+
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
@@ -306,6 +306,8 @@ app.post('/upload', function (req, res){
          		var course = req.body.course;
          		var bookName = req.body.title;
          		var uid = req.body.uid;
+            console.log(req.session.ID)
+            //var uid =  req.session.ID;
         		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
                 pool.query(getImageQuery, (error,result)=>{
           			if(error){
@@ -327,7 +329,7 @@ app.post('/upload', function (req, res){
  
 
 
-//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS who are you?
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS who are you?????
 app.get("/buy", (req, res) => {
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
