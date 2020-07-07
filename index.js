@@ -21,7 +21,7 @@ pool = new Pool({
 })
 
 var app = express();
-app.use(session({
+/*app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -33,7 +33,7 @@ app.use(session({
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
-
+*/
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
@@ -307,8 +307,12 @@ app.post('/upload', function (req, res){
          		var course = req.body.course;
          		var bookName = req.body.title;
          		var uid = req.body.uid;
+                console.log(path)
+                console.log(course)
+                console.log(bookName)
+                console.log(uid)
         		var values=[course, path, bookName, uid];
-        		var getImageQuery='INSERT INTO img (course, path, bookname, uid) VALUES ($1,$2,$3,$4)';
+        		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES ('test','test','test','test')";
         		pool.query(getImageQuery, values, (error,result)=>{
           			if(error){
               			res.end(error);
