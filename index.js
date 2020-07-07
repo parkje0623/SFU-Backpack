@@ -124,7 +124,7 @@ app.post('/adduser', (req, res) => {
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
     if(uid && uname && uemail && upassword){
-        pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', values , (error,result)=>{
+        pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
             if(error){
                 res.end(error);
             }
@@ -136,7 +136,7 @@ app.post('/adduser', (req, res) => {
                     if(error)
                         res.end(error);
                     else{
-                        res.send(`USER ID: ${ID} HAS BEEN SUBMITTED!`);
+                        res.send(`USER ID: ${uid} HAS BEEN SUBMITTED!`);
                     }
                 })
             }
