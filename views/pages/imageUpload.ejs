@@ -1,23 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ 
   
   <title>Image Upload</title>
 </head>
 <body>
-  <div class="container">
+  
+<style>
+  body {
+    color: #fff;
+        background: #f1e3cb;
+        font-family: 'Roboto', sans-serif;
+  }
+  .form-control {
+    min-height: 41px;
+    background: #f2f2f2;
+    box-shadow: none !important;
+    border: transparent;
+  }
+  .form-control:focus {
+    background: #e2e2e2;
+  }
+  .form-control, .btn {        
+        border-radius: 2px;
+    }
+  .login-form {
+    width: 500px;
+    margin: 30px auto;
+    text-align: center;
+  }
+  .login-form h2 {
+        margin: 10px 0 25px;
+    }
+    .login-form form {
+    color: #7a7a7a;
+    border-radius: 3px;
+      margin-bottom: 15px;
+        background: #fff;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+    .login-form .btn {        
+        font-size: 16px;
+        font-weight: bold;
+    background: #179b81;
+    border: none;
+        outline: none !important;
+    }
+  .login-form .btn:hover, .login-form .btn:focus {
+    background: #179b81;
+  }
+  .login-form a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .login-form a:hover {
+    text-decoration: none;
+  }
+  .login-form form a {
+    color: #7a7a7a;
+    text-decoration: none;
+  }
+  .login-form form a:hover {
+    text-decoration: underline;
+  }
+</style>
+  <div class="login-form">
 
-    <h1>File Upload</h1>
-    <%= typeof msg != 'undefined' ? msg : '' %>
+
+    
+    
     <form action="/upload" method="POST" enctype="multipart/form-data">
-    	
+    	<h2 class="text-center">File Upload</h2>
+      <%= typeof msg != 'undefined' ? msg : '' %><br>
     	<p> User ID:</p>
-      <input type="text"  name="uid" value="" placeholder="USER ID">
+      <input type="text"  class="form-control" name="uid" value="" placeholder="USER ID">
       <p>Title:</p>
-      <input type="text"  name="title" value="" placeholder="TITLE">
+      <input type="text"  class="form-control" name="title" value="" placeholder="TITLE">
     	<p> Course:</p>
-    	<select type="text" name="course">
+    	<select type="text" class="form-control" name="course">
 					<option> CMPT </option>
 					<option> Arts </option>
 					<option> Business </option>
@@ -26,7 +90,7 @@
 					<option> Mathematics </option>
 		</select><br>
     	<p> Cost :</p>
-    	<input type="number"  name="cost" value="" placeholder="COST">
+    	<input type="number"  class="form-control" name="cost" value="" placeholder="COST">
     	<p>The Condition:</p>
   		<input type="radio" id = "con1" name="condition">
   		<label for="con1">New</label><br>
@@ -38,18 +102,23 @@
   		<input type="radio" id = "con4" name="condition" value="100">
   		<label for="con4">Used(fair)</label><br>
   		<p> Description:</p>
-  		<textarea name="description"></textarea><br>
+  		<textarea class="form-control" name="description" rows="4" cols="200"></textarea><br>
 
 
       
         <span>File</span>
-        <input name="myImage" id = "file-input" type="file"  >
+        <input name="myImage" class="form-control" id = "file-input" type="file"  ><br>
   
         
-      	<button type="submit" class="btn">Submit</button>
+      	<button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
     </form><br>
 
     <img src="<%= typeof file != 'undefined' ? file : '' %>" class="responsive-img">
+
+
   </div>
+
+
+
 </body>
 </html>

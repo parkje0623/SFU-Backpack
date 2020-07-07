@@ -21,7 +21,7 @@ pool = new Pool({
 })
 
 var app = express();
-app.use(session({
+/*app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -33,7 +33,7 @@ app.use(session({
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
-
+*/
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
@@ -257,7 +257,7 @@ AWS.config.update({
 
 const S3 = new AWS.S3();
 
-var upload = multer({
+const upload = multer({
     // CREATE MULTER-S3 FUNCTION FOR STORAGE
     storage: multerS3({
         s3: S3,
@@ -266,7 +266,7 @@ var upload = multer({
 
         // SET / MODIFY ORIGINAL FILE NAME. ///// to be done shiva
         key: function (req, file, cb) {
-            cb(null, file.originalname); //set unique file name if you wise using Date.toISOString()
+            cb(null, new Date().toISOString() + path.extname(file.originalname)); //set unique file name if you wise using Date.toISOString()
             // EXAMPLE 1
             // cb(null, Date.now() + '-' + file.originalname);
             // EXAMPLE 2
@@ -276,28 +276,74 @@ var upload = multer({
     }),
     // SET DEFAULT FILE SIZE UPLOAD LIMIT
     limits: { fileSize: 1024 * 1024 * 50 }, // 50MB
+
     // FILTER OPTIONS LIKE VALIDATING FILE EXTENSION
     fileFilter: function(req, file, cb) {
-        const filetypes = /jpeg|jpg|png/;
+        const filetypes = /jpeg|jpg|gif|png/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = filetypes.test(file.mimetype);
         if (mimetype && extname) {
             return cb(null, true);
         } else {
-            cb("Error: Allow images only of extensions jpeg|jpg|png !");
+            cb('Only jpeg/jpg/png images allowed')
+            //return cb(('Only jpeg/jpg/png images allowed'))
         }
     }
 });
-app.post('/upload', upload.single('myImage'), function (req, res, next) {
-    res.send(`Done`)
-});
+
 app.get('/upload',(req, res) =>{
-
+     /*var getImgQuery = ' SELECT * FROM img'
+    pool.query(getImgQuery, (error, result) =>{
+      //con.query(sql, function (err, result) {
+      if(error)
+        res.end(error)
+      var results = {'rows': result.rows}*/
       res.render('pages/imageUpload')
+  //})
 });
 
 
-// KHOA BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
+const image_upload = upload.single('myImage');
+app.post('/upload', function (req, res){
+	image_upload(req, res, function(err){
+		if(err){
+      		res.render('pages/imageUpload', {
+        	msg: err
+      		});
+    	} 
+    	else {
+      		if(req.file == undefined){
+        		res.render('pages/imageUpload', {
+          		msg: 'Error: No File Selected!'
+        		});
+      		} 
+     		else {
+        		var path = req.file.location;
+         		var course = req.body.course;
+         		var bookName = req.body.title;
+         		var uid = req.body.uid;
+        		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
+                pool.query(getImageQuery, (error,result)=>{
+          			if(error){
+              			res.end(error);
+          			}
+              		else {
+           				res.render('pages/imageUpload', {
+          				msg: 'File Uploaded!',
+          		
+        				});
+           			}
+         		});
+         
+     		}
+
+      	}
+	});
+});
+ 
+
+
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS who are you?
 app.get("/buy", (req, res) => {
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
@@ -306,14 +352,14 @@ app.get("/buy", (req, res) => {
     res.render("pages/buyingpage", results)
   })
 })
-app.get("/post", (req, res) => {
-  var getUsersQuery = `SELECT * FROM img`
-  pool.query(getUsersQuery, (error, result) => {
-    if (error) res.end(error)
-    var results = { rows: result.rows }
-    res.render("pages/buyingpage", results)
-  })
-})
+// app.get("/post", (req, res) => {
+//   var getUsersQuery = `SELECT * FROM img`
+//   pool.query(getUsersQuery, (error, result) => {
+//     if (error) res.end(error)
+//     var results = { rows: result.rows }
+//     res.render("pages/buyingpage", results)
+//   })
+// })
 app.get("/post/:id", (req, res) => {
   console.log(req.params.id)
   var cname = req.params.id
