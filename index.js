@@ -311,9 +311,9 @@ app.post('/upload', function (req, res){
                 console.log(course)
                 console.log(bookName)
                 console.log(uid)
-        		var values=[course, path, bookName, uid];
-        		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES ('test','test','test','test')";
-        		pool.query(getImageQuery, values, (error,result)=>{
+        		//var values=[course, path, bookName, uid];
+        		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
+        		pool.query(getImageQuery, (error,result)=>{
           			if(error){
               			res.end(error);
           			}
