@@ -45,10 +45,15 @@ app.get('/', (req, res) => res.render('pages/index'));
 
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
-        res.render('pages/mainpage', {uname:req.session.displayName, uid:req.session.ID});
+        if(req.session.ID.trim()=='admin'){
+            res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
+        }
+        else{
+            res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
+        }
     }
     else{
-        res.render('pages/mainpage', {uname: false});
+        res.render('pages/mainpage', {uname: false, uid: false});
     }
 });
 
