@@ -88,7 +88,7 @@
       <input type="file" accept="image/*" name="image" id="file" onchange="getImage(event)"> </input>
       <img id="profile_pic" src="logo.png" alt="logo"/>
       <div class="info">
-        <h1> USERNAME <br></h1>
+        <h1> <%= attr.uname %> <br></h1>
         ID: <%= attr.uid %> <br>
         <p> Email: <%= attr.uemail %> <br></p>
       </div>
@@ -112,6 +112,8 @@
     function getImage(event) {
       var newImage = document.getElementById('profile_pic');
       newImage.src = URL.createObjectURL(event.target.files[0]);
+      var changeImage = document.getElementById('userid');
+      changeImage.value = URL.createObjectURL(event.target.files[0]);
     }
   </script>
 </html>

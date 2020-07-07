@@ -16,8 +16,8 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
-    connectionString:process.env.DATABASE_URL
+    connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
+    //connectionString:process.env.DATABASE_URL
 })
 
 // Amazon web services (AWS) - Simple Storage Service
@@ -75,18 +75,18 @@ function checkFileType(file, cb){
 
 
 var app = express();
-app.use(session({
-    store: new Psession({
-
-        //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        conString: process.env.DATABASE_URL
-
-    }),
-    secret: '!@SDF$@#SDF',
-    resave: false,
-    cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
-    saveUninitialized: true
-}));
+// app.use(session({
+//     store: new Psession({
+//
+//         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+//         conString: process.env.DATABASE_URL
+//
+//     }),
+//     secret: '!@SDF$@#SDF',
+//     resave: false,
+//     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
+//     saveUninitialized: true
+// }));
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());

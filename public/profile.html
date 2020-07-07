@@ -110,6 +110,8 @@
     function getImage(event) {
       var newImage = document.getElementById('profile_pic');
       newImage.src = URL.createObjectURL(event.target.files[0]);
+      var cImage = document.getElementById('userid');
+      cImage.value = URL.createObjectURL(event.target.files[0]);
     }
   </script>
 </html>
