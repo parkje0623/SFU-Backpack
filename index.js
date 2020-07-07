@@ -15,17 +15,17 @@ const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
 pool = new Pool({
-    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
+    connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
     //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
-    connectionString:process.env.DATABASE_URL
+    //connectionString:process.env.DATABASE_URL
 })
 
 var app = express();
 app.use(session({
     store: new Psession({
 
-        //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        conString: process.env.DATABASE_URL
+        conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+        //conString: process.env.DATABASE_URL
 
     }),
     secret: '!@SDF$@#SDF',
@@ -45,18 +45,12 @@ app.get('/', (req, res) => res.render('pages/index'));
 
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
-        res.render('pages/mainpage', {uname:req.session.displayName});
+        res.render('pages/mainpage', {uname:req.session.displayName, uid:req.session.ID});
     }
     else{
-        res.render('pages/mainpage', {uname:false});
+        res.render('pages/mainpage', {uname: false});
     }
 });
-
-/*<%if( uid ===admin){%>
-  <a href="/auth/logout">logout</a> 
-  <a href="/mypage"><%= uname %></a>
-  <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
-<%}%>*/
 
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
     var getUsersQuery='SELECT * FROM backpack';
