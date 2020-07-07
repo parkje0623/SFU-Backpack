@@ -136,6 +136,7 @@ nav ul ul li:hover ul {
   width: 200px;
   left: 140px;
   top: 0px;
+  z-index: 999;
 }
 
 .course-name {
@@ -158,6 +159,23 @@ nav ul ul li:hover ul {
   width: 100px;
 }
 
+.div-display-bookname-bookimage{
+  position: relative;
+  margin-left: 20px;
+  width: 200px;
+  z-index: -1000;
+
+}
+.course-heading-buyingpage {
+  margin-top: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 30px;
+}
+.book-name-buyingpage{
+  margin-top: 10px;
+  text-transform: uppercase;
+}
       </style>
       <link
         href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
@@ -386,11 +404,23 @@ nav ul ul li:hover ul {
             </div>
           </div>
 
-        <ul>
-            <% rows.forEach(function(r) { %>
-            <li><%= r.cname %></li>
-            <% }); %>
-        </ul>
+
+          <% var i = 1; %>
+          <ul>
+              <% rows.forEach(function(r) { %>
+              <% if ( i == 1) {%>
+                <li class="course-heading-buyingpage"><%= r.course %> </li>
+                <% i = 0; %>
+              <%};%>
+                <hr>
+              <br>
+              <div class="div-display-bookname-bookimage">
+                 <img width="200px" src="<%= r.path %>" alt="image">
+                <ul class="book-name-buyingpage"><%= r.bookname %></ul>
+                <button>Select</button>
+                </div>
+              <% }); %>
+          </ul>
     <body>
   </html>
 </html>
