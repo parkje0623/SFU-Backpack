@@ -21,7 +21,7 @@ pool = new Pool({
 })
 
 var app = express();
-/*app.use(session({
+app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -33,7 +33,7 @@ var app = express();
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
-*/
+
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
@@ -42,6 +42,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => res.render('pages/index'));
+
+app.get('/mainpage', (req, res) => {
+    if(isLogedin(req,res)){
+        res.render('pages/mainpage', {uname:req.session.displayName});
+    }
+    else{
+        res.render('pages/mainpage', {uname:false});
+    }
+});
+
+app.get('/login', (req, res) => {
+    res.render('pages/login', {});
+});
 
 app.post('/auth/login', (req, res) =>{
     var uid = req.body.uid;
@@ -52,24 +65,28 @@ app.post('/auth/login', (req, res) =>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
-                res.send(`Who are  you?`);
+                res.redirect('/login');
             }
             else{
                 req.session.displayName = result.rows[0].uname;
-                req.session.is_logined=true;
+                req.session.is_logined =true;
                 req.session.ID=result.rows[0].uid;
                 req.session.save(function(){
-                res.send(`
-                    <h1>hello, ${req.session.displayName} </h1>
-                    <a href="/auth/logout">logout</a> `);
+                    res.redirect('/mainpage');
                 });
-            }
+             }
         });
     }
 });
 
+app.get('/auth/logout', (req, res)=>{
+    req.session.destroy(function(err){
+        res.redirect('/mainpage');
+    });
+});
+
 function isLogedin(req, res){
-    if(request.session.is_logined){
+    if(req.session.is_logined){
         return true;
     }
     else{
@@ -94,11 +111,7 @@ app.get('/dbtest.html', (req, res)=>{
 
 
 
-app.get('/auth/logout', (req, res)=>{
-    req.session.destroy(function(err){
-        res.redirect('/');
-    });
-});
+
 
 app.post('/adduser', (req, res) => {
     var uid = req.body.uid;
@@ -273,6 +286,7 @@ app.get('/upload',(req, res) =>{
   })
 });
 
+
 const image_upload = upload.single('myImage');
 app.post('/upload', function (req, res){
 	image_upload(req, res, function(err){
@@ -313,6 +327,35 @@ app.post('/upload', function (req, res){
 	});
 });
  
+
+
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
+app.get("/buy", (req, res) => {
+  var getUsersQuery = `SELECT * FROM img`
+  pool.query(getUsersQuery, (error, result) => {
+    if (error) res.end(error)
+    var results = { rows: result.rows }
+    res.render("pages/buyingpage", results)
+  })
+})
+// app.get("/post", (req, res) => {
+//   var getUsersQuery = `SELECT * FROM img`
+//   pool.query(getUsersQuery, (error, result) => {
+//     if (error) res.end(error)
+//     var results = { rows: result.rows }
+//     res.render("pages/buyingpage", results)
+//   })
+// })
+app.get("/post/:id", (req, res) => {
+  console.log(req.params.id)
+  var cname = req.params.id
+  pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
+    if (error) res.end(error)
+    var results = { rows: result.rows }
+    res.render("pages/buyingPageReload", results)
+  })
+})
+///////////////////////////////
 
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
