@@ -15,17 +15,17 @@ const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
 pool = new Pool({
-    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
+    connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
     //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
-    connectionString:process.env.DATABASE_URL
+    //connectionString:process.env.DATABASE_URL
 })
 
 var app = express();
 app.use(session({
     store: new Psession({
 
-        //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        conString: process.env.DATABASE_URL
+        conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+        //conString: process.env.DATABASE_URL
 
     }),
     secret: '!@SDF$@#SDF',
@@ -43,6 +43,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => res.render('pages/index'));
 
+app.get('/mainpage', (req, res) => {
+    if(isLogedin(req,res)){
+        res.render('pages/mainpage', {uname:req.session.displayName});
+    }
+    else{
+        res.render('pages/mainpage', {uname:false});
+    }
+});
+
+app.get('/login', (req, res) => {
+    res.render('pages/login', {});
+});
+
 app.post('/auth/login', (req, res) =>{
     var uid = req.body.uid;
     var upassword = req.body.upassword;
@@ -52,24 +65,28 @@ app.post('/auth/login', (req, res) =>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
-                res.send(`Who are  you?`);
+                res.redirect('/login');
             }
             else{
                 req.session.displayName = result.rows[0].uname;
-                req.session.is_logined=true;
+                req.session.is_logined =true;
                 req.session.ID=result.rows[0].uid;
                 req.session.save(function(){
-                res.send(`
-                    <h1>hello, ${req.session.displayName} </h1>
-                    <a href="/auth/logout">logout</a> `);
+                    res.redirect('/mainpage');
                 });
-            }
+             }
         });
     }
 });
 
+app.get('/auth/logout', (req, res)=>{
+    req.session.destroy(function(err){
+        res.redirect('/mainpage.html');
+    });
+});
+
 function isLogedin(req, res){
-    if(request.session.is_logined){
+    if(req.session.is_logined){
         return true;
     }
     else{
@@ -94,11 +111,7 @@ app.get('/dbtest.html', (req, res)=>{
 
 
 
-app.get('/auth/logout', (req, res)=>{
-    req.session.destroy(function(err){
-        res.redirect('/');
-    });
-});
+
 
 app.post('/adduser', (req, res) => {
     var uid = req.body.uid;
