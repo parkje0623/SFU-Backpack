@@ -164,29 +164,23 @@ nav ul ul li:hover ul {
         rel="stylesheet"
     </head>
     <body>
-      <div class="top-container">
-        <nav class="search-bar">
-          <form>
-            <input
-              class="search-input"
-              type="search"
-              placeholder="Search"
-              aria-label="Search.."
-            />
-            <button class="search-btn" type="submit">Search</button>
-          </form>
-        </nav>
-        <form>
-          <nav class="login-bar">
-            <%if( uname ===false){%>
-            <a href="/login">login</a>
-          <%}%>
-            <%if( uname !=false){%>
-              <a href="/auth/logout">logout</a>
-              <a href="/mypage"><%= uname %></a>
-          <%}%>
-          </nav>
-        </form>
+        <div class="top-container">
+            <nav class="search-bar">
+              <form>
+                <input
+                  class="search-input"
+                  type="search"
+                  placeholder="Search"
+                  aria-label="Search.."
+                />
+                <button class="search-btn" type="submit">Search</button>
+              </form>
+            </nav>
+            <nav class="login-bar">
+              <button class="login-btn" type="submit">Login</button>
+              <button class="login-btn" type="submit">Mypage</button>
+              <button class="login-btn circle" type="submit">Info</button>
+            </nav>
 
             <img id="logo" src="logo.png" alt="logo" />
             <p class="logo-font">sfu-backpack</p>
