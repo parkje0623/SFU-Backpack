@@ -276,14 +276,14 @@ const upload = multer({
 });
 
 app.get('/upload',(req, res) =>{
-     var getImgQuery = ' SELECT * FROM img'
+     /*var getImgQuery = ' SELECT * FROM img'
     pool.query(getImgQuery, (error, result) =>{
       //con.query(sql, function (err, result) {
       if(error)
         res.end(error)
-      var results = {'rows': result.rows}
+      var results = {'rows': result.rows}*/
       res.render('pages/imageUpload')
-  })
+  //})
 });
 
 
