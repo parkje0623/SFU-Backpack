@@ -7,8 +7,8 @@ const multer = require('multer');
 const multerS3 = require('multer-s3')
 const fs = require('fs');
 const AWS = require('aws-sdk');
-const AWS_ID = 'AKIAIP3KOLSW55YT432Q';
-const AWS_SECRET = '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';
+const AWS_ID = 'AKIAJW23KIMJQF66OE2Q';
+const AWS_SECRET = '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';
 const BUCKET_NAME = 'cmpt276-uploads';
 const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
@@ -19,60 +19,6 @@ pool = new Pool({
     connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
     //connectionString:process.env.DATABASE_URL
 })
-
-// Amazon web services (AWS) - Simple Storage Service
-const s3 = new AWS.S3({
-    accessKeyId: AWS_ID,
-    secretAccessKey: AWS_SECRET
-});
-
-
-// Set The Storage Engine
-const storage = multer.diskStorage({
-  destination: './public/uploads/',
-  filename: function(req, file, cb){
-    cb(null,  Date.now() + path.extname(file.originalname));
-  }
-});
-
-// Init Upload
-
-const upload = multer({
-  /*storage: storage,
-  limits:{fileSize: 9000000},
-  fileFilter: function(req, file, cb){
-    checkFileType(file, cb);
-  }*/
-  storage: multerS3({
-    s3: s3,
-    bucket: BUCKET_NAME,
-    acl: 'public-read',
-    metadata: function (req, file, cb) {
-      cb(null, {fieldName: file.fieldname});
-    },
-    key: function (req, file, cb) {
-      cb(null, Date.now().toString())
-    }
-  })
-})
-
-
-// Check File Type
-function checkFileType(file, cb){
-  // Allowed ext
-  const filetypes = /jpeg|jpg|png|gif/;
-  // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
-
-  if(mimetype && extname){
-    return cb(null,true);
-  } else {
-    cb('Error: Images Only please!');
-  }
-}
-
 
 var app = express();
 // app.use(session({
@@ -88,6 +34,7 @@ var app = express();
 //     saveUninitialized: true
 // }));
 
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
@@ -95,6 +42,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => res.render('pages/index'));
+
+app.get('/mainpage', (req, res) => {
+    if(isLogedin(req,res)){
+        res.render('pages/mainpage', {uname:req.session.displayName});
+    }
+    else{
+        res.render('pages/mainpage', {uname:false});
+    }
+});
+
+app.get('/login', (req, res) => {
+    res.render('pages/login', {});
+});
 
 app.post('/auth/login', (req, res) =>{
     var uid = req.body.uid;
@@ -105,23 +65,53 @@ app.post('/auth/login', (req, res) =>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
-                res.send(`Who are  you?`);
+                res.redirect('/login');
             }
             else{
                 req.session.displayName = result.rows[0].uname;
-                res.send(`
-                    <h1>hello, ${req.session.displayName} </h1>
-                    <a href="/auth/logout">logout</a>
-                    `);
-            }
+                req.session.is_logined =true;
+                req.session.ID=result.rows[0].uid;
+                req.session.save(function(){
+                    res.redirect('/mainpage');
+                });
+             }
         });
     }
 });
 
 app.get('/auth/logout', (req, res)=>{
-    delete req.session.displayName;
-    res.send(`log out`);
+    req.session.destroy(function(err){
+        res.redirect('/mainpage');
+    });
 });
+
+function isLogedin(req, res){
+    if(req.session.is_logined){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+function UIstatus(req,res){
+    var UI='<a href="/auth/login">login</a>'
+    if(isLogedin(req,res)){
+        UI='<a href="/auth/logout">logout</a>'
+    }
+    return UI
+
+}
+
+app.get('/dbtest.html', (req, res)=>{
+    var html =template.HTML(title, list, UIstatus(req,res));
+});
+
+
+
+
+
+
+
 
 app.post('/adduser', (req, res) => {
     var uid = req.body.uid;
@@ -143,7 +133,7 @@ app.post('/adduser', (req, res) => {
                     if(error)
                         res.end(error);
                     else{
-                        res.send(`USER ID: ${uid} HAS BEEN SUBMITTED!`);
+                        res.send(`USER ID: ${ID} HAS BEEN SUBMITTED!`);
                     }
                 })
             }
@@ -179,13 +169,16 @@ app.post('/deleteuser', (req, res) => {
 });
 
 app.post('/edituser', (req, res) => {
-    var uid = req.body.uid;
+    if(!isLogedin(req,res)){
+        res.redirect('/');
+        return false;
+    }
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
     var confirm_pwd = req.body.confirm;
     var values=[uid, uname, uemail, upassword];
-    if(uid && uname && uemail && upassword && confirm_pwd){ //edited Jieung
+    if(uname && uemail && upassword && confirm_pwd){ //edited Jieung
       //MUST CHECK IF password = confirm password -> NOT DONE YET
       if (confirm_pwd === upassword) {
         pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
@@ -234,8 +227,87 @@ app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
           }
       });
   } else {
-    res.send("Must log-in fisrt");
+
+    res.send("Must log-in first");
   }
 });
+
+// SETTING UP AMAZON STORAGE
+AWS.config.update({
+  accessKeyId:  AWS_ID,
+  secretAccessKey: AWS_SECRET,
+  region: 'us-west-2'
+})
+
+const S3 = new AWS.S3();
+
+var upload = multer({
+    // CREATE MULTER-S3 FUNCTION FOR STORAGE
+    storage: multerS3({
+        s3: S3,
+        acl: 'public-read',
+        bucket: BUCKET_NAME,
+
+        // SET / MODIFY ORIGINAL FILE NAME. ///// to be done shiva
+        key: function (req, file, cb) {
+            cb(null, file.originalname); //set unique file name if you wise using Date.toISOString()
+            // EXAMPLE 1
+            // cb(null, Date.now() + '-' + file.originalname);
+            // EXAMPLE 2
+            // cb(null, new Date().toISOString() + '-' + file.originalname);
+
+        }
+    }),
+    // SET DEFAULT FILE SIZE UPLOAD LIMIT
+    limits: { fileSize: 1024 * 1024 * 50 }, // 50MB
+    // FILTER OPTIONS LIKE VALIDATING FILE EXTENSION
+    fileFilter: function(req, file, cb) {
+        const filetypes = /jpeg|jpg|png/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb("Error: Allow images only of extensions jpeg|jpg|png !");
+        }
+    }
+});
+app.post('/upload', upload.single('myImage'), function (req, res, next) {
+    res.send(`Done`)
+});
+app.get('/upload',(req, res) =>{
+
+      res.render('pages/imageUpload')
+});
+
+
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
+app.get("/buy", (req, res) => {
+  var getUsersQuery = `SELECT * FROM img`
+  pool.query(getUsersQuery, (error, result) => {
+    if (error) res.end(error)
+    var results = { rows: result.rows }
+    res.render("pages/buyingpage", results)
+  })
+})
+// app.get("/post", (req, res) => {
+//   var getUsersQuery = `SELECT * FROM img`
+//   pool.query(getUsersQuery, (error, result) => {
+//     if (error) res.end(error)
+//     var results = { rows: result.rows }
+//     res.render("pages/buyingpage", results)
+//   })
+// })
+app.get("/post/:id", (req, res) => {
+  console.log(req.params.id)
+  var cname = req.params.id
+  pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
+    if (error) res.end(error)
+    var results = { rows: result.rows }
+    res.render("pages/buyingPageReload", results)
+  })
+})
+///////////////////////////////
+
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));

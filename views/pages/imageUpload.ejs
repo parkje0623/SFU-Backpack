@@ -33,7 +33,7 @@
   		<p>As New (AN): describes a book that is in the same perfect condition as when it was issued by the printer. There are no flaws. None at all. This book or dust jacket is in pristine condition, just as it came from the publisher. The book is tight. It has not been read or its pages turned. AN is the highest grade possible for a book or dust jacket.</p>
   		<input type="radio" id = "con2" name="condition">
   		<label for="con2">Used(new)</label><br>  
- 		<input type="radio" id = "con3" name="condition">
+ 		  <input type="radio" id = "con3" name="condition">
   		<label for="con3">Used(good)</label><br>  
   		<input type="radio" id = "con4" name="condition" value="100">
   		<label for="con4">Used(fair)</label><br>
@@ -43,17 +43,13 @@
 
       
         <span>File</span>
-        <input name="myImage" type="file">
+        <input name="myImage" id = "file-input" type="file"  >
+  
         
       	<button type="submit" class="btn">Submit</button>
-    </form>
-
-    <br>
+    </form><br>
 
     <img src="<%= typeof file != 'undefined' ? file : '' %>" class="responsive-img">
   </div>
-
-  
-   
 </body>
 </html>
