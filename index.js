@@ -297,14 +297,13 @@ const upload = multer({
 });
 
 app.get('/upload',(req, res) =>{
-     /*var getImgQuery = ' SELECT * FROM img'
-    pool.query(getImgQuery, (error, result) =>{
-      //con.query(sql, function (err, result) {
-      if(error)
-        res.end(error)
-      var results = {'rows': result.rows}*/
+    if(!isLogedin(req,res)){
+      res.redirect('/login');
+      return false;
+    }
+    else{
       res.render('pages/imageUpload')
-  //})
+    }
 });
 
 
@@ -326,9 +325,8 @@ app.post('/upload', function (req, res){
         		var path = req.file.location;
          		var course = req.body.course;
          		var bookName = req.body.title;
-         		var uid = req.body.uid;
-            console.log(req.session.ID)
-            //var uid =  req.session.ID;
+         		var uid = req.body.uid; ///////////// change before submit // shiva
+            //var uid =  req.session.ID;  
         		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
                 pool.query(getImageQuery, (error,result)=>{
           			if(error){
