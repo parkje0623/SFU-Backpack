@@ -302,18 +302,11 @@ app.post('/upload', function (req, res){
         		});
       		} 
      		else {
-        		//console.log(req.file)
         		var path = req.file.location;
          		var course = req.body.course;
          		var bookName = req.body.title;
          		var uid = req.body.uid;
-                //console.log(typeof path)
-                //console.log(typeof course)
-                //console.log(typeof bookName)
-                //console.log(typeof uid)
-        		//var values=[course, path, bookName, uid];
         		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
-        		//console.log(getImageQuery)
                 pool.query(getImageQuery, (error,result)=>{
           			if(error){
               			res.end(error);
