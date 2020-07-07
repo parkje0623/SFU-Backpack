@@ -45,11 +45,21 @@ app.get('/', (req, res) => res.render('pages/index'));
 
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
-        res.render('pages/mainpage', {uname:req.session.displayName});
+        res.render('pages/mainpage', {uname:req.session.displayName, uid:req.session.ID});
     }
     else{
         res.render('pages/mainpage', {uname:false});
     }
+});
+
+app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
+    var getUsersQuery='SELECT * FROM backpack';
+    pool.query(getUsersQuery, (error,result)=>{
+        if(error)
+            res.end(error);
+        var results = {'rows':result.rows}
+        res.render('pages/db', results);
+    })
 });
 
 app.get('/login', (req, res) => {
@@ -93,18 +103,6 @@ function isLogedin(req, res){
         return false;
     }
 }
-function UIstatus(req,res){
-    var UI='<a href="/auth/login">login</a>'
-    if(isLogedin(req,res)){
-        UI='<a href="/auth/logout">logout</a>'
-    }
-    return UI
-
-}
-
-app.get('/dbtest.html', (req, res)=>{
-    var html =template.HTML(title, list, UIstatus(req,res));
-});
 
 
 
@@ -209,6 +207,24 @@ app.post('/showpassword', (req, res) => {
             }
             else{
                 res.send(result.rows[0].upassword);
+            }
+        })
+    }
+});
+
+app.post('/showid', (req, res) => {
+    var uname = req.body.uname;
+    var uemail = req.body.uemail;
+    var values=[uname, uemail];
+    if(uname && uemail){
+        pool.query(`SELECT * from backpack where uemail=$1 AND uname=$2`, values, (error, result)=>{
+            if(error)
+                res.end(error);
+            else if(!result||!result.rows[0]){
+                res.send(`INFORMAION is not correct!`);
+            }
+            else{
+                res.send(result.rows[0].uid);
             }
         })
     }
