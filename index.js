@@ -281,7 +281,7 @@ app.get('/upload',(req, res) =>{
 });
 
 
-// KHOA BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
 app.get("/buy", (req, res) => {
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
@@ -290,14 +290,14 @@ app.get("/buy", (req, res) => {
     res.render("pages/buyingpage", results)
   })
 })
-app.get("/post", (req, res) => {
-  var getUsersQuery = `SELECT * FROM img`
-  pool.query(getUsersQuery, (error, result) => {
-    if (error) res.end(error)
-    var results = { rows: result.rows }
-    res.render("pages/buyingpage", results)
-  })
-})
+// app.get("/post", (req, res) => {
+//   var getUsersQuery = `SELECT * FROM img`
+//   pool.query(getUsersQuery, (error, result) => {
+//     if (error) res.end(error)
+//     var results = { rows: result.rows }
+//     res.render("pages/buyingpage", results)
+//   })
+// })
 app.get("/post/:id", (req, res) => {
   console.log(req.params.id)
   var cname = req.params.id
