@@ -16,7 +16,7 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+    //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
     connectionString:process.env.DATABASE_URL
 })
 
@@ -26,7 +26,6 @@ app.use(session({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
         conString: process.env.DATABASE_URL
-        //conString:'postgres://postgres:cmpt276@localhost/postgres'
 
     }),
     secret: '!@SDF$@#SDF',
@@ -58,7 +57,6 @@ app.get('/mainpage', (req, res) => {
     }
 });
 
-
 app.get('/sign_up', (req, res)=>{
      res.redirect('/sign_up.html');
  });
@@ -72,7 +70,6 @@ app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (re
         res.render('pages/db', results);
     })
 });
-
 
 app.get('/login', (req, res) => {
     res.render('pages/login', {});
@@ -115,16 +112,15 @@ function isLogedin(req, res){
         return false;
     }
 }
+
 function UIstatus(req,res){
-    var UI='<a href="/auth/login">login</a>'
-    if(isLogedin(req,res)){
-        UI='<a href="/auth/logout">logout</a>'
-    }
-    return UI
+     var UI='<a href="/auth/login">login</a>'
+     if(isLogedin(req,res)){
+         UI='<a href="/auth/logout">logout</a>'
+     }
+     return UI
 
-
-}
-
+ }
 
  app.get('/dbtest.html', (req, res)=>{
      var html =template.HTML(title, list, UIstatus(req,res));
@@ -312,25 +308,6 @@ app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
   }
 });
 
-app.post('/changeImage', (req, res) => {
-  var uimage = req.body.uimage;
-  var uid = req.body.uid;
-  var values = [uimage, uid];
-  var uidOnly = [uid];
-  if (uimage && uid) {
-    pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
-      if (error)
-        res.end(error);
-      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
-        if(error)
-          res.end(error);
-        var results = {'rows':result.rows};
-        res.render('pages/profile', results);
-      });
-    });
-  }
-});
-
 // SETTING UP AMAZON STORAGE
 AWS.config.update({
   accessKeyId:  AWS_ID,
@@ -340,7 +317,7 @@ AWS.config.update({
 
 const S3 = new AWS.S3();
 
-var upload = multer({
+const upload = multer({
     // CREATE MULTER-S3 FUNCTION FOR STORAGE
     storage: multerS3({
         s3: S3,
@@ -349,7 +326,7 @@ var upload = multer({
 
         // SET / MODIFY ORIGINAL FILE NAME. ///// to be done shiva
         key: function (req, file, cb) {
-            cb(null, file.originalname); //set unique file name if you wise using Date.toISOString()
+            cb(null, new Date().toISOString() + path.extname(file.originalname)); //set unique file name if you wise using Date.toISOString()
             // EXAMPLE 1
             // cb(null, Date.now() + '-' + file.originalname);
             // EXAMPLE 2
@@ -359,21 +336,29 @@ var upload = multer({
     }),
     // SET DEFAULT FILE SIZE UPLOAD LIMIT
     limits: { fileSize: 1024 * 1024 * 50 }, // 50MB
+
     // FILTER OPTIONS LIKE VALIDATING FILE EXTENSION
     fileFilter: function(req, file, cb) {
-        const filetypes = /jpeg|jpg|png/;
+        const filetypes = /jpeg|jpg|gif|png/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = filetypes.test(file.mimetype);
         if (mimetype && extname) {
             return cb(null, true);
         } else {
-            cb("Error: Allow images only of extensions jpeg|jpg|png !");
+            cb('Only jpeg/jpg/png images allowed')
+            //return cb(('Only jpeg/jpg/png images allowed'))
         }
     }
 });
 
 app.get('/upload',(req, res) =>{
-  res.render('pages/imageUpload')
+    if(!isLogedin(req,res)){
+      res.redirect('/login');
+      return false;
+    }
+    else{
+      res.render('pages/imageUpload')
+    }
 });
 
 
@@ -385,7 +370,7 @@ app.post('/upload', function (req, res){
           msg: err
           });
       } 
-    else {
+      else {
           if(req.file == undefined){
             res.render('pages/imageUpload', {
               msg: 'Error: No File Selected!'
@@ -411,13 +396,13 @@ app.post('/upload', function (req, res){
          
         }
 
-
-    }
+        }
   });
 });
+ 
 
 
-//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS who are you?????
 app.get("/buy", (req, res) => {
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
@@ -443,19 +428,6 @@ app.get("/post/:id", (req, res) => {
     res.render("pages/buyingPageReload", results)
   })
 })
-app.get('/header', (req, res) => {
-    if(isLogedin(req,res)){
-        if(req.session.ID.trim()=='admin'){
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
-        }
-        else{
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
-        }
-    }
-    else{
-        res.render('pages/mainpage', {uname: false, uid: false});
-    }
-});
 ///////////////////////////////
 
 app.get('/header', (req, res) => {
