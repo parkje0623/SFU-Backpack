@@ -55,7 +55,7 @@ app.get('/mainpage', (req, res) => {
         res.render('pages/mainpage', {uname:req.session.displayName});
     }
     else{
-        res.render('pages/mainpage', {uname:false});
+        res.render('pages/mainpage', {uname:false, admin:false});
     }
 });
 
