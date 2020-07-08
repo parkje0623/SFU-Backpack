@@ -235,8 +235,12 @@ app.post('/showid', (req, res) => {
     }
 });
 
-app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
-  var uid = req.body.uid;
+app.get('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
+  if(!isLogedin(req,res)){
+      res.redirect('/login');
+      return false;
+  }
+  var uid = req.session.ID;
   var values=[uid];
   if(uid){
       pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
@@ -250,6 +254,25 @@ app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
   } else {
 
     res.send("Must log-in first");
+  }
+});
+
+app.post('/changeImage', (req, res) => {
+  var uimage = req.body.uimage;
+  var uid = req.body.uid;
+  var values = [uimage, uid];
+  var uidOnly = [uid];
+  if (uimage && uid) {
+    pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
+      if (error)
+        res.end(error);
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
+        if(error)
+          res.end(error);
+        var results = {'rows':result.rows};
+        res.render('pages/profile', results);
+      });
+    });
   }
 });
 
