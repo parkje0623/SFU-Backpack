@@ -59,7 +59,7 @@ app.get('/mainpage', (req, res) => {
 });
 
 app.get('/sign_up', (req, res)=>{
-     res.redirect('/signUp');
+     res.render('pages/signUp');
  });
 
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
