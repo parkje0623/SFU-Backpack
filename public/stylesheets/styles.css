@@ -175,11 +175,8 @@ body {
   margin-top: 10px;
   text-transform: uppercase;
 }
-<<<<<<< HEAD
-/* ////////////////////////// */
-=======
 
-/* Style for mypage (profile) */
+/* Style for profile.ejs (profile) START */
 .username {
   position: absolute;
   right: 100px;
@@ -220,6 +217,12 @@ body {
   width: 300px;
   height: 50px;
 }
+.delete_info{
+  color: red;
+  position: absolute;
+  top: 320px;
+  left: 900px;
+}
 #file {
   position: absolute;
   top: 400px;
@@ -253,4 +256,5 @@ input[id=profid], [id=profname], [id=profpwd], [id=profconfirm], [id=profemail] 
   left: 500px;
   top: 400px;
 }
->>>>>>> 459cdada1c9f0e76eb756a669dcffa882b6348a3
+
+/* Style for profile.ejs (profile) FINISIHED */
