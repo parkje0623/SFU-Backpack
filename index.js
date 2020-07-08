@@ -114,13 +114,13 @@ function isLogedin(req, res){
 }
 
 function UIstatus(req,res){
-    var UI='<a href="/auth/login">login</a>'
-    if(isLogedin(req,res)){
-        UI='<a href="/auth/logout">logout</a>'
-    }
-    return UI
+     var UI='<a href="/auth/login">login</a>'
+     if(isLogedin(req,res)){
+         UI='<a href="/auth/logout">logout</a>'
+     }
+     return UI
 
-}
+ }
 
  app.get('/dbtest.html', (req, res)=>{
      var html =template.HTML(title, list, UIstatus(req,res));
@@ -144,13 +144,13 @@ app.post('/adduser', (req, res) => {
                 res.send(`USER ID or EMAIL is already taken!`);
             }
             else{
-              pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
-                  if(error)
-                      res.end(error);
-                  else{
-                      res.redirect('/login');
-                  }
-              })
+                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
+                    if(error)
+                        res.end(error);
+                    else{
+                        res.redirect('/login');
+                    }
+                })
             }
         })
     }
@@ -185,15 +185,17 @@ app.post('/deleteuser', (req, res) => {
 
 app.post('/edituser', (req, res) => {
     if(!isLogedin(req,res)){
-        res.redirect('/');
+        res.redirect('/login');
         return false;
     }
+    var uid = req.body.uid;
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
     var confirm_pwd = req.body.confirm;
     var values=[uid, uname, uemail, upassword];
-    if(uname && uemail && upassword && confirm_pwd){
+    if(uname && uemail && upassword && confirm_pwd){ //edited Jieung
+      //MUST CHECK IF password = confirm password -> NOT DONE YET
       if (confirm_pwd === upassword) {
         pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
             if(error)
@@ -228,47 +230,26 @@ app.post('/showpassword', (req, res) => {
     }
 });
 
-app.post('/showid', (req, res) => {
-    var uname = req.body.uname;
-    var uemail = req.body.uemail;
-    var values=[uname, uemail];
-    if(uname && uemail){
-        pool.query(`SELECT * from backpack where uemail=$1 AND uname=$2`, values, (error, result)=>{
-            if(error)
-                res.end(error);
-            else if(!result||!result.rows[0]){
-                res.send(`INFORMAION is not correct!`);
-            }
-            else{
-                res.send(result.rows[0].uid);
-            }
-        })
-    }
-});
-
-//Profile page that shows information of logged-in user
-app.get('/mypage', (req, res) => {
-  if(!isLogedin(req,res)){ //If no user is logged-in, direct user to login page
+app.get('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
+  if(!isLogedin(req,res)){
       res.redirect('/login');
        return false;
    }
-
    var uid = req.session.ID;
    var values=[uid];
-   if(uid){ //If the user id is given, take all data of user with given ID in the backpack table in the database
+   if(uid){
        pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
           if(error)
               res.end(error);
-          else{ //Sends all the user data towards profile.ejs file where profile page design is made
+          else{
               var results = {'rows':result.rows};
               res.render('pages/profile', results);
           }
       });
-  } else { //If user id is not given, direct user to the login page
-    res.redirect('/login');
+  } else {
+    res.send("Must log-in first");
   }
 });
-
 app.post('/changeImage', (req, res) => {
   var uimage = req.body.uimage;
   var uid = req.body.uid;
@@ -309,40 +290,21 @@ app.post('/showid', (req, res) => {
     }
 });
 
-//Profile page that shows information of logged-in user
-app.post('/mypage', (req, res) => {
+app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
   var uid = req.body.uid;
   var values=[uid];
-  if(uid){ //If the user id is given, take all data of user with given ID in the backpack table in the database
+  if(uid){
       pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
           if(error)
               res.end(error);
-          else{ //Sends all the user data towards profile.ejs file where profile page design is made
+          else{
               var results = {'rows':result.rows};
               res.render('pages/profile', results);
           }
       });
-  } else { //If user id is not given, direct user to the login page
-    res.redirect('/login');
-  }
-});
+  } else {
 
-app.post('/changeImage', (req, res) => {
-  var uimage = req.body.uimage;
-  var uid = req.body.uid;
-  var values = [uimage, uid];
-  var uidOnly = [uid];
-  if (uimage && uid) {
-    pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
-      if (error)
-        res.end(error);
-      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
-        if(error)
-          res.end(error);
-        var results = {'rows':result.rows};
-        res.render('pages/profile', results);
-      });
-    });
+    res.send("Must log-in first");
   }
 });
 
@@ -388,7 +350,6 @@ const upload = multer({
         }
     }
 });
-<<<<<<< HEAD
 
 app.get('/upload',(req, res) =>{
     if(!isLogedin(req,res)){
@@ -398,10 +359,6 @@ app.get('/upload',(req, res) =>{
     else{
       res.render('pages/imageUpload')
     }
-=======
-
-app.get('/upload',(req, res) =>{
-  res.render('pages/imageUpload')
 });
 
 
@@ -413,7 +370,7 @@ app.post('/upload', function (req, res){
           msg: err
           });
       }
-    else {
+      else {
           if(req.file == undefined){
             res.render('pages/imageUpload', {
               msg: 'Error: No File Selected!'
@@ -439,50 +396,8 @@ app.post('/upload', function (req, res){
 
         }
 
-
-    }
+        }
   });
->>>>>>> 886605e2e05b553c21aa56ef4d5cb388eeff5471
-});
-
-
-const image_upload = upload.single('myImage');
-app.post('/upload', function (req, res){
-	image_upload(req, res, function(err){
-		if(err){
-      		res.render('pages/imageUpload', {
-        	msg: err
-      		});
-    	}
-    	else {
-      		if(req.file == undefined){
-        		res.render('pages/imageUpload', {
-          		msg: 'Error: No File Selected!'
-        		});
-      		}
-     		else {
-        		var path = req.file.location;
-         		var course = req.body.course;
-         		var bookName = req.body.title;
-         		var uid = req.body.uid; ///////////// change before submit // shiva
-            //var uid =  req.session.ID;
-        		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
-                pool.query(getImageQuery, (error,result)=>{
-          			if(error){
-              			res.end(error);
-          			}
-              		else {
-           				res.render('pages/imageUpload', {
-          				msg: 'File Uploaded!',
-
-        				});
-           			}
-         		});
-
-     		}
-
-      	}
-	});
 });
 
 
@@ -513,23 +428,8 @@ app.get("/post/:id", (req, res) => {
     res.render("pages/buyingPageReload", results)
   })
 })
-app.get('/header', (req, res) => {
-    if(isLogedin(req,res)){
-        if(req.session.ID.trim()=='admin'){
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
-        }
-        else{
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
-        }
-    }
-    else{
-        res.render('pages/mainpage', {uname: false, uid: false});
-    }
-});
 ///////////////////////////////
 
-<<<<<<< HEAD
-=======
 app.get('/header', (req, res) => {
      if(isLogedin(req,res)){
          if(req.session.ID.trim()=='admin'){
@@ -544,6 +444,5 @@ app.get('/header', (req, res) => {
      }
  });
 
->>>>>>> 886605e2e05b553c21aa56ef4d5cb388eeff5471
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
