@@ -59,7 +59,7 @@ app.get('/mainpage', (req, res) => {
 });
 
 app.get('/sign_up', (req, res)=>{
-     res.redirect('/sign_up.html');
+     res.redirect('/signUp');
  });
 
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
@@ -146,7 +146,7 @@ app.post('/adduser', (req, res) => {
                     res.end(error);
                 }
                 else if(result&&result.rows[0]){
-                    res.render('/sign_up.html', { // if the ID and the email already in database
+                    res.render('pages/signUp', { // if the ID and the email already in database
                       msg: 'Error: USER ID or EMAIL is already taken!'
                    });
                 }
@@ -163,7 +163,7 @@ app.post('/adduser', (req, res) => {
         }
     }
     else{
-        res.render('/sign_up.html', { // if the two password don't match
+        res.render('pages/signUp', { // if the two password don't match
           msg: 'Error: PASSWORD and CONFIRM PASSWORD have to match!'
         });
 
