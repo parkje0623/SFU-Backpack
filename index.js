@@ -52,7 +52,6 @@ app.get('/mainpage', (req, res) => {
         else{
             res.render('pages/mainpage', {uname:req.session.displayName, admin:false});
         }
-        res.render('pages/mainpage', {uname:req.session.displayName});
     }
     else{
         res.render('pages/mainpage', {uname:false, admin:false});
@@ -256,7 +255,7 @@ app.post('/changeImage', (req, res) => {
     pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
       if (error)
         res.end(error);
-      pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
         if(error)
           res.end(error);
         var results = {'rows':result.rows};
