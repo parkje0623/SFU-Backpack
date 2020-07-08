@@ -47,10 +47,10 @@ app.get('/', (req, res) => res.render('pages/index'));
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
         if(req.session.ID.trim()=='admin'){
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
+            res.render('pages/mainpage', {uname:req.session.displayName, admin:true});
         }
         else{
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:req.session.ID});
+            res.render('pages/mainpage', {uname:req.session.displayName, admin:false});
         }
         res.render('pages/mainpage', {uname:req.session.displayName});
     }
