@@ -314,19 +314,19 @@ app.post('/upload', function (req, res){
       		res.render('pages/imageUpload', {
         	msg: err
       		});
-    	} 
+    	}
     	else {
       		if(req.file == undefined){
         		res.render('pages/imageUpload', {
           		msg: 'Error: No File Selected!'
         		});
-      		} 
+      		}
      		else {
         		var path = req.file.location;
          		var course = req.body.course;
          		var bookName = req.body.title;
          		var uid = req.body.uid; ///////////// change before submit // shiva
-            //var uid =  req.session.ID;  
+            //var uid =  req.session.ID;
         		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
                 pool.query(getImageQuery, (error,result)=>{
           			if(error){
@@ -335,17 +335,17 @@ app.post('/upload', function (req, res){
               		else {
            				res.render('pages/imageUpload', {
           				msg: 'File Uploaded!',
-          		
+
         				});
            			}
          		});
-         
+
      		}
 
       	}
 	});
 });
- 
+
 
 
 //  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS who are you?????
@@ -374,6 +374,19 @@ app.get("/post/:id", (req, res) => {
     res.render("pages/buyingPageReload", results)
   })
 })
+app.get('/header', (req, res) => {
+    if(isLogedin(req,res)){
+        if(req.session.ID.trim()=='admin'){
+            res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
+        }
+        else{
+            res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
+        }
+    }
+    else{
+        res.render('pages/mainpage', {uname: false, uid: false});
+    }
+});
 ///////////////////////////////
 
 
