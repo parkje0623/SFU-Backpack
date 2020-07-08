@@ -46,14 +46,14 @@ app.get('/', (req, res) => res.render('pages/index'));
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
         if(req.session.ID.trim()=='admin'){
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
+            res.render('pages/mainpage', {uname:req.session.displayName, admin:true});
         }
         else{
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
+            res.render('pages/mainpage', {uname:req.session.displayName, admin:false});
         }
     }
     else{
-        res.render('pages/mainpage', {uname: false, uid: false});
+        res.render('pages/mainpage', {uname:false, admin:false});
     }
 });
 
@@ -109,7 +109,9 @@ function isLogedin(req, res){
     }
 }
 
-
+app.get('/sign_up', (req, res)=>{
+    res.redirect('/sign_up.html');
+});
 
 
 
@@ -121,6 +123,7 @@ app.post('/adduser', (req, res) => {
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
+    var upasswordcon=req.body.upasswordcon;
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
     if(uid && uname && uemail && upassword){
@@ -132,13 +135,13 @@ app.post('/adduser', (req, res) => {
                 res.send(`USER ID or EMAIL is already taken!`);
             }
             else{
-                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
-                    if(error)
-                        res.end(error);
-                    else{
-                        res.send(`USER ID: ${uid} HAS BEEN SUBMITTED!`);
-                    }
-                })
+              pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
+                  if(error)
+                      res.end(error);
+                  else{
+                      res.redirect('/login');
+                  }
+              })
             }
         })
     }
@@ -181,8 +184,7 @@ app.post('/edituser', (req, res) => {
     var upassword = req.body.upassword;
     var confirm_pwd = req.body.confirm;
     var values=[uid, uname, uemail, upassword];
-    if(uname && uemail && upassword && confirm_pwd){ //edited Jieung
-      //MUST CHECK IF password = confirm password -> NOT DONE YET
+    if(uname && uemail && upassword && confirm_pwd){
       if (confirm_pwd === upassword) {
         pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
             if(error)
@@ -235,25 +237,26 @@ app.post('/showid', (req, res) => {
     }
 });
 
-app.get('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
-  if(!isLogedin(req,res)){
+//Profile page that shows information of logged-in user
+app.get('/mypage', (req, res) => {
+  if(!isLogedin(req,res)){ //If no user is logged-in, direct user to login page
       res.redirect('/login');
       return false;
   }
-  var uid = req.session.ID;
+
+  var uid = req.session.ID; //Grabs an ID of the user signed-in
   var values=[uid];
-  if(uid){
+  if(uid){ //If the user id is given, take all data of user with given ID in the backpack table in the database
       pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
           if(error)
               res.end(error);
-          else{
+          else{ //Sends all the user data towards profile.ejs file where profile page design is made
               var results = {'rows':result.rows};
               res.render('pages/profile', results);
           }
       });
-  } else {
-
-    res.send("Must log-in first");
+  } else { //If user id is not given, direct user to the login page
+    res.redirect('/login');
   }
 });
 
