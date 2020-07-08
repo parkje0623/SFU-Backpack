@@ -43,12 +43,11 @@
 
       <div class="account">
         <h1> Account <br></h1>
-        <p> ID:       <input id="profid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" size="40"></input><br></p> <!--makes sure its read-only later !-->
-        <p> Username: <input id="profname" type="text" name="uname" placeholder="<%= attr.uname %>" size="40"</input><br></p>
-        <p> Password: <input id="profpwd" type="password" name="upassword" placeholder="<%= attr.upassword %>" size="40"</input><br></p>
-        <p> Confirm Password: <input id="profconfirm" type="password" name="confirm" placeholder="<%= attr.upassword %>" size="40"</input><br></p>
-        <p> Email:    <input id="profemail" type="text" name="uemail" placeholder="<%= attr.uemail %>" size="40"</input><br></p>
-        <!-- For input can use maxlength="5" to maximize the input value along with the size as well -->
+        <p> ID:       <input id="profid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" maxLength="10" size="40"></input><br></p> <!--makes sure its read-only later !-->
+        <p> Username: <input id="profname" type="text" name="uname" placeholder="<%= attr.uname %>" maxLength="10" size="40"</input><br></p>
+        <p> Password: <input id="profpwd" type="password" name="upassword" placeholder="<%= attr.upassword %>" maxLength="30" size="40"</input><br></p>
+        <p> Confirm Password: <input id="profconfirm" type="password" name="confirm" placeholder="<%= attr.upassword %>" maxLength="30" size="40"</input><br></p>
+        <p> Email:    <input id="profemail" type="text" name="uemail" placeholder="<%= attr.uemail %>" maxLength="20" size="40"</input><br></p>
         <button formaction="/edituser" type="submit" formmethod="post" class="edit">Edit</button>
       </div>
       <% }); %>

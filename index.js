@@ -16,8 +16,8 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
-    connectionString:process.env.DATABASE_URL
+    connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+    //connectionString:process.env.DATABASE_URL
 })
 
 var app = express();
@@ -25,7 +25,8 @@ app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        conString: process.env.DATABASE_URL
+        //conString: process.env.DATABASE_URL
+        conString:'postgres://postgres:cmpt276@localhost/postgres'
 
     }),
     secret: '!@SDF$@#SDF',
@@ -183,26 +184,34 @@ app.post('/deleteuser', (req, res) => {
     }
 });
 
+//Edit user's profile to requested values from the user.
 app.post('/edituser', (req, res) => {
-    if(!isLogedin(req,res)){
+    if(!isLogedin(req,res)){ //If user is not logged-in, user is directed to login page
         res.redirect('/login');
         return false;
     }
-    var uid = req.body.uid;
+    var uid = req.body.uid; //Requests values that are being modified from profile.ejs
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
     var confirm_pwd = req.body.confirm;
     var values=[uid, uname, uemail, upassword];
-    if(uname && uemail && upassword && confirm_pwd){ //edited Jieung
-      //MUST CHECK IF password = confirm password -> NOT DONE YET
-      if (confirm_pwd === upassword) {
+    var uidOnly = [uid];
+
+    if(uname && uemail && upassword && confirm_pwd){
+      if (confirm_pwd === upassword) { //Checks if user provided password matches the confirm password section
+        //If do match, modifies the requested fields of the table with given values
         pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
             if(error)
                 res.end(error);
-            else{
-                res.send(`USER ID: ${uid} HAS BEEN EDITED!`);
-            }
+            pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
+               if(error)
+                   res.end(error);
+               else{ //Sends all the user data towards profile.ejs file where profile page design is made
+                   var results = {'rows':result.rows};
+                   res.render('pages/profile', results);
+               }
+            });
         });
       } else {
         res.send("Password do not match");
@@ -230,12 +239,14 @@ app.post('/showpassword', (req, res) => {
     }
 });
 
-app.get('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
-  if(!isLogedin(req,res)){
+//Profile page that shows information of logged-in user
+app.get('/mypage', (req, res) => {
+  if(!isLogedin(req,res)){ //If no user is logged-in, direct user to log-in page
       res.redirect('/login');
        return false;
    }
-   var uid = req.session.ID;
+
+   var uid = req.session.ID; //Grabs an ID of the user signed-in
    var values=[uid];
    if(uid){
        pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
@@ -250,19 +261,24 @@ app.get('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
     res.send("Must log-in first");
   }
 });
+
+//Allows for image change in profile page
 app.post('/changeImage', (req, res) => {
-  var uimage = req.body.uimage;
+  var uimage = req.body.uimage; //Requests values that are being modified from profile.ejs
   var uid = req.body.uid;
   var values = [uimage, uid];
   var uidOnly = [uid];
   if (uimage && uid) {
+    //Modifies database: uimage field is replaced with new image's filename and its type.
      pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
        if (error)
-         res.end(error);
-        pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
-         if(error)
-           res.end(error);
-         var results = {'rows':result.rows};
+        res.end(error);
+      //Grab all the data (even modified image field) of uid equal to the user.
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
+        if(error)
+          res.end(error);
+        //Directs user back to the profile page with the changed image.
+        var results = {'rows':result.rows};
         res.render('pages/profile', results);
       });
     });
