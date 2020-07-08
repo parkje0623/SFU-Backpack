@@ -305,12 +305,11 @@ var upload = multer({
         }
     }
 });
-app.post('/upload', upload.single('myImage'), function (req, res, next) {
-    res.send(`Done`)
-});
-app.get('/upload',(req, res) =>{
 
-<<<<<<< HEAD
+app.get('/upload',(req, res) =>{
+  res.render('pages/imageUpload')
+});
+
 
 const image_upload = upload.single('myImage');
 app.post('/upload', function (req, res){
@@ -350,11 +349,6 @@ app.post('/upload', function (req, res){
       	}
 	});
 });
-
-=======
-      res.render('pages/imageUpload')
-});
->>>>>>> 459cdada1c9f0e76eb756a669dcffa882b6348a3
 
 
 //  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
