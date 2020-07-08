@@ -441,18 +441,19 @@ app.get("/buy", (req, res) => {
   pool.query(getUsersQuery, (error, result) => {
     if (error) { res.end(error) }
     var results = { rows: result.rows }
+    if(isLogedin(req,res)){
+        if(req.session.ID.trim()=='admin'){
+            res.render('pages/buyingpage', {results, uname:req.session.displayName, admin:true});
+        }
+        else{
+            res.render('pages/buyingpage', {results,uname:req.session.displayName, admin:false});
+        }
+    }
+    else{
+          res.render('pages/buyingpage', {results, uname:false, admin:false});
+    }
   })
-  if(isLogedin(req,res)){
-      if(req.session.ID.trim()=='admin'){
-          res.render('pages/buyingpage', {results, uname:req.session.displayName, admin:true});
-      }
-      else{
-          res.render('pages/buyingpage', {results,uname:req.session.displayName, admin:false});
-      }
-  }
-  else{
-        res.render('pages/buyingpage', {results, uname:false, admin:false});
-  }
+
 })
 // app.get("/post", (req, res) => {
 //   var getUsersQuery = `SELECT * FROM img`
