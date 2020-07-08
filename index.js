@@ -399,7 +399,7 @@ app.post('/upload', function (req, res){
             var uid =  req.session.ID;
             var cost = req.body.cost
             var condition = req.body.condition
-            var description.req.body.description
+            var description = req.body.description
             var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
                 pool.query(getImageQuery, (error,result)=>{
                 if(error){
