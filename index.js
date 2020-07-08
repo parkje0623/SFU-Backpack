@@ -58,7 +58,7 @@ app.get('/mainpage', (req, res) => {
     }
 });
 
-app.get('/sign_up', (req, res)=>{
+app.get('/signUp', (req, res)=>{
      res.render('pages/signUp');
  });
 
