@@ -107,13 +107,6 @@ app.get('/dbtest.html', (req, res)=>{
     var html =template.HTML(title, list, UIstatus(req,res));
 });
 
-
-
-
-
-
-
-
 app.post('/adduser', (req, res) => {
     var uid = req.body.uid;
     var uname = req.body.uname;
@@ -247,7 +240,7 @@ app.post('/changeImage', (req, res) => {
     pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
       if (error)
         res.end(error);
-      pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
         if(error)
           res.end(error);
         var results = {'rows':result.rows};
