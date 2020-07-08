@@ -428,13 +428,31 @@ app.post('/upload', function (req, res){
 
 
 //  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
+// app.get("/buy", (req, res) => {
+//   var getUsersQuery = `SELECT * FROM img`
+//   pool.query(getUsersQuery, (error, result) => {
+//     if (error) res.end(error)
+//     var results = { rows: result.rows }
+//     res.render("pages/buyingpage", results)
+//   })
+// })
 app.get("/buy", (req, res) => {
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
-    if (error) res.end(error)
+    if (error) { res.end(error) }
     var results = { rows: result.rows }
-    res.render("pages/buyingpage", results)
   })
+  if(isLogedin(req,res)){
+      if(req.session.ID.trim()=='admin'){
+          res.render('pages/buyingpage', {results, uname:req.session.displayName, admin:true});
+      }
+      else{
+          res.render('pages/buyingpage', {results,uname:req.session.displayName, admin:false});
+      }
+  }
+  else{
+        res.render('pages/buyingpage', {results, uname:false, admin:false});
+  }
 })
 // app.get("/post", (req, res) => {
 //   var getUsersQuery = `SELECT * FROM img`
@@ -455,19 +473,6 @@ app.get("/post/:id", (req, res) => {
 })
 ///////////////////////////////
 
-app.get('/headerbuying', (req, res) => {
-     if(isLogedin(req,res)){
-         if(req.session.ID.trim()=='admin'){
-             res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
-         }
-         else{
-             res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
-         }
-     }
-     else{
-         res.render('partials/headerbuying', {uname: false, uid: false});
-     }
- });
 
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
