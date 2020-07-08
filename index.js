@@ -16,7 +16,7 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    //connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
+    //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
     connectionString:process.env.DATABASE_URL
 })
 
@@ -26,6 +26,7 @@ app.use(session({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
         conString: process.env.DATABASE_URL
+        //conString:'postgres://postgres:cmpt276@localhost/postgres'
 
     }),
     secret: '!@SDF$@#SDF',
@@ -136,83 +137,92 @@ app.post('/adduser', (req, res) => {
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
     if(upassword===upasswordcon){
-         if(uid && uname && uemail && upassword){
-             pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
-                 if(error){
-                     res.end(error);
-                 }
-                 else if(result&&result.rows[0]){
-                     res.send(`USER ID or EMAIL is already taken!`);
-                 }
-                 else{
-                     pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
-                         if(error)
-                             res.end(error);
-                         else{
-                             res.redirect('/login');
-                         }
-                     })
-                 }
-             })
-         }
-     }
-     else{
-         res.redirect('/sign_up.html');
+
+        if(uid && uname && uemail && upassword){
+            pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
+                if(error){
+                    res.end(error);
+                }
+                else if(result&&result.rows[0]){
+                    res.send(`USER ID or EMAIL is already taken!`);
+                }
+                else{
+                    pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
+                        if(error)
+                            res.end(error);
+                        else{
+                            res.redirect('/login');
+                        }
+                    })
+                }
+            })
+        }
+    }
+    else{
+        res.redirect('/sign_up.html');
     }
 
 });
 
+//Allows user to delete their account permanently
 app.post('/deleteuser', (req, res) => {
-    var uid = req.body.uid;
-    var upassword = req.body.upassword;
-    var checking =[uid, upassword]
-    if(uid && upassword){
-        pool.query('SELECT * FROM backpack WHERE uid=$1 AND password=$2', checking, (error,result)=>{
+    var uid = req.body.uid; //Requests values that are being modified from profile.ejs
+    //var upassword = req.body.upassword;
+    var checking = [uid];
+    if(uid) {
+        //If user id and password are given, find the user in the database table backpack
+        pool.query(`SELECT * FROM backpack WHERE uid=$1`, checking, (error,result)=>{
             if(error)
                 res.end(error);
-            else if(!result||!result.rows[0]){
-                res.send(`USER ID or PASSWORD is not correct!`);
-            }
             else{
-
-                var insertUsersQuery=`DELETE FROM backpack WHERE uid=$1`;
-                pool.query(insertUsersQuery, [uid], (error,result)=>{
-                    if(error)
-                        res.end(error);
-                    else{
-                        res.send(`USER ID: ${uid} HAS BEEN DELETED!`);
-                    }
-                })
+              //Once the data is gathered, delete the user from the database table backpack
+              var insertUsersQuery=`DELETE FROM backpack WHERE uid=$1`;
+              pool.query(insertUsersQuery, checking, (error,result)=>{
+                if(error)
+                  res.end(error);
+                else{ //If succesfully deleted, the user is logged-out, deleted account then taken back to the mainpage
+                  req.session.destroy(function(err){
+                      res.redirect('/mainpage');
+                  });
+                }
+              })
             }
         })
     }
 });
 
+//Edit user's profile to requested values from the user.
 app.post('/edituser', (req, res) => {
-    if(!isLogedin(req,res)){
+    if(!isLogedin(req,res)){ //If user is not logged-in, user is directed to login page
         res.redirect('/login');
         return false;
     }
-    var uid = req.body.uid;
+    var uid = req.body.uid; //Requests values that are being modified from profile.ejs
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
     var confirm_pwd = req.body.confirm;
     var values=[uid, uname, uemail, upassword];
-    if(uname && uemail && upassword && confirm_pwd){ //edited Jieung
-      //MUST CHECK IF password = confirm password -> NOT DONE YET
-      if (confirm_pwd === upassword) {
+    var uidOnly = [uid];
+
+    if(uname && uemail && upassword && confirm_pwd){
+      if (confirm_pwd === upassword) { //Checks if user provided password matches the confirm password section
+        //If do match, modifies the requested fields of the table with given values
         pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
             if(error)
                 res.end(error);
-            else{
-                res.send(`USER ID: ${uid} HAS BEEN EDITED!`);
-            }
+            pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
+               if(error)
+                   res.end(error);
+               else{ //Sends all the user data towards profile.ejs file where profile page design is made
+                   var results = {'rows':result.rows};
+                   res.render('pages/profile', results);
+               }
+            });
         });
-      } else {
-        res.send("Password do not match");
       }
     }
+    //Error handling such as mismatch password or blank input given is handled in Javascript from profile.ejs
 });
 
 
@@ -235,39 +245,45 @@ app.post('/showpassword', (req, res) => {
     }
 });
 
-app.get('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
-  if(!isLogedin(req,res)){
+//Profile page that shows information of logged-in user
+app.get('/mypage', (req, res) => {
+  if(!isLogedin(req,res)){ //If no user is logged-in, direct user to log-in page
       res.redirect('/login');
        return false;
    }
-   var uid = req.session.ID;
+
+   var uid = req.session.ID; //Grabs an ID of the user signed-in
    var values=[uid];
-   if(uid){
+   if(uid){ //If user id is given, take all data of user that matches the given ID
        pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
           if(error)
               res.end(error);
-          else{
+          else{ //Sends the data to profile.ejs
               var results = {'rows':result.rows};
               res.render('pages/profile', results);
           }
       });
-  } else {
-    res.send("Must log-in first");
   }
 });
+
+//Allows for image change in profile page
 app.post('/changeImage', (req, res) => {
-  var uimage = req.body.uimage;
+  var uimage = req.body.uimage; //Requests values that are being modified from profile.ejs
   var uid = req.body.uid;
   var values = [uimage, uid];
   var uidOnly = [uid];
   if (uimage && uid) {
+    //Modifies database: uimage field is replaced with new image's filename and its type.
      pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
        if (error)
-         res.end(error);
-        pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
-         if(error)
-           res.end(error);
-         var results = {'rows':result.rows};
+        res.end(error);
+      //Grab all the data (even modified image field) of uid equal to the user.
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
+        if(error)
+          res.end(error);
+
+        //Directs user back to the profile page with the changed image.
+        var results = {'rows':result.rows};
         res.render('pages/profile', results);
       });
     });
@@ -294,6 +310,7 @@ app.post('/showid', (req, res) => {
         })
     }
 });
+
 
 app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
   var uid = req.body.uid;
@@ -368,14 +385,14 @@ app.post('/upload', function (req, res){
           res.render('pages/imageUpload', { // if the file is not an image
           msg: err
           });
-      } 
+      }
       else {
           if(req.file == undefined){
             res.render('pages/imageUpload', { // if no file was selected
               msg: 'Error: No File Selected!'
             });
-          } 
-        else { // file is correct
+          }
+        else {
             var path = req.file.location;
             var course = req.body.course.toLowerCase();
             var bookName = req.body.title;
@@ -391,17 +408,16 @@ app.post('/upload', function (req, res){
                   else {
                   res.render('pages/imageUpload', {
                   msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
-              
                 });
                 }
             });
-         
-        }
 
         }
+
+      }
   });
 });
- 
+
 
 
 //  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS 
