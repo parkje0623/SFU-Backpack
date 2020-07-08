@@ -427,21 +427,14 @@ app.post('/upload', function (req, res){
 
 
 
-//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
-// app.get("/buy", (req, res) => {
-//   var getUsersQuery = `SELECT * FROM img`
-//   pool.query(getUsersQuery, (error, result) => {
-//     if (error) res.end(error)
-//     var results = { rows: result.rows }
-//     res.render("pages/buyingpage", results)
-//   })
-// })
-app.get("/buy", (req, res) => {
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS - khoa
+
+app.get("/buy", (req, res) => {  // This will return a first buying page and have login function
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
     if (error) { res.end(error) }
     var results = { rows: result.rows }
-    if(isLogedin(req,res)){
+    if(isLogedin(req,res)){  // This is login and logout function
         if(req.session.ID.trim()=='admin'){
             res.render('pages/buyingpage', {results, uname:req.session.displayName, admin:true});
         }
@@ -453,23 +446,25 @@ app.get("/buy", (req, res) => {
           res.render('pages/buyingpage', {results, uname:false, admin:false});
     }
   })
-
 })
-// app.get("/post", (req, res) => {
-//   var getUsersQuery = `SELECT * FROM img`
-//   pool.query(getUsersQuery, (error, result) => {
-//     if (error) res.end(error)
-//     var results = { rows: result.rows }
-//     res.render("pages/buyingpage", results)
-//   })
-// })
-app.get("/post/:id", (req, res) => {
+
+app.get("/post/:id", (req, res) => {  // This will lead to books with specific course
   console.log(req.params.id)
-  var cname = req.params.id
+  var cname = req.params.id  // Get data from course name
   pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
     if (error) res.end(error)
-    var results = { rows: result.rows }
-    res.render("pages/buyingPageReload", results)
+    var results = { rows: result.rows }  // Will return data from img table
+    if(isLogedin(req,res)){  // This is login and logout function
+        if(req.session.ID.trim()=='admin'){
+            res.render('pages/buyingPageReload', {results, uname:req.session.displayName, admin:true});
+        }
+        else{
+            res.render('pages/buyingPageReload', {results,uname:req.session.displayName, admin:false});
+        }
+    }
+    else{
+          res.render('pages/buyingPageReload', {results, uname:false, admin:false});
+    }
   })
 })
 ///////////////////////////////
