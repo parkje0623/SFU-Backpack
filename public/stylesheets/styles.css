@@ -17,6 +17,9 @@ body {
   left: 40px;
   width: 5%;
 }
+#logo:hover {
+  cursor: pointer;
+}
 
 .logo-font {
   position: relative;
@@ -148,4 +151,79 @@ nav ul ul li:hover ul {
 
 .image-book {
   width: 100px;
+}
+
+/* Style for mypage (profile) */
+.username {
+  position: absolute;
+  right: 100px;
+  margin-top: 20px;
+}
+#profile_pic {
+  border: 1px solid black;
+  background-color: white;
+  position: absolute;
+  left: 150px;
+  width: 170px;
+}
+.info {
+  font-size: 24px;
+  position: absolute;
+  left: 370px;
+  top: 200px;
+}
+.account {
+  font-size: 24px;
+  position: absolute;
+  top: 450px;
+  left: 150px;
+}
+.edit {
+  font-size: 28px;
+  position: absolute;
+  top: 400px;
+  width: 200px;
+  height: 50px;
+}
+.delete {
+  font-size: 28px;
+  color: red;
+  position: absolute;
+  top: 350px;
+  left: 900px;
+  width: 300px;
+  height: 50px;
+}
+#file {
+  position: absolute;
+  top: 400px;
+  left: 150px;
+}
+h1, p {
+  margin-bottom: 30px;
+}
+input[id=profid], [id=profname], [id=profpwd], [id=profconfirm], [id=profemail] {
+  line-height: 2em;
+  font-size: 18px;
+  position: absolute;
+  left: 250px;
+}
+#list_pics {
+  font-size: 22px;
+  position: absolute;
+  left: 150px;
+  top: 400px;
+}
+#pics {
+  font-size: 22px;
+  position: absolute;
+  left: 340px;
+  top: 400px;
+}
+#imageButton {
+  font-size: 22px;
+  width: 100px;
+  position: absolute;
+  left: 500px;
+  top: 400px;
 }

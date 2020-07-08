@@ -16,23 +16,24 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    connectionString:'postgres://postgres:cmpt276@localhost/test' //- for Jieung
+    connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
     //connectionString:process.env.DATABASE_URL
 })
 
 var app = express();
-// app.use(session({
-//     store: new Psession({
-//
-//         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-//         conString: process.env.DATABASE_URL
-//
-//     }),
-//     secret: '!@SDF$@#SDF',
-//     resave: false,
-//     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
-//     saveUninitialized: true
-// }));
+app.use(session({
+    store: new Psession({
+
+        //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+        //conString: process.env.DATABASE_URL
+        conString:'postgres://postgres:cmpt276@localhost/postgres'
+
+    }),
+    secret: '!@SDF$@#SDF',
+    resave: false,
+    cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
+    saveUninitialized: true
+}));
 
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -170,9 +171,10 @@ app.post('/deleteuser', (req, res) => {
 
 app.post('/edituser', (req, res) => {
     if(!isLogedin(req,res)){
-        res.redirect('/');
+        res.redirect('/login');
         return false;
     }
+    var uid = req.body.uid;
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
@@ -214,8 +216,12 @@ app.post('/showpassword', (req, res) => {
     }
 });
 
-app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
-  var uid = req.body.uid;
+app.get('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
+  if(!isLogedin(req,res)){
+      res.redirect('/login');
+      return false;
+  }
+  var uid = req.session.ID;
   var values=[uid];
   if(uid){
       pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
@@ -229,6 +235,25 @@ app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
   } else {
 
     res.send("Must log-in first");
+  }
+});
+
+app.post('/changeImage', (req, res) => {
+  var uimage = req.body.uimage;
+  var uid = req.body.uid;
+  var values = [uimage, uid];
+  var uidOnly = [uid];
+  if (uimage && uid) {
+    pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
+      if (error)
+        res.end(error);
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
+        if(error)
+          res.end(error);
+        var results = {'rows':result.rows};
+        res.render('pages/profile', results);
+      });
+    });
   }
 });
 
