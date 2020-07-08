@@ -49,7 +49,7 @@ app.get('/mainpage', (req, res) => {
             res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
         }
         else{
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
+            res.render('pages/mainpage', {uname:req.session.displayName, uid:req.session.ID});
         }
     }
     else{
@@ -109,7 +109,9 @@ function isLogedin(req, res){
     }
 }
 
-
+app.get('/sign_up', (req, res)=>{
+    res.redirect('/sign_up.html');
+});
 
 
 
@@ -121,6 +123,7 @@ app.post('/adduser', (req, res) => {
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
+    var upasswordcon=req.body.upasswordcon;
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
     if(uid && uname && uemail && upassword){
@@ -136,7 +139,7 @@ app.post('/adduser', (req, res) => {
                     if(error)
                         res.end(error);
                     else{
-                        res.send(`USER ID: ${uid} HAS BEEN SUBMITTED!`);
+                        res.redirect('/login');
                     }
                 })
             }
