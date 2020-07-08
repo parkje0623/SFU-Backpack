@@ -458,7 +458,7 @@ app.get('/headerbuying', (req, res) => {
          }
      }
      else{
-         res.render('pages/headerbuying', {uname: false, uid: false});
+         res.render('partials/headerbuying', {uname: false, uid: false});
      }
  });
 
