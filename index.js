@@ -136,24 +136,29 @@ app.post('/adduser', (req, res) => {
     var upasswordcon=req.body.upasswordcon;
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
-    if(uid && uname && uemail && upassword){
-        pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
-            if(error){
-                res.end(error);
-            }
-            else if(result&&result.rows[0]){
-                res.send(`USER ID or EMAIL is already taken!`);
-            }
-            else{
-                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
-                    if(error)
-                        res.end(error);
-                    else{
-                        res.redirect('/login');
-                    }
-                })
-            }
-        })
+    if(upassword===upasswordcon){
+        if(uid && uname && uemail && upassword){
+            pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
+                if(error){
+                    res.end(error);
+                }
+                else if(result&&result.rows[0]){
+                    res.send(`USER ID or EMAIL is already taken!`);
+                }
+                else{
+                    pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
+                        if(error)
+                            res.end(error);
+                        else{
+                            res.redirect('/login');
+                        }
+                    })
+                }
+            })
+        }
+    }
+    else{
+        res.redirect('/sign_up.html');
     }
 
 });
