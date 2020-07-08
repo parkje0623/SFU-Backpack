@@ -135,24 +135,29 @@ app.post('/adduser', (req, res) => {
     var upasswordcon=req.body.upasswordcon;
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
-    if(uid && uname && uemail && upassword){
-        pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
-            if(error){
-                res.end(error);
-            }
-            else if(result&&result.rows[0]){
-                res.send(`USER ID or EMAIL is already taken!`);
-            }
-            else{
-                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
-                    if(error)
-                        res.end(error);
-                    else{
-                        res.redirect('/login');
-                    }
-                })
-            }
-        })
+    if(upassword===upasswordcon){
+         if(uid && uname && uemail && upassword){
+             pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
+                 if(error){
+                     res.end(error);
+                 }
+                 else if(result&&result.rows[0]){
+                     res.send(`USER ID or EMAIL is already taken!`);
+                 }
+                 else{
+                     pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
+                         if(error)
+                             res.end(error);
+                         else{
+                             res.redirect('/login');
+                         }
+                     })
+                 }
+             })
+         }
+     }
+     else{
+         res.redirect('/sign_up.html');
     }
 
 });
@@ -308,7 +313,7 @@ app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
   }
 });
 
-// SETTING UP AMAZON STORAGE
+// Setting up Amazon Storage
 AWS.config.update({
   accessKeyId:  AWS_ID,
   secretAccessKey: AWS_SECRET,
@@ -318,26 +323,21 @@ AWS.config.update({
 const S3 = new AWS.S3();
 
 const upload = multer({
-    // CREATE MULTER-S3 FUNCTION FOR STORAGE
+    // Create Multer-S3 Function for Storage 
     storage: multerS3({
         s3: S3,
         acl: 'public-read',
         bucket: BUCKET_NAME,
 
-        // SET / MODIFY ORIGINAL FILE NAME. ///// to be done shiva
+        // Changing the file name to be unique
         key: function (req, file, cb) {
-            cb(null, new Date().toISOString() + path.extname(file.originalname)); //set unique file name if you wise using Date.toISOString()
-            // EXAMPLE 1
-            // cb(null, Date.now() + '-' + file.originalname);
-            // EXAMPLE 2
-            // cb(null, new Date().toISOString() + '-' + file.originalname);
-
+            cb(null, new Date().toISOString() + path.extname(file.originalname));
         }
     }),
-    // SET DEFAULT FILE SIZE UPLOAD LIMIT
+    // Set default file size upload limit 
     limits: { fileSize: 1024 * 1024 * 50 }, // 50MB
 
-    // FILTER OPTIONS LIKE VALIDATING FILE EXTENSION
+    // validation of the file extention
     fileFilter: function(req, file, cb) {
         const filetypes = /jpeg|jpg|gif|png/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -346,18 +346,17 @@ const upload = multer({
             return cb(null, true);
         } else {
             cb('Only jpeg/jpg/png images allowed')
-            //return cb(('Only jpeg/jpg/png images allowed'))
         }
     }
 });
 
 app.get('/upload',(req, res) =>{
-    if(!isLogedin(req,res)){
+    if(!isLogedin(req,res)){ //if user is not login direct them to login page
       res.redirect('/login');
       return false;
     }
     else{
-      res.render('pages/imageUpload')
+      res.render('pages/imageUpload')// else to upload page
     }
 });
 
@@ -366,29 +365,32 @@ const image_upload = upload.single('myImage');
 app.post('/upload', function (req, res){
   image_upload(req, res, function(err){
     if(err){
-          res.render('pages/imageUpload', {
+          res.render('pages/imageUpload', { // if the file is not an image
           msg: err
           });
       } 
       else {
           if(req.file == undefined){
-            res.render('pages/imageUpload', {
+            res.render('pages/imageUpload', { // if no file was selected
               msg: 'Error: No File Selected!'
             });
           } 
-        else {
+        else { // file is correct
             var path = req.file.location;
-            var course = req.body.course;
+            var course = req.body.course.toLowerCase();
             var bookName = req.body.title;
-            var uid =  req.session.ID;  
-            var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
+            var uid =  req.session.ID; 
+            var cost = req.body.cost 
+            var condition = req.body.condition
+            var description.req.body.description
+            var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
                 pool.query(getImageQuery, (error,result)=>{
                 if(error){
                     res.end(error);
                 }
                   else {
                   res.render('pages/imageUpload', {
-                  msg: 'File Uploaded!',
+                  msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
               
                 });
                 }
@@ -402,7 +404,7 @@ app.post('/upload', function (req, res){
  
 
 
-//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS who are you?????
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS 
 app.get("/buy", (req, res) => {
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
