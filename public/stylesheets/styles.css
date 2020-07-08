@@ -56,13 +56,11 @@ body {
 }
 
 /* buying page html */
-
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
-
 .buying-menu {
   width: 100%;
   position: relative;
@@ -72,29 +70,29 @@ body {
   text-align: center;
 }
 
-nav {
+.nav-buying-dropdown-menu {
   display: inline-block;
   text-align: center;
   text-transform: uppercase;
 }
 
-nav a {
+.nav-buying-dropdown-menu a {
   font-family: monospace;
   font-weight: bold;
   font-size: 15pt;
   color: #112233;
 }
 
-nav a:hover {
+.nav-buying-dropdown-menu a:hover {
   background: #223433;
   color: #f0f1f5;
 }
 
-nav ul {
+.nav-buying-dropdown-menu ul {
   list-style: none;
 }
 
-nav ul li {
+.nav-buying-dropdown-menu ul li {
   float: left;
   width: 50px;
   height: 40px;
@@ -102,19 +100,24 @@ nav ul li {
   background: #fc575e;
 }
 
-nav ul ul li {
+.nav-buying-dropdown-menu ul ul li {
   position: relative;
   display: none;
 }
 
-nav ul ul ul {
-  display: none;
-}
 
-nav ul li:hover ul li {
+/* nav ul ul ul {
+  display: none;
+} */
+
+.nav-buying-dropdown-menu ul li:hover ul li{
   display: block;
   animation: navmenu 500ms forwards;
 }
+/* nav ul li:hover ul li {
+  display: block;
+  animation: navmenu 500ms forwards;
+} */
 @keyframes navmenu {
   0% {
     opacity: 0;
@@ -125,7 +128,7 @@ nav ul li:hover ul li {
     top: 0px;
   }
 }
-nav ul ul li:hover ul {
+.nav-buying-dropdown-menu ul ul li:hover ul {
   display: block;
   position: absolute;
   width: 200px;
@@ -151,7 +154,30 @@ nav ul ul li:hover ul {
 
 .image-book {
   width: 100px;
+  z-index: -1;
+
 }
+
+.div-display-bookname-bookimage{
+  position: relative;
+  margin-left: 20px;
+  width: 200px;
+  z-index: -1000;
+
+}
+.course-heading-buyingpage {
+  margin-top: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 30px;
+}
+.book-name-buyingpage{
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+<<<<<<< HEAD
+/* ////////////////////////// */
+=======
 
 /* Style for mypage (profile) */
 .username {
@@ -227,3 +253,4 @@ input[id=profid], [id=profname], [id=profpwd], [id=profconfirm], [id=profemail] 
   left: 500px;
   top: 400px;
 }
+>>>>>>> 459cdada1c9f0e76eb756a669dcffa882b6348a3

@@ -57,6 +57,10 @@ app.get('/mainpage', (req, res) => {
     }
 });
 
+app.get('/sign_up', (req, res)=>{
+     res.redirect('/sign_up.html');
+ });
+
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
     var getUsersQuery='SELECT * FROM backpack';
     pool.query(getUsersQuery, (error,result)=>{
@@ -109,13 +113,18 @@ function isLogedin(req, res){
     }
 }
 
-app.get('/sign_up', (req, res)=>{
-    res.redirect('/sign_up.html');
-});
+function UIstatus(req,res){
+    var UI='<a href="/auth/login">login</a>'
+    if(isLogedin(req,res)){
+        UI='<a href="/auth/logout">logout</a>'
+    }
+    return UI
 
+}
 
-
-
+ app.get('/dbtest.html', (req, res)=>{
+     var html =template.HTML(title, list, UIstatus(req,res));
+ });
 
 
 app.post('/adduser', (req, res) => {
@@ -241,10 +250,68 @@ app.post('/showid', (req, res) => {
 app.get('/mypage', (req, res) => {
   if(!isLogedin(req,res)){ //If no user is logged-in, direct user to login page
       res.redirect('/login');
-      return false;
-  }
+       return false;
+   }
 
-  var uid = req.session.ID; //Grabs an ID of the user signed-in
+   var uid = req.session.ID;
+   var values=[uid];
+   if(uid){ //If the user id is given, take all data of user with given ID in the backpack table in the database
+       pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
+          if(error)
+              res.end(error);
+          else{ //Sends all the user data towards profile.ejs file where profile page design is made
+              var results = {'rows':result.rows};
+              res.render('pages/profile', results);
+          }
+      });
+  } else { //If user id is not given, direct user to the login page
+    res.redirect('/login');
+  }
+});
+
+app.post('/changeImage', (req, res) => {
+  var uimage = req.body.uimage;
+  var uid = req.body.uid;
+  var values = [uimage, uid];
+  var uidOnly = [uid];
+  if (uimage && uid) {
+     pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
+       if (error)
+         res.end(error);
+        pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
+         if(error)
+           res.end(error);
+         var results = {'rows':result.rows};
+        res.render('pages/profile', results);
+      });
+    });
+  }
+});
+
+
+
+
+app.post('/showid', (req, res) => {
+    var uname = req.body.uname;
+    var uemail = req.body.uemail;
+    var values=[uname, uemail];
+    if(uname && uemail){
+        pool.query(`SELECT * from backpack where uemail=$1 AND uname=$2`, values, (error, result)=>{
+            if(error)
+                res.end(error);
+            else if(!result||!result.rows[0]){
+                res.send(`INFORMAION is not correct!`);
+            }
+            else{
+                res.send(result.rows[0].uid);
+            }
+        })
+    }
+});
+
+//Profile page that shows information of logged-in user
+app.post('/mypage', (req, res) => {
+  var uid = req.body.uid;
   var values=[uid];
   if(uid){ //If the user id is given, take all data of user with given ID in the backpack table in the database
       pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
@@ -321,6 +388,7 @@ const upload = multer({
         }
     }
 });
+<<<<<<< HEAD
 
 app.get('/upload',(req, res) =>{
     if(!isLogedin(req,res)){
@@ -330,6 +398,51 @@ app.get('/upload',(req, res) =>{
     else{
       res.render('pages/imageUpload')
     }
+=======
+
+app.get('/upload',(req, res) =>{
+  res.render('pages/imageUpload')
+});
+
+
+const image_upload = upload.single('myImage');
+app.post('/upload', function (req, res){
+  image_upload(req, res, function(err){
+    if(err){
+          res.render('pages/imageUpload', {
+          msg: err
+          });
+      }
+    else {
+          if(req.file == undefined){
+            res.render('pages/imageUpload', {
+              msg: 'Error: No File Selected!'
+            });
+          }
+        else {
+            var path = req.file.location;
+            var course = req.body.course;
+            var bookName = req.body.title;
+            var uid =  req.session.ID;
+            var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
+                pool.query(getImageQuery, (error,result)=>{
+                if(error){
+                    res.end(error);
+                }
+                  else {
+                  res.render('pages/imageUpload', {
+                  msg: 'File Uploaded!',
+
+                });
+                }
+            });
+
+        }
+
+
+    }
+  });
+>>>>>>> 886605e2e05b553c21aa56ef4d5cb388eeff5471
 });
 
 
@@ -400,7 +513,37 @@ app.get("/post/:id", (req, res) => {
     res.render("pages/buyingPageReload", results)
   })
 })
+app.get('/header', (req, res) => {
+    if(isLogedin(req,res)){
+        if(req.session.ID.trim()=='admin'){
+            res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
+        }
+        else{
+            res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
+        }
+    }
+    else{
+        res.render('pages/mainpage', {uname: false, uid: false});
+    }
+});
 ///////////////////////////////
 
+<<<<<<< HEAD
+=======
+app.get('/header', (req, res) => {
+     if(isLogedin(req,res)){
+         if(req.session.ID.trim()=='admin'){
+             res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
+         }
+         else{
+             res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
+         }
+     }
+     else{
+         res.render('pages/mainpage', {uname: false, uid: false});
+     }
+ });
+
+>>>>>>> 886605e2e05b553c21aa56ef4d5cb388eeff5471
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
