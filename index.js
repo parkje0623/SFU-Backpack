@@ -46,16 +46,20 @@ app.get('/', (req, res) => res.render('pages/index'));
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
         if(req.session.ID.trim()=='admin'){
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
+            res.render('pages/mainpage', {uname:req.session.displayName, admin:true});
         }
         else{
-            res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
+            res.render('pages/mainpage', {uname:req.session.displayName, admin:false});
         }
     }
     else{
-        res.render('pages/mainpage', {uname: false, uid: false});
+        res.render('pages/mainpage', {uname:false, admin:false});
     }
 });
+
+app.get('/sign_up', (req, res)=>{
+     res.redirect('/sign_up.html');
+ });
 
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
     var getUsersQuery='SELECT * FROM backpack';
@@ -109,11 +113,18 @@ function isLogedin(req, res){
     }
 }
 
+function UIstatus(req,res){
+     var UI='<a href="/auth/login">login</a>'
+     if(isLogedin(req,res)){
+         UI='<a href="/auth/logout">logout</a>'
+     }
+     return UI
 
+ }
 
-
-
-
+ app.get('/dbtest.html', (req, res)=>{
+     var html =template.HTML(title, list, UIstatus(req,res));
+ });
 
 
 app.post('/adduser', (req, res) => {
@@ -121,6 +132,7 @@ app.post('/adduser', (req, res) => {
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
+    var upasswordcon=req.body.upasswordcon;
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
     if(uid && uname && uemail && upassword){
@@ -136,7 +148,7 @@ app.post('/adduser', (req, res) => {
                     if(error)
                         res.end(error);
                     else{
-                        res.send(`USER ID: ${uid} HAS BEEN SUBMITTED!`);
+                        res.redirect('/login');
                     }
                 })
             }
@@ -173,9 +185,10 @@ app.post('/deleteuser', (req, res) => {
 
 app.post('/edituser', (req, res) => {
     if(!isLogedin(req,res)){
-        res.redirect('/');
+        res.redirect('/login');
         return false;
     }
+    var uid = req.body.uid;
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var upassword = req.body.upassword;
@@ -216,6 +229,48 @@ app.post('/showpassword', (req, res) => {
         })
     }
 });
+
+app.get('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
+  if(!isLogedin(req,res)){
+      res.redirect('/login');
+       return false;
+   }
+   var uid = req.session.ID;
+   var values=[uid];
+   if(uid){
+       pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
+          if(error)
+              res.end(error);
+          else{
+              var results = {'rows':result.rows};
+              res.render('pages/profile', results);
+          }
+      });
+  } else {
+    res.send("Must log-in first");
+  }
+});
+app.post('/changeImage', (req, res) => {
+  var uimage = req.body.uimage;
+  var uid = req.body.uid;
+  var values = [uimage, uid];
+  var uidOnly = [uid];
+  if (uimage && uid) {
+     pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
+       if (error)
+         res.end(error);
+        pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
+         if(error)
+           res.end(error);
+         var results = {'rows':result.rows};
+        res.render('pages/profile', results);
+      });
+    });
+  }
+});
+
+
+
 
 app.post('/showid', (req, res) => {
     var uname = req.body.uname;
@@ -309,41 +364,40 @@ app.get('/upload',(req, res) =>{
 
 const image_upload = upload.single('myImage');
 app.post('/upload', function (req, res){
-	image_upload(req, res, function(err){
-		if(err){
-      		res.render('pages/imageUpload', {
-        	msg: err
-      		});
-    	} 
-    	else {
-      		if(req.file == undefined){
-        		res.render('pages/imageUpload', {
-          		msg: 'Error: No File Selected!'
-        		});
-      		} 
-     		else {
-        		var path = req.file.location;
-         		var course = req.body.course;
-         		var bookName = req.body.title;
-         		var uid = req.body.uid; ///////////// change before submit // shiva
-            //var uid =  req.session.ID;  
-        		var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
+  image_upload(req, res, function(err){
+    if(err){
+          res.render('pages/imageUpload', {
+          msg: err
+          });
+      } 
+      else {
+          if(req.file == undefined){
+            res.render('pages/imageUpload', {
+              msg: 'Error: No File Selected!'
+            });
+          } 
+        else {
+            var path = req.file.location;
+            var course = req.body.course;
+            var bookName = req.body.title;
+            var uid =  req.session.ID;  
+            var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
                 pool.query(getImageQuery, (error,result)=>{
-          			if(error){
-              			res.end(error);
-          			}
-              		else {
-           				res.render('pages/imageUpload', {
-          				msg: 'File Uploaded!',
-          		
-        				});
-           			}
-         		});
+                if(error){
+                    res.end(error);
+                }
+                  else {
+                  res.render('pages/imageUpload', {
+                  msg: 'File Uploaded!',
+              
+                });
+                }
+            });
          
-     		}
+        }
 
-      	}
-	});
+        }
+  });
 });
  
 
@@ -375,6 +429,20 @@ app.get("/post/:id", (req, res) => {
   })
 })
 ///////////////////////////////
+
+app.get('/header', (req, res) => {
+     if(isLogedin(req,res)){
+         if(req.session.ID.trim()=='admin'){
+             res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
+         }
+         else{
+             res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
+         }
+     }
+     else{
+         res.render('pages/mainpage', {uname: false, uid: false});
+     }
+ });
 
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
