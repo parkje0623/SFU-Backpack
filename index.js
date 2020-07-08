@@ -347,7 +347,7 @@ AWS.config.update({
 const S3 = new AWS.S3();
 
 const upload = multer({
-    // Create Multer-S3 Function for Storage 
+    // Create Multer-S3 Function for Storage
     storage: multerS3({
         s3: S3,
         acl: 'public-read',
@@ -358,7 +358,7 @@ const upload = multer({
             cb(null, new Date().toISOString() + path.extname(file.originalname));
         }
     }),
-    // Set default file size upload limit 
+    // Set default file size upload limit
     limits: { fileSize: 1024 * 1024 * 50 }, // 50MB
 
     // validation of the file extention
@@ -403,8 +403,8 @@ app.post('/upload', function (req, res){
             var path = req.file.location;
             var course = req.body.course.toLowerCase();
             var bookName = req.body.title;
-            var uid =  req.session.ID; 
-            var cost = req.body.cost 
+            var uid =  req.session.ID;
+            var cost = req.body.cost
             var condition = req.body.condition
             var description = req.body.description
             var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
@@ -427,7 +427,7 @@ app.post('/upload', function (req, res){
 
 
 
-//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS 
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS
 app.get("/buy", (req, res) => {
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
@@ -455,7 +455,7 @@ app.get("/post/:id", (req, res) => {
 })
 ///////////////////////////////
 
-app.get('/header', (req, res) => {
+app.get('/headerbuying', (req, res) => {
      if(isLogedin(req,res)){
          if(req.session.ID.trim()=='admin'){
              res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
@@ -465,7 +465,7 @@ app.get('/header', (req, res) => {
          }
      }
      else{
-         res.render('pages/mainpage', {uname: false, uid: false});
+         res.render('pages/headerbuying', {uname: false, uid: false});
      }
  });
 
