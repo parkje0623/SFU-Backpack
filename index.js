@@ -85,7 +85,9 @@ app.post('/auth/login', (req, res) =>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
-                res.redirect('/login');
+                res.render('pages/login', { // if wrong password or ID
+                  msg: 'Error: Wrong USER ID or PASSWORD!'
+                });
             }
             else{
                 req.session.displayName = result.rows[0].uname;
@@ -144,7 +146,9 @@ app.post('/adduser', (req, res) => {
                     res.end(error);
                 }
                 else if(result&&result.rows[0]){
-                    res.send(`USER ID or EMAIL is already taken!`);
+                    res.render('/sign_up.html', { // if the ID and the email already in database
+                      msg: 'Error: USER ID or EMAIL is already taken!'
+                   });
                 }
                 else{
                     pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
@@ -159,7 +163,10 @@ app.post('/adduser', (req, res) => {
         }
     }
     else{
-        res.redirect('/sign_up.html');
+        res.render('/sign_up.html', { // if the two password don't match
+          msg: 'Error: PASSWORD and CONFIRM PASSWORD have to match!'
+        });
+
     }
 
 });
