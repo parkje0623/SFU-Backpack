@@ -49,6 +49,12 @@
         <p> Confirm Password: <input id="profconfirm" type="password" name="confirm" placeholder="<%= attr.upassword %>" maxLength="30" size="40"</input><br></p>
         <p> Email:    <input id="profemail" type="text" name="uemail" placeholder="<%= attr.uemail %>" maxLength="20" size="40"</input><br></p>
         <button formaction="/edituser" type="submit" formmethod="post" class="edit">Edit</button>
+        <%if( data_sent ===true){%>
+          alert("Data Successfully Edited!");
+        <%}%>
+        <%if( data_sent ===false){%>
+          alert("Could not be edited, please check if you have entered all of Username, Password, Confirm Password, and Email!");
+        <%}%>
       </div>
       <% }); %>
     </form>

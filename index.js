@@ -209,12 +209,12 @@ app.post('/edituser', (req, res) => {
                    res.end(error);
                else{ //Sends all the user data towards profile.ejs file where profile page design is made
                    var results = {'rows':result.rows};
-                   res.render('pages/profile', results);
+                   res.render('pages/profile', results, {data_sent:true});
                }
             });
         });
       } else {
-        res.send("Password do not match");
+        res.render('pages/profile', {data_sent:false});
       }
     }
 });
@@ -248,17 +248,15 @@ app.get('/mypage', (req, res) => {
 
    var uid = req.session.ID; //Grabs an ID of the user signed-in
    var values=[uid];
-   if(uid){
+   if(uid){ //If user id is given, take all data of user that matches the given ID
        pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
           if(error)
               res.end(error);
-          else{
+          else{ //Sends the data to profile.ejs
               var results = {'rows':result.rows};
               res.render('pages/profile', results);
           }
       });
-  } else {
-    res.send("Must log-in first");
   }
 });
 
