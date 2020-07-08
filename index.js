@@ -158,27 +158,28 @@ app.post('/adduser', (req, res) => {
 
 });
 
+//Allows user to delete their account permanently
 app.post('/deleteuser', (req, res) => {
-    var uid = req.body.uid;
-    var upassword = req.body.upassword;
-    var checking =[uid, upassword]
-    if(uid && upassword){
-        pool.query('SELECT * FROM backpack WHERE uid=$1 AND password=$2', checking, (error,result)=>{
+    var uid = req.body.uid; //Requests values that are being modified from profile.ejs
+    //var upassword = req.body.upassword;
+    var checking = [uid];
+    if(uid) {
+        //If user id and password are given, find the user in the database table backpack
+        pool.query(`SELECT * FROM backpack WHERE uid=$1`, checking, (error,result)=>{
             if(error)
                 res.end(error);
-            else if(!result||!result.rows[0]){
-                res.send(`USER ID or PASSWORD is not correct!`);
-            }
             else{
-
-                var insertUsersQuery=`DELETE FROM backpack WHERE uid=$1`;
-                pool.query(insertUsersQuery, [uid], (error,result)=>{
-                    if(error)
-                        res.end(error);
-                    else{
-                        res.send(`USER ID: ${uid} HAS BEEN DELETED!`);
-                    }
-                })
+              //Once the data is gathered, delete the user from the database table backpack
+              var insertUsersQuery=`DELETE FROM backpack WHERE uid=$1`;
+              pool.query(insertUsersQuery, checking, (error,result)=>{
+                if(error)
+                  res.end(error);
+                else{ //If succesfully deleted, the user is logged-out, deleted account then taken back to the mainpage
+                  req.session.destroy(function(err){
+                      res.redirect('/mainpage');
+                  });
+                }
+              })
             }
         })
     }
@@ -209,14 +210,13 @@ app.post('/edituser', (req, res) => {
                    res.end(error);
                else{ //Sends all the user data towards profile.ejs file where profile page design is made
                    var results = {'rows':result.rows};
-                   res.render('pages/profile', results, {data_sent:true});
+                   res.render('pages/profile', results);
                }
             });
         });
-      } else {
-        res.render('pages/profile', {data_sent:false});
       }
     }
+    //Error handling such as mismatch password or blank input given is handled in Javascript from profile.ejs
 });
 
 
@@ -275,6 +275,7 @@ app.post('/changeImage', (req, res) => {
       pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
         if(error)
           res.end(error);
+
         //Directs user back to the profile page with the changed image.
         var results = {'rows':result.rows};
         res.render('pages/profile', results);
@@ -302,24 +303,6 @@ app.post('/showid', (req, res) => {
             }
         })
     }
-});
-
-app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
-  var uid = req.body.uid;
-  var values=[uid];
-  if(uid){
-      pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
-          if(error)
-              res.end(error);
-          else{
-              var results = {'rows':result.rows};
-              res.render('pages/profile', results);
-          }
-      });
-  } else {
-
-    res.send("Must log-in first");
-  }
 });
 
 // SETTING UP AMAZON STORAGE

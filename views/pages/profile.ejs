@@ -38,32 +38,24 @@
         <p> Email: <%= attr.uemail %> <br></p>
       </div>
 
-      <button formaction="/deleteuser" formmethod="post" type="submit" class="delete"> Permanently Delete </button>
+      <div class="delete_info"> *Must Enter Password and Confirm Password Below to Delete*</div>
+      <button id="delete_btn" formaction="/deleteuser" formmethod="post" type="submit" class="delete"> Permanently Delete </button>
       <br><br><br>
 
       <div class="account">
         <h1> Account <br></h1>
-        <p> ID:       <input id="profid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" maxLength="10" size="40"></input><br></p> <!--makes sure its read-only later !-->
+        <p> ID:       <input id="profid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" maxLength="10" size="40"></input><br></p> 
         <p> Username: <input id="profname" type="text" name="uname" placeholder="<%= attr.uname %>" maxLength="10" size="40"</input><br></p>
         <p> Password: <input id="profpwd" type="password" name="upassword" placeholder="<%= attr.upassword %>" maxLength="30" size="40"</input><br></p>
         <p> Confirm Password: <input id="profconfirm" type="password" name="confirm" placeholder="<%= attr.upassword %>" maxLength="30" size="40"</input><br></p>
         <p> Email:    <input id="profemail" type="text" name="uemail" placeholder="<%= attr.uemail %>" maxLength="20" size="40"</input><br></p>
-        <button formaction="/edituser" type="submit" formmethod="post" class="edit">Edit</button>
-        <%if( data_sent ===true){%>
-          alert("Data Successfully Edited!");
-        <%}%>
-        <%if( data_sent ===false){%>
-          alert("Could not be edited, please check if you have entered all of Username, Password, Confirm Password, and Email!");
-        <%}%>
+        <button id="submit_btn" formaction="/edituser" type="submit" formmethod="post" class="edit">Edit</button>
       </div>
       <% }); %>
     </form>
   </body>
 
-  <script>
-    function getImage(event) {
-      var changeImg = document.getElementById('image');
-      changeImg.value = document.getElementById('pics').value;
-    }
+  <script type="text/javascript" src="./script.js">
   </script>
+
 </html>
