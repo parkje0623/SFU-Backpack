@@ -16,7 +16,7 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+    // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
     connectionString:process.env.DATABASE_URL
 })
 
@@ -26,7 +26,7 @@ app.use(session({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
         conString: process.env.DATABASE_URL
-        //conString:'postgres://postgres:cmpt276@localhost/postgres'
+        // conString:'postgres://postgres:@localhost/postgres'
 
     }),
     secret: '!@SDF$@#SDF',
@@ -62,6 +62,10 @@ app.get('/signUp', (req, res)=>{
      res.render('pages/signUp');
  });
 
+ app.get('/find_pw', (req, res)=>{
+     res.render('pages/find_pw');
+ });
+
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
     var getUsersQuery='SELECT * FROM backpack';
     pool.query(getUsersQuery, (error,result)=>{
@@ -71,6 +75,37 @@ app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (re
         res.render('pages/db', results);
     })
 });
+
+//allowing the Admin to delete a user from backpack database
+app.post('/admin_deleteUser',(req,res) =>{
+    var id = req.body.uid
+    // delete this user id from the backpack database
+    var getUs = "DELETE FROM backpack WHERE uid = '" + id +"'" 
+    pool.query(getUs, (error, result) =>{
+       if(error)
+        res.end(error)
+    })
+      // go to the admin main page with the updated table (without the deleted user)
+      res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
+  });
+
+  // allowing the Admin  to edit a user name information 
+   app.post('/admin_edituser',(req,res) =>{
+    var uname = req.body.uname
+    var email = req.body.uemail
+    var id = req.body.uid
+    var image = req.body.uimage
+    var old_id = req.body.oid
+    // update the username information using the old id
+    var getUs = "UPDATE backpack SET uname = '" + uname + "', uemail '" + email + "', uid = '" + id + "', uimage = '" + image + "' WHERE uid = '" + oid + "'" 
+    pool.query(getUs, (error, result) =>{
+      if(error)
+        res.end(error)
+      })
+    // go to the admin main page with the updated table (with the updated user)
+    res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
+  });
+
 
 app.get('/login', (req, res) => {
     res.render('pages/login', {});
@@ -239,14 +274,18 @@ app.post('/showpassword', (req, res) => {
     var uemail = req.body.uemail;
     var values=[uid, uname, uemail];
     if(uid && uname && uemail){
-        pool.query(`SELECT * from backpack where uid=$1 AND uemail=$2 AND uname=$3`, values, (error, result)=>{
+        pool.query(`SELECT * from backpack where uid=$1 AND uname=$2 AND uemail=$3`, values, (error, result)=>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
-                res.send(`INFORMAION is not correct!`);
+                res.render('pages/find_pw', { // all the input enter have to be true to show the PASSWORD
+                      msg: 'INFORMAION is not correct!'
+                   });
             }
             else{
-                res.send(result.rows[0].upassword);
+                res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
+                      msg: "PASSWORD: " + result.rows[0].upassword
+                });
             }
         })
     }
@@ -343,7 +382,7 @@ AWS.config.update({
   secretAccessKey: AWS_SECRET,
   region: 'us-west-2'
 })
-
+// initiate the storage
 const S3 = new AWS.S3();
 
 const upload = multer({
@@ -353,7 +392,7 @@ const upload = multer({
         acl: 'public-read',
         bucket: BUCKET_NAME,
 
-        // Changing the file name to be unique
+        // Changing the file name to be unique (put the time and date instead of filename)
         key: function (req, file, cb) {
             cb(null, new Date().toISOString() + path.extname(file.originalname));
         }
@@ -407,6 +446,7 @@ app.post('/upload', function (req, res){
             var cost = req.body.cost
             var condition = req.body.condition
             var description = req.body.description
+            // insert the user info into the img database (the image in AWS and the path of image in img database)
             var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
                 pool.query(getImageQuery, (error,result)=>{
                 if(error){
@@ -434,6 +474,7 @@ app.get("/buy", (req, res) => {  // This will return a first buying page and hav
   pool.query(getUsersQuery, (error, result) => {
     if (error) { res.end(error) }
     var results = { rows: result.rows }
+
     if(isLogedin(req,res)){  // This is login and logout function
         if(req.session.ID.trim()=='admin'){
             res.render('pages/buyingpage', {results, uname:req.session.displayName, admin:true});
@@ -446,6 +487,7 @@ app.get("/buy", (req, res) => {  // This will return a first buying page and hav
           res.render('pages/buyingpage', {results, uname:false, admin:false});
     }
   })
+
 })
 
 app.get("/post/:id", (req, res) => {  // This will lead to books with specific course

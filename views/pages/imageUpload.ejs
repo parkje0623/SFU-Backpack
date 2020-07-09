@@ -22,9 +22,9 @@
     <form action="/upload" method="POST" enctype="multipart/form-data">
     	<h2 class="text-center">File Upload</h2>
       <div class= "warning"> 
-        <%= typeof msg != 'undefined' ? msg : '' %><br>
+        <%= typeof msg != 'undefined' ? msg : '' %>
       </div><br>
-      <input type="text"  class="form-control" name="title" value="" placeholder="TITLE OF THE BOOK"><br>
+      <input type="text"  class="form-control" name="title" value="File" placeholder="TITLE OF THE BOOK" maxlength="50"><br>
     	<select type="text" class="form-control" name="course">
 					<option> ACMA </option>
 					<option> ALS </option>
@@ -113,30 +113,43 @@
           <option> TRSS </option>
           <option> URB </option>
           <option> WL </option>
+          <option> Others </option>
 		    </select><br>
-    	<input type="number"  class="form-control" name="cost" value="" placeholder="COST">
-  		<input type="radio" id = "con1" name="condition">
-  		  <label for="con1">AS New</label><br>
-  		    <p> AN - AS New: describes a book that is in the same perfect condition as when it was issued by the printer. There are no flaws. None at all. This book or dust jacket is in pristine condition, just as it came from the publisher. The book is tight. It has not been read or its pages turned. As New is the highest grade possible for a book or dust jacket.</p>
-  		<input type="radio" id = "con2" name="condition">
-  		  <label for="con2"> Fine </label><br> 
-          <p> F - Fine: describes a book or dust jacket that is not quite as crisp as an AN book. Many new books sold in large bookshops are in Fine condition and not As New because the books have been out on the shelves and have been picked up and handled by prospective buyers. In fact, some books sold in mega stores may have dust jackets only in VG (Very Good) condition. If there is any flaw to a book or dj labeled Fine (F), the bookseller needs to describe it. (Eg. DJ - Slightest edge wear bottom edge.) If the book has a remainder mark (a mark, usually on the bottom edge, placed by a publisher selling off books at a discount) that must be stated. As a collector you want to avoid books with remainder marks.</p> 
- 		  <input type="radio" id = "con3" name="condition">
-  		  <label for="con3"> Very Good </label><br>
-          <p> VG - Very Good: describes a book that does show some small signs of wear - but no tears - on either binding or paper.</p>  
-  		<input type="radio" id = "con4" name="condition" value="100">
-  		  <label for="con4"> Good </label><br>
-          <p> G - Good: describes the average used book that has all pages or leaves present.</p>
-      <input type="radio" id = "con5" name="condition" value="100">
-        <label for="con5"> Fair </label><br>
-          <p> Fair:describes a worn book that has complete text pages (including those with maps or plates) but may lack endpapers, half-title page, etc. (Such missing pieces must be noted in the description). The binding, jacket (if any) may also be worn.</p>
-      <input type="radio" id = "con6" name="condition" value="100">
-        <label for="con6"> Poor </label><br>
-          <p> Poor: describes a book that is sufficiently worn, to the point that its only merit is as a Reading Copy because it HAS the complete text. (The text must be legible.) Any missing maps or plates should still be noted. A book or dust jacket listed as Poor (P) may be soiled, scuffed, stained or spotted and the book may have loose joints, hinges, pages, etc.</p>
-  		<textarea class="form-control" name="description" rows="4" cols="200" placeholder="DESCRIPTION"></textarea><br>
+        <select type="text" class="form-control" name="condition">
+          <option> Brand New </option>
+          <option>  Fine </option>
+          <option> Very Good </option>
+          <option> Good </option>
+          <option> Fair </option>
+          <option> Poor </option>
+        </select>
+        <a class="condition_use" onclick="pop_up_condition()">Definitions of Book Conditions
+        <span class="popuptext" id="popup">
+              <h4>BN - Brand New</h4>
+              <p> describes a book that is in the same perfect condition as when it was issued by the printer. There are no flaws. None at all. This book or dust jacket is in pristine condition, just as it came from the publisher. The book is tight. It has not been read or its pages turned. Brand New is the highest grade possible for a book or dust jacket.</p>
+              <h4> F - Fine </h4>
+              <p> describes a book or dust jacket that is not quite as crisp as an AN book. Many new books sold in large bookshops are in Fine condition and not As New because the books have been out on the shelves and have been picked up and handled by prospective buyers. In fact, some books sold in mega stores may have dust jackets only in VG (Very Good) condition. If there is any flaw to a book or dj labeled Fine (F), the bookseller needs to describe it. (Eg. DJ - Slightest edge wear bottom edge.) If the book has a remainder mark (a mark, usually on the bottom edge, placed by a publisher selling off books at a discount) that must be stated. As a collector you want to avoid books with remainder marks.</p> 
+              <h4>VG - Very Good</h4>
+              <p> describes a book that does show some small signs of wear - but no tears - on either binding or paper.</p>  
+              <h4>G - Good</h4>
+              <p> describes the average used book that has all pages or leaves present.</p>
+              <h4>Fair</h4>
+              <p> describes a worn book that has complete text pages (including those with maps or plates) but may lack endpapers, half-title page, etc. (Such missing pieces must be noted in the description). The binding, jacket (if any) may also be worn.</p>
+              <h4>Poor</h4>
+              <p> describes a book that is sufficiently worn, to the point that its only merit is as a Reading Copy because it HAS the complete text. (The text must be legible.) Any missing maps or plates should still be noted. A book or dust jacket listed as Poor (P) may be soiled, scuffed, stained or spotted and the book may have loose joints, hinges, pages, etc.</p>
+            </span>
+          </a><br><br>
+    	<input type="number"  class="form-control" name="cost" value="" placeholder="COST" maxlength="20"><br>
+  		<textarea class="form-control" name="description" rows="4" cols="200" placeholder="DESCRIPTION" maxlength="300"></textarea><br>
         <input name="myImage" class="form-control" id = "file-input" type="file"><br>
       	<button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
     </form><br>
   </div>
+  <script type="text/javascript">
+    function pop_up_condition() {
+   var popup = document.getElementById("popup");
+   popup.classList.toggle("show");
+ }
+  </script>
 </body>
 </html>

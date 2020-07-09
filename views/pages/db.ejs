@@ -2,22 +2,127 @@
 <html>
 <head>
   <% include ../partials/header.ejs %>
+  <link rel="stylesheet" type="text/css" href="table.css">
 </head>
 
 <body>
+	
+<style type="text/css">
+table, th, td {
+  border: 1px solid white;
+  text-align: center;
+  color: white;
+}
+table{
+	width: 100%;
+}
+th{
+	font-weight: bold;
+	background-color: black;
 
-<% include ../partials/nav.ejs %>
+}
+td{
+  background-color: #31263e;
+}
+* {
+  box-sizing: border-box;
+}
+body{
+   font-family: Arial, Helvetica, sans-serif;
+   background-color: #f1e3cb;
+   width: 90%;
+   margin: 40px 65px 65px 65px;
+}
 
-<div class="container">
-<h2>Database Results</h2>
 
-<ul>
+
+	</style>
+<h2>backpack Database Results</h2>
+
+<table id = "tbl">
+	<tr>
+		<th> User ID </th>
+		<th> User Name </th>
+		<th> User Email </th>
+		<th> User Image </th>
+	</tr>
+	
     <% rows.forEach(function(r) { %>
-        <li><%= r.uid %> - <%= r.uname %> - <%= r.uemail %></li>
+      	<tr>
+      		<td> <%= r.uid.trim() %></td>
+        	<td> <%= r.uname.trim() %> </td> 
+        	<td> <%= r.uemail %> </td> 
+        	<td> <%= r.uimage %> </td>
+    	</tr>    
     <% }); %>
-</ul>
-
+  
+</table>
+<br><hr>
+<div class="container">
+  <form class="" action="/admin_deleteUser" method="post">
+    <div class="clear">
+      <div class="col-25">
+        <label for="UserID">User ID</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "UserID" name="uid" value="" placeholder="UserId"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <input type="submit" name="sub" value="Delete User"> <br>
+    </div>
+  </form> 
+<hr>
+  <form class="" action="/admin_edituser" method="post">
+   <div class="clear">
+      <div class="col-25">
+        <label for="UserID">User ID</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "UserID" name="uid" value="" placeholder="User ID"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <div class="col-25">
+        <label for="oldId">Old ID</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "oldId" name="oid" value="" placeholder="Old User ID"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <div class="col-25">
+        <label for="UserName"> User Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "UserName" name="uname" value="" placeholder="User Name"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <div class="col-25">
+        <label for="UserEmail"> User Email </label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "UserEmail" name="uemail" value="" placeholder="User Email"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <div class="col-25">
+        <label for="UserImage"> User Image </label>
+      </div>
+      <div class="col-75">
+        <input type="text" id= "UserImage" name="uimage" value="" placeholder="User Image"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <input type="submit" name="sub" value="Edit User"> <br>
+    </div>
+  </form> 
 </div>
+  
+</table>
+</div>
+<div style="margin-top : 100px"></div> 
 
 </body>
 </html>
