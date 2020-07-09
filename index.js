@@ -72,6 +72,20 @@ app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (re
     })
 });
 
+//allowing the Admin to delete a user from backpack database
+app.post('/admin_deleteUser',(req,res) =>{
+    var id = req.body.uid
+    // delete this user id from the backpack database
+    var getUs = "DELETE FROM backpack WHERE uid = '" + id +"'" 
+    pool.query(getUs, (error, result) =>{
+       if(error)
+        res.end(error)
+    })
+      // go to the admin main page with the updated table (without the deleted user)
+      res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
+  });
+
+
 app.get('/login', (req, res) => {
     res.render('pages/login', {});
 });
@@ -343,7 +357,7 @@ AWS.config.update({
   secretAccessKey: AWS_SECRET,
   region: 'us-west-2'
 })
-
+// initiate the storage
 const S3 = new AWS.S3();
 
 const upload = multer({
@@ -353,7 +367,7 @@ const upload = multer({
         acl: 'public-read',
         bucket: BUCKET_NAME,
 
-        // Changing the file name to be unique
+        // Changing the file name to be unique (put the time and date instead of filename)
         key: function (req, file, cb) {
             cb(null, new Date().toISOString() + path.extname(file.originalname));
         }
@@ -407,6 +421,7 @@ app.post('/upload', function (req, res){
             var cost = req.body.cost
             var condition = req.body.condition
             var description = req.body.description
+            // insert the user info into the img database (the image in AWS and the path of image in img database)
             var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
                 pool.query(getImageQuery, (error,result)=>{
                 if(error){

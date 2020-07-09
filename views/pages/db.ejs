@@ -5,19 +5,46 @@
 </head>
 
 <body>
+<h2>backpack Database Results</h2>
 
-<% include ../partials/nav.ejs %>
-
-<div class="container">
-<h2>Database Results</h2>
-
-<ul>
+<table id = "tbl">
+	<tr>
+		<th> User ID </th>
+		<th> User Name </th>
+		<th> User Email </th>
+		<th> User Image </th>
+	</tr>
+	
     <% rows.forEach(function(r) { %>
-        <li><%= r.uid %> - <%= r.uname %> - <%= r.uemail %></li>
+      	<tr>
+      		<td> <%= r.uid.trim() %></td>
+        	<td> <%= r.uname.trim() %> </td> 
+        	<td> <%= r.uemail %> </td> 
+        	<td> <%= r.uimage %> </td>
+    	</tr>    
     <% }); %>
-</ul>
-
+  
+</table>
+<br><hr>
+<div class="container">
+  <form class="" action="/admin_deleteUser" method="post">
+    <div class="clear">
+      <div class="col-25">
+        <label for="UserID">User ID</label>
+      </div>
+      <div class="col-75">
+        <input type="number" id = "UserID" name="uid" value="" placeholder="UserId"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <input type="submit" name="sub" value="Delete User"> <br>
+    </div>
+  </form> 
 </div>
+  
+</table>
+</div>
+<div style="margin-top : 100px"></div> 
 
 </body>
 </html>
