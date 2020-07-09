@@ -261,10 +261,14 @@ app.post('/showpassword', (req, res) => {
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
-                res.send(`INFORMAION is not correct!`);
+                res.render('pages/find_pw', { // all the input enter have to be true to show the PASSWORD
+                      msg: 'INFORMAION is not correct!'
+                   });
             }
             else{
-                res.send(result.rows[0].upassword);
+                res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
+                      msg: result.rows[0].upassword
+                });
             }
         })
     }

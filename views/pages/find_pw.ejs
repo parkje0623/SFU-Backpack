@@ -31,6 +31,9 @@
                       <h3><i class="fa fa-lock fa-4x"></i></h3>
                       <h2 class="text-center">Forgot Password?</h2>
                       <p>You can see your password here.</p>
+                      <div class= "warning" style="color:red;">
+                        <%= typeof msg != 'undefined' ? msg : '' %><br>
+                      </div><br>
                       <div class="panel-body">
         
                         <form action="/showpassword" id="register-form" role="form" autocomplete="off" class="form" method="post">
