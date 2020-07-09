@@ -97,7 +97,7 @@ app.post('/admin_deleteUser',(req,res) =>{
     var image = req.body.uimage
     var old_id = req.body.oid
     // update the username information using the old id
-    var getUs = "UPDATE backpack SET uname = '" + uname + "', uemail '" + email + "', uid = '" + id + "', uimage = '" + image + "' WHERE uid = '" + oid + "'" 
+    var getUs = "UPDATE backpack SET uname = '" + uname + "', uemail '" + email + "', uid = '" + id + "', uimage = '" + image + "' WHERE uid = '" + old_id + "'" 
     pool.query(getUs, (error, result) =>{
       if(error)
         res.end(error)
