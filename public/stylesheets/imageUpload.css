@@ -70,3 +70,53 @@ body {
   right: 100px;
   margin-top: 20px;
 }
+.condition_use {
+  position: relative;
+  left:0px;
+  display: inline-block;
+  cursor: pointer;
+}
+.condition_use .popuptext {
+  visibility: hidden;
+  width: 500px;
+  background-color: #555;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 16px;
+  z-index: 1;
+  overflow-y:scroll;
+  height: 400px;
+  width: 500px;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+h2 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.condition_use .popuptext h2 {
+  color:#20B2AA; 
+}
+.accept {
+  height: 50px;
+  width: 70px;
+  float: right;
+}
+.condition_use .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s
+}
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+

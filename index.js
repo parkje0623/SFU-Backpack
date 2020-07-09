@@ -21,7 +21,7 @@ pool = new Pool({
 })
 
 var app = express();
-app.use(session({
+/*app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -33,7 +33,7 @@ app.use(session({
     resave: false,
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
-}));
+}));*/
 
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -375,13 +375,13 @@ const upload = multer({
 });
 
 app.get('/upload',(req, res) =>{
-    if(!isLogedin(req,res)){ //if user is not login direct them to login page
+    /*if(!isLogedin(req,res)){ //if user is not login direct them to login page
       res.redirect('/login');
       return false;
     }
-    else{
+    else{*/
       res.render('pages/imageUpload')// else to upload page
-    }
+    //}
 });
 
 
@@ -400,6 +400,7 @@ app.post('/upload', function (req, res){
             });
           }
         else {
+            alert(req.body.condition.value)
             var path = req.file.location;
             var course = req.body.course.toLowerCase();
             var bookName = req.body.title;
@@ -434,6 +435,7 @@ app.get("/buy", (req, res) => {  // This will return a first buying page and hav
   pool.query(getUsersQuery, (error, result) => {
     if (error) { res.end(error) }
     var results = { rows: result.rows }
+
     if(isLogedin(req,res)){  // This is login and logout function
         if(req.session.ID.trim()=='admin'){
             res.render('pages/buyingpage', {results, uname:req.session.displayName, admin:true});
@@ -446,6 +448,7 @@ app.get("/buy", (req, res) => {  // This will return a first buying page and hav
           res.render('pages/buyingpage', {results, uname:false, admin:false});
     }
   })
+
 })
 
 app.get("/post/:id", (req, res) => {  // This will lead to books with specific course
