@@ -2,22 +2,52 @@
 <html>
 <head>
   <% include ../partials/header.ejs %>
+  <link rel="stylesheet" type="text/css" href="./stylesheets/db.css">
+
+  <title>Admin Database</title>
+  <nav class="username">
+            <a href="/auth/logout">logout</a>
+  </nav>
+      <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'" />
+      <p class="logo-font">sfu-backpack</p>
+      <ul>
+        <li><a class="link" href="/mypage">Back to My Page</a></li>
+        <li><a class="link" href="/buy"> Go to Buy</a></li>
+        <li><a class="link" href="/upload"> Go to Sell</a></li>
+      </ul>
 </head>
 
 <body>
+<h2>backpack Database Results</h2>
 
-<% include ../partials/nav.ejs %>
-
-<div class="container">
-<h2>Database Results</h2>
-
-<ul>
+<table id = "tbl">
+	<tr>
+		<th> User ID </th>
+		<th> User Name </th>
+		<th> User Email </th>
+		<th> User Image </th>
+	</tr>
+	
     <% rows.forEach(function(r) { %>
-        <li><%= r.uid %> - <%= r.uname %> - <%= r.uemail %></li>
+      	<tr>
+      		<td> <%= r.uid.trim() %></td>
+        	<td> <%= r.uname.trim() %> </td> 
+        	<td> <%= r.uemail %> </td> 
+        	<td> <%= r.uimage %> </td>
+    	</tr>    
     <% }); %>
-</ul>
-
+  
+</table>
+<br><hr>
+<div class="container">
+  <form class="" action="/admin_deleteUser" method="post">
+    <input type="text" id = "UserID" name="uid" value="" placeholder="UserId"><br>
+    <input type="submit" name="sub" value="Delete User"> <br><br>
 </div>
+  </form> 
+</table>
+</div>
+<div style="margin-top : 100px"></div> 
 
 </body>
 </html>

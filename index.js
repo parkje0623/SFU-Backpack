@@ -14,19 +14,23 @@ const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
+
+
+//user database access
 pool = new Pool({
-    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-    //connectionString:process.env.DATABASE_URL
+    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
+    // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+    connectionString:process.env.DATABASE_URL
 })
 
+//login session access
 var app = express();
 app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        //conString: process.env.DATABASE_URL
-        conString:'postgres://postgres:cmpt276@localhost/postgres'
+        conString: process.env.DATABASE_URL
+        // conString:'postgres://postgres:@localhost/postgres'
 
     }),
     secret: '!@SDF$@#SDF',
@@ -44,6 +48,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => res.render('pages/index'));
 
+//check whether a user did log-in or not before accessing the mainpage to show different contents
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
         if(req.session.ID.trim()=='admin'){
@@ -58,10 +63,17 @@ app.get('/mainpage', (req, res) => {
     }
 });
 
+//path to sign-up page
 app.get('/signUp', (req, res)=>{
      res.render('pages/signUp');
  });
 
+//path to find pw page
+ app.get('/find_pw', (req, res)=>{
+     res.render('pages/find_pw');
+ });
+
+//path to database page(shows every user information excerp for passwords)
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
     var getUsersQuery='SELECT * FROM backpack';
     pool.query(getUsersQuery, (error,result)=>{
@@ -72,14 +84,30 @@ app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (re
     })
 });
 
+//allowing the Admin to delete a user from backpack database
+app.post('/admin_deleteUser',(req,res) =>{
+    var id = req.body.uid
+    // delete this user id from the backpack database
+    var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id +"'"
+    pool.query(getUsersQuery, (error, result) =>{
+       if(error)
+        res.end(error)
+    })
+      // go to the admin main page with the updated table (without the deleted user)
+      res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
+  });
+
+
 app.get('/login', (req, res) => {
     res.render('pages/login', {});
 });
+
 
 app.post('/auth/login', (req, res) =>{
     var uid = req.body.uid;
     var upassword = req.body.upassword;
     var values=[uid, upassword];
+    //find database if there is a user who matches with the given information
     if(uid && upassword){
         pool.query('SELECT * FROM backpack WHERE uid=$1 AND upassword=$2', values , (error,result)=>{
             if(error)
@@ -90,6 +118,7 @@ app.post('/auth/login', (req, res) =>{
                 });
             }
             else{
+                //user information which was done log-in in a machine is saved
                 req.session.displayName = result.rows[0].uname;
                 req.session.is_logined =true;
                 req.session.ID=result.rows[0].uid;
@@ -102,11 +131,12 @@ app.post('/auth/login', (req, res) =>{
 });
 
 app.get('/auth/logout', (req, res)=>{
-    req.session.destroy(function(err){
+    req.session.destroy(function(err){//destroy session information of the machine
         res.redirect('/mainpage');
     });
 });
 
+//check if a user did log-in or not
 function isLogedin(req, res){
     if(req.session.is_logined){
         return true;
@@ -116,20 +146,7 @@ function isLogedin(req, res){
     }
 }
 
-function UIstatus(req,res){
-     var UI='<a href="/auth/login">login</a>'
-     if(isLogedin(req,res)){
-         UI='<a href="/auth/logout">logout</a>'
-     }
-     return UI
-
- }
-
- app.get('/dbtest.html', (req, res)=>{
-     var html =template.HTML(title, list, UIstatus(req,res));
- });
-
-
+//add user to database with given information
 app.post('/adduser', (req, res) => {
     var uid = req.body.uid;
     var uname = req.body.uname;
@@ -138,10 +155,10 @@ app.post('/adduser', (req, res) => {
     var upasswordcon=req.body.upasswordcon;
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
-    if(upassword===upasswordcon){
+    if(upassword===upasswordcon){//check given password and password for confirmation are match
 
         if(uid && uname && uemail && upassword){
-            pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
+            pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{//user ID and email are unique, so need to check it
                 if(error){
                     res.end(error);
                 }
@@ -232,21 +249,25 @@ app.post('/edituser', (req, res) => {
     //Error handling such as mismatch password or blank input given is handled in Javascript from profile.ejs
 });
 
-
+//function for who forgot his/her password. Shows password to user if given information is correct
 app.post('/showpassword', (req, res) => {
     var uid = req.body.uid;
     var uname = req.body.uname;
     var uemail = req.body.uemail;
     var values=[uid, uname, uemail];
     if(uid && uname && uemail){
-        pool.query(`SELECT * from backpack where uid=$1 AND uemail=$2 AND uname=$3`, values, (error, result)=>{
+        pool.query(`SELECT * from backpack where uid=$1 AND uname=$2 AND uemail=$3`, values, (error, result)=>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
-                res.send(`INFORMAION is not correct!`);
+                res.render('pages/find_pw', { // all the input enter have to be true to show the PASSWORD
+                      msg: 'INFORMAION is not correct!'
+                   });
             }
             else{
-                res.send(result.rows[0].upassword);
+                res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
+                      msg: "PASSWORD: " + result.rows[0].upassword
+                });
             }
         })
     }
@@ -299,7 +320,7 @@ app.post('/changeImage', (req, res) => {
 
 
 
-
+//function for who forgot his/her ID. Shows ID to user if given information is correct
 app.post('/showid', (req, res) => {
     var uname = req.body.uname;
     var uemail = req.body.uemail;
@@ -343,7 +364,7 @@ AWS.config.update({
   secretAccessKey: AWS_SECRET,
   region: 'us-west-2'
 })
-
+// initiate the storage
 const S3 = new AWS.S3();
 
 const upload = multer({
@@ -353,7 +374,7 @@ const upload = multer({
         acl: 'public-read',
         bucket: BUCKET_NAME,
 
-        // Changing the file name to be unique
+        // Changing the file name to be unique (put the time and date instead of filename)
         key: function (req, file, cb) {
             cb(null, new Date().toISOString() + path.extname(file.originalname));
         }
@@ -407,6 +428,7 @@ app.post('/upload', function (req, res){
             var cost = req.body.cost
             var condition = req.body.condition
             var description = req.body.description
+            // insert the user info into the img database (the image in AWS and the path of image in img database)
             var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
                 pool.query(getImageQuery, (error,result)=>{
                 if(error){
@@ -434,6 +456,7 @@ app.get("/buy", (req, res) => {  // This will return a first buying page and hav
   pool.query(getUsersQuery, (error, result) => {
     if (error) { res.end(error) }
     var results = { rows: result.rows }
+
     if(isLogedin(req,res)){  // This is login and logout function
         if(req.session.ID.trim()=='admin'){
             res.render('pages/buyingpage', {results, uname:req.session.displayName, admin:true});
@@ -446,6 +469,7 @@ app.get("/buy", (req, res) => {  // This will return a first buying page and hav
           res.render('pages/buyingpage', {results, uname:false, admin:false});
     }
   })
+
 })
 
 app.get("/post/:id", (req, res) => {  // This will lead to books with specific course
