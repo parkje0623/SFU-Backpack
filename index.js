@@ -92,7 +92,7 @@ app.post('/admin_deleteUser',(req,res) =>{
   // allowing the Admin  to edit a user name information 
    app.post('/admin_edituser',(req,res) =>{
     var uname = req.body.uname
-    var age = req.body.age
+    var email = req.body.uemail
     var id = req.body.uid
     var image = req.body.uimage
     var old_id = req.body.oid
