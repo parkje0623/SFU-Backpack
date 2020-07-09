@@ -1,5 +1,6 @@
 /* Javascript for profile.ejs START */
 //Constantly watches for event such that user clicks the edit button
+
 document.getElementById('submit_btn').addEventListener("click",
   function(event) {
     var username = document.getElementById('profname').value.trim();
