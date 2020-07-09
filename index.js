@@ -453,22 +453,19 @@ app.get("/post/:id", (req, res) => {  // This will lead to books with specific c
   pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
     if (error) {res.end(error)}
     var results = { rows: result.rows }  // Will return data from img table
-    })
+
     if(isLogedin(req,res)){  // This is login and logout function
         if(req.session.ID.trim()=='admin'){
-            var uname = req.session.displayName;
-            var admin = true;
+            res.render('pages/buyingPageReload', {results, uname:req.session.displayName, admin:true});
         }
         else{
-            var uname = req.session.displayName;
-            var admin:false;
+            res.render('pages/buyingPageReload', {results,uname:req.session.displayName, admin:false});
         }
     }
     else{
-      var uname = false;
-      var admin = false;
+          res.render('pages/buyingPageReload', {results, uname:false, admin:false});
     }
-  res.render('pages/buyingPageReload', {results, uname, admin});
+  })
 })
 
 ///////////////////////////////
