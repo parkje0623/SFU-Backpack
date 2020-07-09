@@ -2,41 +2,22 @@
 <html>
 <head>
   <% include ../partials/header.ejs %>
-  <link rel="stylesheet" type="text/css" href="table.css">
+  <link rel="stylesheet" type="text/css" href="./stylesheets/db.css">
+
+  <title>Admin Database</title>
+  <nav class="username">
+            <a href="/auth/logout">logout</a>
+  </nav>
+      <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'" />
+      <p class="logo-font">sfu-backpack</p>
+      <ul>
+        <li><a class="link" href="/mypage">Back to My Page</a></li>
+        <li><a class="link" href="/buy"> Go to Buy</a></li>
+        <li><a class="link" href="/upload"> Go to Sell</a></li>
+      </ul>
 </head>
 
 <body>
-	
-<style type="text/css">
-table, th, td {
-  border: 1px solid white;
-  text-align: center;
-  color: white;
-}
-table{
-	width: 100%;
-}
-th{
-	font-weight: bold;
-	background-color: black;
-
-}
-td{
-  background-color: #31263e;
-}
-* {
-  box-sizing: border-box;
-}
-body{
-   font-family: Arial, Helvetica, sans-serif;
-   background-color: #f1e3cb;
-   width: 90%;
-   margin: 40px 65px 65px 65px;
-}
-
-
-
-	</style>
 <h2>backpack Database Results</h2>
 
 <table id = "tbl">
@@ -73,53 +54,6 @@ body{
     </div>
   </form> 
 <hr>
-  <form class="" action="/admin_edituser" method="post">
-   <div class="clear">
-      <div class="col-25">
-        <label for="UserID">User ID</label>
-      </div>
-      <div class="col-75">
-        <input type="text" id = "UserID" name="uid" value="" placeholder="User ID"> <br>
-      </div>
-    </div>
-    <div class="clear">
-      <div class="col-25">
-        <label for="oldId">Old ID</label>
-      </div>
-      <div class="col-75">
-        <input type="text" id = "oldId" name="oid" value="" placeholder="Old User ID"> <br>
-      </div>
-    </div>
-    <div class="clear">
-      <div class="col-25">
-        <label for="UserName"> User Name</label>
-      </div>
-      <div class="col-75">
-        <input type="text" id = "UserName" name="uname" value="" placeholder="User Name"> <br>
-      </div>
-    </div>
-    <div class="clear">
-      <div class="col-25">
-        <label for="UserEmail"> User Email </label>
-      </div>
-      <div class="col-75">
-        <input type="text" id = "UserEmail" name="uemail" value="" placeholder="User Email"> <br>
-      </div>
-    </div>
-    <div class="clear">
-      <div class="col-25">
-        <label for="UserImage"> User Image </label>
-      </div>
-      <div class="col-75">
-        <input type="text" id= "UserImage" name="uimage" value="" placeholder="User Image"> <br>
-      </div>
-    </div>
-    <div class="clear">
-      <input type="submit" name="sub" value="Edit User"> <br>
-    </div>
-  </form> 
-</div>
-  
 </table>
 </div>
 <div style="margin-top : 100px"></div> 
