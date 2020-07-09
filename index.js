@@ -14,12 +14,16 @@ const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
+
+
+//user database access
 pool = new Pool({
-    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
+    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
     // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
     connectionString:process.env.DATABASE_URL
 })
 
+//login session access
 var app = express();
 app.use(session({
     store: new Psession({
@@ -44,6 +48,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => res.render('pages/index'));
 
+//check whether a user did log-in or not before accessing the mainpage to show different contents
 app.get('/mainpage', (req, res) => {
     if(isLogedin(req,res)){
         if(req.session.ID.trim()=='admin'){
@@ -58,14 +63,17 @@ app.get('/mainpage', (req, res) => {
     }
 });
 
+//path to sign-up page
 app.get('/signUp', (req, res)=>{
      res.render('pages/signUp');
  });
 
+//path to find pw page
  app.get('/find_pw', (req, res)=>{
      res.render('pages/find_pw');
  });
 
+//path to database page(shows every user information excerp for passwords)
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
     var getUsersQuery='SELECT * FROM backpack';
     pool.query(getUsersQuery, (error,result)=>{
@@ -106,15 +114,17 @@ app.post('/admin_deleteUser',(req,res) =>{
     res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
   });
 
-
+//path to login page
 app.get('/login', (req, res) => {
     res.render('pages/login', {});
 });
+
 
 app.post('/auth/login', (req, res) =>{
     var uid = req.body.uid;
     var upassword = req.body.upassword;
     var values=[uid, upassword];
+    //find database if there is a user who matches with the given information
     if(uid && upassword){
         pool.query('SELECT * FROM backpack WHERE uid=$1 AND upassword=$2', values , (error,result)=>{
             if(error)
@@ -125,6 +135,7 @@ app.post('/auth/login', (req, res) =>{
                 });
             }
             else{
+                //user information which was done log-in in a machine is saved
                 req.session.displayName = result.rows[0].uname;
                 req.session.is_logined =true;
                 req.session.ID=result.rows[0].uid;
@@ -137,11 +148,12 @@ app.post('/auth/login', (req, res) =>{
 });
 
 app.get('/auth/logout', (req, res)=>{
-    req.session.destroy(function(err){
+    req.session.destroy(function(err){//destroy session information of the machine
         res.redirect('/mainpage');
     });
 });
 
+//check if a user did log-in or not
 function isLogedin(req, res){
     if(req.session.is_logined){
         return true;
@@ -151,20 +163,7 @@ function isLogedin(req, res){
     }
 }
 
-function UIstatus(req,res){
-     var UI='<a href="/auth/login">login</a>'
-     if(isLogedin(req,res)){
-         UI='<a href="/auth/logout">logout</a>'
-     }
-     return UI
-
- }
-
- app.get('/dbtest.html', (req, res)=>{
-     var html =template.HTML(title, list, UIstatus(req,res));
- });
-
-
+//add user to database with given information
 app.post('/adduser', (req, res) => {
     var uid = req.body.uid;
     var uname = req.body.uname;
@@ -173,10 +172,10 @@ app.post('/adduser', (req, res) => {
     var upasswordcon=req.body.upasswordcon;
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
-    if(upassword===upasswordcon){
+    if(upassword===upasswordcon){//check given password and password for confirmation are match
 
         if(uid && uname && uemail && upassword){
-            pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
+            pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{//user ID and email are unique, so need to check it
                 if(error){
                     res.end(error);
                 }
@@ -267,7 +266,7 @@ app.post('/edituser', (req, res) => {
     //Error handling such as mismatch password or blank input given is handled in Javascript from profile.ejs
 });
 
-
+//function for who forgot his/her password. Shows password to user if given information is correct
 app.post('/showpassword', (req, res) => {
     var uid = req.body.uid;
     var uname = req.body.uname;
@@ -338,7 +337,7 @@ app.post('/changeImage', (req, res) => {
 
 
 
-
+//function for who forgot his/her ID. Shows ID to user if given information is correct
 app.post('/showid', (req, res) => {
     var uname = req.body.uname;
     var uemail = req.body.uemail;
