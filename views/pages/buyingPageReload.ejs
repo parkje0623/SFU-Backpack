@@ -27,6 +27,7 @@
       crossorigin="anonymous"
     ></script>
     <!-- BOOTSTRAP -->
+    <base href="/">
 
     <link rel="stylesheet" href="./stylesheets/styles.css" />
     <link
@@ -47,7 +48,7 @@
           </form>
         </nav>
         <!-- LOGIN FEATURE -->
-        <form> 
+        <form>
           <nav class="login-bar">
             <%if( uname ===false){%>
             <a href="/login">login</a>
@@ -271,7 +272,7 @@
           <% var i = 1; %>
           <ul>
             <!-- Get data from img table and display it -->
-              <% rows.forEach(function(r) { %>
+              <% results.forEach(function(r) { %>
                 <!-- Make an if statement to print course name only one time -->
               <% if ( i == 1) {%>
                 <li class="course-heading-buyingpage"><%= r.course %> </li>
