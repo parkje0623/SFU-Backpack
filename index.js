@@ -58,8 +58,8 @@ app.get('/mainpage', (req, res) => {
     }
 });
 
-app.get('/sign_up', (req, res)=>{
-     res.redirect('/sign_up.html');
+app.get('/signUp', (req, res)=>{
+     res.render('pages/signUp');
  });
 
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
@@ -85,7 +85,9 @@ app.post('/auth/login', (req, res) =>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
-                res.redirect('/login');
+                res.render('pages/login', { // if wrong password or ID
+                  msg: 'Error: Wrong USER ID or PASSWORD!'
+                });
             }
             else{
                 req.session.displayName = result.rows[0].uname;
@@ -136,24 +138,35 @@ app.post('/adduser', (req, res) => {
     var upasswordcon=req.body.upasswordcon;
     var checking = [uid, uemail];
     var values=[uid, uname, uemail, upassword];
-    if(uid && uname && uemail && upassword){
-        pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
-            if(error){
-                res.end(error);
-            }
-            else if(result&&result.rows[0]){
-                res.send(`USER ID or EMAIL is already taken!`);
-            }
-            else{
-                pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
-                    if(error)
-                        res.end(error);
-                    else{
-                        res.redirect('/login');
-                    }
-                })
-            }
-        })
+    if(upassword===upasswordcon){
+
+        if(uid && uname && uemail && upassword){
+            pool.query('SELECT * FROM backpack WHERE uid=$1 OR uemail=$2', checking , (error,result)=>{
+                if(error){
+                    res.end(error);
+                }
+                else if(result&&result.rows[0]){
+                    res.render('pages/signUp', { // if the ID and the email already in database
+                      msg: 'Error: USER ID or EMAIL is already taken!'
+                   });
+                }
+                else{
+                    pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
+                        if(error)
+                            res.end(error);
+                        else{
+                            res.redirect('/login');
+                        }
+                    })
+                }
+            })
+        }
+    }
+    else{
+        res.render('pages/signUp', { // if the two password don't match
+          msg: 'Error: PASSWORD and CONFIRM PASSWORD have to match!'
+        });
+
     }
 
 });
@@ -305,7 +318,26 @@ app.post('/showid', (req, res) => {
     }
 });
 
-// SETTING UP AMAZON STORAGE
+
+app.post('/mypage', (req, res) => { //Edit Jieung, new feature for profile.ejs
+  var uid = req.body.uid;
+  var values=[uid];
+  if(uid){
+      pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
+          if(error)
+              res.end(error);
+          else{
+              var results = {'rows':result.rows};
+              res.render('pages/profile', results);
+          }
+      });
+  } else {
+
+    res.send("Must log-in first");
+  }
+});
+
+// Setting up Amazon Storage
 AWS.config.update({
   accessKeyId:  AWS_ID,
   secretAccessKey: AWS_SECRET,
@@ -315,26 +347,21 @@ AWS.config.update({
 const S3 = new AWS.S3();
 
 const upload = multer({
-    // CREATE MULTER-S3 FUNCTION FOR STORAGE
+    // Create Multer-S3 Function for Storage
     storage: multerS3({
         s3: S3,
         acl: 'public-read',
         bucket: BUCKET_NAME,
 
-        // SET / MODIFY ORIGINAL FILE NAME. ///// to be done shiva
+        // Changing the file name to be unique
         key: function (req, file, cb) {
-            cb(null, new Date().toISOString() + path.extname(file.originalname)); //set unique file name if you wise using Date.toISOString()
-            // EXAMPLE 1
-            // cb(null, Date.now() + '-' + file.originalname);
-            // EXAMPLE 2
-            // cb(null, new Date().toISOString() + '-' + file.originalname);
-
+            cb(null, new Date().toISOString() + path.extname(file.originalname));
         }
     }),
-    // SET DEFAULT FILE SIZE UPLOAD LIMIT
+    // Set default file size upload limit
     limits: { fileSize: 1024 * 1024 * 50 }, // 50MB
 
-    // FILTER OPTIONS LIKE VALIDATING FILE EXTENSION
+    // validation of the file extention
     fileFilter: function(req, file, cb) {
         const filetypes = /jpeg|jpg|gif|png/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -343,18 +370,17 @@ const upload = multer({
             return cb(null, true);
         } else {
             cb('Only jpeg/jpg/png images allowed')
-            //return cb(('Only jpeg/jpg/png images allowed'))
         }
     }
 });
 
 app.get('/upload',(req, res) =>{
-    if(!isLogedin(req,res)){
+    if(!isLogedin(req,res)){ //if user is not login direct them to login page
       res.redirect('/login');
       return false;
     }
     else{
-      res.render('pages/imageUpload')
+      res.render('pages/imageUpload')// else to upload page
     }
 });
 
@@ -363,83 +389,87 @@ const image_upload = upload.single('myImage');
 app.post('/upload', function (req, res){
   image_upload(req, res, function(err){
     if(err){
-          res.render('pages/imageUpload', {
+          res.render('pages/imageUpload', { // if the file is not an image
           msg: err
           });
       }
       else {
           if(req.file == undefined){
-            res.render('pages/imageUpload', {
+            res.render('pages/imageUpload', { // if no file was selected
               msg: 'Error: No File Selected!'
             });
           }
         else {
             var path = req.file.location;
-            var course = req.body.course;
+            var course = req.body.course.toLowerCase();
             var bookName = req.body.title;
             var uid =  req.session.ID;
-            var getImageQuery="INSERT INTO img (course, path, bookname, uid) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "')"
+            var cost = req.body.cost
+            var condition = req.body.condition
+            var description = req.body.description
+            var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
                 pool.query(getImageQuery, (error,result)=>{
                 if(error){
                     res.end(error);
                 }
                   else {
                   res.render('pages/imageUpload', {
-                  msg: 'File Uploaded!',
-
+                  msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
                 });
                 }
             });
 
         }
 
-        }
+      }
   });
 });
 
 
 
-//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS who are you?????
-app.get("/buy", (req, res) => {
+//  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS - khoa
+
+app.get("/buy", (req, res) => {  // This will return a first buying page and have login function
   var getUsersQuery = `SELECT * FROM img`
   pool.query(getUsersQuery, (error, result) => {
-    if (error) res.end(error)
+    if (error) { res.end(error) }
     var results = { rows: result.rows }
-    res.render("pages/buyingpage", results)
+    if(isLogedin(req,res)){  // This is login and logout function
+        if(req.session.ID.trim()=='admin'){
+            res.render('pages/buyingpage', {results, uname:req.session.displayName, admin:true});
+        }
+        else{
+            res.render('pages/buyingpage', {results,uname:req.session.displayName, admin:false});
+        }
+    }
+    else{
+          res.render('pages/buyingpage', {results, uname:false, admin:false});
+    }
   })
 })
-// app.get("/post", (req, res) => {
-//   var getUsersQuery = `SELECT * FROM img`
-//   pool.query(getUsersQuery, (error, result) => {
-//     if (error) res.end(error)
-//     var results = { rows: result.rows }
-//     res.render("pages/buyingpage", results)
-//   })
-// })
-app.get("/post/:id", (req, res) => {
-  console.log(req.params.id)
-  var cname = req.params.id
+
+app.get("/post/:id", (req, res) => {  // This will lead to books with specific course
+  var cname = req.params.id  // Get data from course name
   pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
-    if (error) res.end(error)
-    var results = { rows: result.rows }
-    res.render("pages/buyingPageReload", results)
+    if (error) {res.end(error)}
+    var results = { rows: result.rows }  // Will return data from img table
+
+    if(isLogedin(req,res)){  // This is login and logout function
+        if(req.session.ID.trim()=='admin'){
+            res.render('pages/buyingPageReload', {results, uname:req.session.displayName, admin:true});
+        }
+        else{
+            res.render('pages/buyingPageReload', {results,uname:req.session.displayName, admin:false});
+        }
+    }
+    else{
+          res.render('pages/buyingPageReload', {results, uname:false, admin:false});
+    }
   })
 })
+
 ///////////////////////////////
 
-app.get('/header', (req, res) => {
-     if(isLogedin(req,res)){
-         if(req.session.ID.trim()=='admin'){
-             res.render('pages/mainpage', {uname:req.session.displayName, uid:true});
-         }
-         else{
-             res.render('pages/mainpage', {uname:req.session.displayName, uid:false});
-         }
-     }
-     else{
-         res.render('pages/mainpage', {uname: false, uid: false});
-     }
- });
 
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));

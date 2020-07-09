@@ -1,5 +1,6 @@
 /* Javascript for profile.ejs START */
 //Constantly watches for event such that user clicks the edit button
+
 document.getElementById('submit_btn').addEventListener("click",
   function(event) {
     var username = document.getElementById('profname').value.trim();
@@ -39,10 +40,5 @@ document.getElementById('delete_btn').addEventListener("click",
 function getImage(event) {
   var changeImg = document.getElementById('image');
   changeImg.value = document.getElementById('pics').value;
-}
-
-function pop_up_condition() {
-  var popup = document.getElementById("popup");
-  popup.classList.toggle("show");
 }
 /* Javascript for profile.ejs FINISHED */
