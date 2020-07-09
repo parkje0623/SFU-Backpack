@@ -136,34 +136,11 @@ body {
   top: 0px;
 }
 
-.course-name {
-  display: inline-block;
-  width: 200px;
-  text-align: right;
-}
-
-.course-heading-title {
-  text-align: center;
-  margin: 50px;
-}
-.display-image-books {
-  display: inline-block;
-  width: 500px;
-  height: 500px;
-}
-
-.image-book {
-  width: 100px;
-  z-index: -1;
-
-}
-
-.div-display-bookname-bookimage{
+.div-display-bookname-bookimage {
   position: relative;
   margin-left: 20px;
-  width: 200px;
+  /* width: 200px; */
   z-index: -1000;
-
 }
 .course-heading-buyingpage {
   margin-top: 20px;
@@ -171,8 +148,16 @@ body {
   text-transform: uppercase;
   font-size: 30px;
 }
-.book-name-buyingpage{
+.book-name-buyingpage {
+  margin-left: 10px;
+  display: inline-block;
+  vertical-align: top;
+  text-transform: uppercase;
+}
+.select-btn-buyingpage {
+  position: relative;
   margin-top: 10px;
+  display: block;
   text-transform: uppercase;
 }
 
