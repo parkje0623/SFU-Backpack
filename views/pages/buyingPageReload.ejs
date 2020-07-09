@@ -27,212 +27,45 @@
       crossorigin="anonymous"
     ></script>
     <!-- BOOTSTRAP -->
-<style media="screen">
-body {
-  background-color: #f1e3cb;
-}
-.top-container {
-  position: relative;
-  height: 100px;
-}
+    <base href="/">
 
-.middle-container {
-  position: relative;
-  height: 100px;
-  text-align: center;
-}
-
-#logo {
-  position: relative;
-  left: 40px;
-  width: 5%;
-}
-#logo:hover {
-  cursor: pointer;
-}
-
-.logo-font {
-  position: relative;
-  font-family: "MuseoModerno", cursive;
-  margin-top: 0;
-  left: 20px;
-}
-.search-bar {
-  text-align: center;
-  position: absolute;
-  width: 100%;
-  margin-top: 20px;
-}
-
-.search-input {
-  height: 30px;
-}
-.search-btn {
-  height: 30px;
-}
-
-.login-bar {
-  position: absolute;
-  right: 100px;
-  margin-top: 20px;
-}
-.login-btn {
-  height: 30px;
-}
-.button {
-  width: 10%;
-  height: 100px;
-  font: 50px;
-}
-
-/* buying page html */
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-.buying-menu {
-  width: 100%;
-  position: relative;
-}
-
-.navigationDesktop {
-  text-align: center;
-}
-
-.nav-buying-dropdown-menu {
-  display: inline-block;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.nav-buying-dropdown-menu a {
-  font-family: monospace;
-  font-weight: bold;
-  font-size: 15pt;
-  color: #112233;
-}
-
-.nav-buying-dropdown-menu a:hover {
-  background: #223433;
-  color: #f0f1f5;
-}
-
-.nav-buying-dropdown-menu ul {
-  list-style: none;
-}
-
-.nav-buying-dropdown-menu ul li {
-  float: left;
-  width: 50px;
-  height: 40px;
-  line-height: 40px;
-  background: #fc575e;
-}
-
-.nav-buying-dropdown-menu ul ul li {
-  position: relative;
-  display: none;
-}
-
-
-/* nav ul ul ul {
-  display: none;
-} */
-
-.nav-buying-dropdown-menu ul li:hover ul li{
-  display: block;
-  animation: navmenu 500ms forwards;
-}
-/* nav ul li:hover ul li {
-  display: block;
-  animation: navmenu 500ms forwards;
-} */
-@keyframes navmenu {
-  0% {
-    opacity: 0;
-    top: 25px;
-  }
-  100% {
-    opacity: 1;
-    top: 0px;
-  }
-}
-.nav-buying-dropdown-menu ul ul li:hover ul {
-  display: block;
-  position: absolute;
-  width: 200px;
-  left: 140px;
-  top: 0px;
-}
-
-.course-name {
-  display: inline-block;
-  width: 200px;
-  text-align: right;
-}
-
-.course-heading-title {
-  text-align: center;
-  margin: 50px;
-}
-.display-image-books {
-  display: inline-block;
-  width: 500px;
-  height: 500px;
-}
-
-.image-book {
-  width: 100px;
-  z-index: -1;
-
-}
-
-.div-display-bookname-bookimage{
-  position: relative;
-  margin-left: 20px;
-  width: 200px;
-  z-index: -1000;
-
-}
-.course-heading-buyingpage {
-  margin-top: 20px;
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 30px;
-}
-.book-name-buyingpage{
-  margin-top: 10px;
-  text-transform: uppercase;
-}
-</style>
+    <link rel="stylesheet" href="./stylesheets/styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
-    </head>
     <body>
-        <div class="top-container">
-            <nav class="search-bar">
-              <form>
-                <input
-                  class="search-input"
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search.."
-                />
-                <button class="search-btn" type="submit">Search</button>
-              </form>
-            </nav>
-            <nav class="login-bar">
-              <button class="login-btn" type="submit">Login</button>
-              <button class="login-btn" type="submit">Mypage</button>
-              <button class="login-btn circle" type="submit">Info</button>
-            </nav>
+      <div class="top-container">
+        <nav class="search-bar">
+          <form>
+            <input
+              class="search-input"
+              type="search"
+              placeholder="Search"
+              aria-label="Search.."
+            />
+            <button class="search-btn" type="submit">Search</button>
+          </form>
+        </nav>
+        <!-- LOGIN FEATURE -->
+        <form>
+          <nav class="login-bar">
+            <%if( uname ===false){%>
+            <a href="/login">login</a>
+          <%}%>
+            <%if( uname !=false){%>
+              <a href="/auth/logout">logout</a>
+              <a href="/mypage"><%= uname %></a>
+          <%}%>
+            <%if( admin == true){%>
+            <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+          <%}%>
+          </nav>
+        </form>
 
-            <img id="logo" src="/logo.png" alt="logo" />
-            <p class="logo-font">sfu-backpack</p>
-          </div>
+        <img id="logo" src="logo.png" alt="logo" />
+        <p class="logo-font">sfu-backpack</p>
+      </div>
 
 
           <!-- Drop-down menu -->
@@ -439,7 +272,7 @@ body {
           <% var i = 1; %>
           <ul>
             <!-- Get data from img table and display it -->
-              <% rows.forEach(function(r) { %>
+              <% results.forEach(function(r) { %>
                 <!-- Make an if statement to print course name only one time -->
               <% if ( i == 1) {%>
                 <li class="course-heading-buyingpage"><%= r.course %> </li>
