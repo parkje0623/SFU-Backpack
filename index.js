@@ -62,6 +62,10 @@ app.get('/signUp', (req, res)=>{
      res.render('pages/signUp');
  });
 
+ app.get('/find_pw', (req, res)=>{
+     res.render('pages/find_pw');
+ });
+
 app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (req, res) => {
     var getUsersQuery='SELECT * FROM backpack';
     pool.query(getUsersQuery, (error,result)=>{

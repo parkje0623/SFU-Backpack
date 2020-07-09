@@ -22,6 +22,13 @@
 		box-shadow: none !important;
 		border: transparent;
 	}
+	.form-control i {
+		position: absolute;
+		left: 75%;
+    	top: 27px;
+    	color: orange;
+	}
+
 	.form-control:focus {
 		background: #e2e2e2;
 	}
@@ -44,6 +51,7 @@
         box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
         padding: 30px;
     }
+
     .login-form .btn {        
         font-size: 16px;
         font-weight: bold;
@@ -81,14 +89,30 @@
         	<input type="text" class="form-control" name="uid" placeholder="ID" required="required">
         </div>
 		<div class="form-group">
-            <input type="password" class="form-control" name="upassword" placeholder="Password" required="required">
+			<input type="password" class="form-control" name="upassword" placeholder="Password" required="required">
+			<i class="fa fa-eye fa-lg"></i>
         </div>        
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
         </div>
-        <p><a href="#">Lost your Password?</a></p>
+        <p><a href="/find_pw">Lost your Password?</a></p>
     </form>
     <p class="text-center small">Don't have an account? <a href="/signUp">Sign up here!</a></p>
 </div>
 </body>
+<script>
+	$(document).ready(function(){
+    $('.form-group i').on('click',function(){
+        $('input').toggleClass('active');
+        if($('input').hasClass('active')){
+            $(this).attr('class',"fa fa-eye-slash fa-lg")
+            .prev('input').attr('type',"text");
+        }else{
+            $(this).attr('class',"fa fa-eye fa-lg")
+            .prev('input').attr('type','password');
+        }
+    });
+});
+
+</script>
 </html>
