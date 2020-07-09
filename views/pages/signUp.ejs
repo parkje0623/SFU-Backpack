@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="./stylesheets/signUp.css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
 <title>Sign Up</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -22,13 +23,13 @@ body {
 .form-control, .form-control:focus, .input-group-text {
 	border-color: #e1e1e1;
 }
-.form-control, .btn {        
+.form-control, .btn {
 	border-radius: 3px;
 }
 .signup-form {
 	width: 400px;
 	margin: 0 auto;
-	padding: 30px 0;		
+	padding: 30px 0;
 }
 .signup-form form {
 	color: #999;
@@ -56,12 +57,12 @@ body {
 .signup-form .form-control {
 	min-height: 38px;
 	box-shadow: none !important;
-}	
+}
 .signup-form .input-group-addon {
 	max-width: 42px;
 	text-align: center;
-}	
-.signup-form .btn, .signup-form .btn:active {        
+}
+.signup-form .btn, .signup-form .btn:active {
 	font-size: 16px;
 	font-weight: bold;
 	background: #19aa8d !important;
@@ -72,7 +73,7 @@ body {
 	background: #179b81 !important;
 }
 .signup-form a {
-	color: #fff;	
+	color: #fff;
 	text-decoration: underline;
 }
 .signup-form a:hover {
@@ -81,7 +82,7 @@ body {
 .signup-form form a {
 	color: #19aa8d;
 	text-decoration: none;
-}	
+}
 .signup-form form a:hover {
 	text-decoration: underline;
 }
@@ -106,15 +107,15 @@ body {
 		<h2>Registration</h2>
 		<p>Please fill in this form to create an account!</p>
 		<hr>
-		<div class= "warning" style="color:red;"> 
+		<div class= "warning" style="color:red;">
         	<%= typeof msg != 'undefined' ? msg : '' %><br>
-      	</div><br>   
+      	</div><br>
         <div class="form-group">
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<span class="input-group-text">
 						<span class="fa fa-user-circle"></span>
-					</span>                    
+					</span>
 				</div>
 				<input type="text" class="form-control" name="uid" placeholder="ID" required="required">
 			</div>
@@ -125,7 +126,7 @@ body {
             <div class="input-group-prepend">
               <span class="input-group-text">
                 <span class="fa fa-user"></span>
-              </span>                    
+              </span>
             </div>
             <input type="text" class="form-control" name="uname" placeholder="Username" required="required">
           </div>
@@ -136,7 +137,7 @@ body {
 				<div class="input-group-prepend">
 					<span class="input-group-text">
 						<i class="fa fa-paper-plane"></i>
-					</span>                    
+					</span>
 				</div>
 				<input type="email" class="form-control" name="uemail" placeholder="Email Address" required="required">
 			</div>
@@ -147,7 +148,7 @@ body {
 				<div class="input-group-prepend">
 					<span class="input-group-text">
 						<i class="fa fa-lock"></i>
-					</span>                    
+					</span>
 				</div>
 				<input type="password" class="form-control hide pass" name="upassword" placeholder="Password" required="required">
 			</div>
@@ -159,18 +160,44 @@ body {
 					<span class="input-group-text">
 						<i class="fa fa-lock"></i>
 						<i class="fa fa-check"></i>
-					</span>                    
+					</span>
 				</div>
 				<input type="password" class="form-control hide pass" name="upasswordcon" placeholder="Confirm Password" required="required">
 			</div>
         </div>
         <div class="form-group">
-			<label class="form-check-label"><input type="checkbox" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
+			<label class="form-check-label">
+				<input type="checkbox" required="required"> </input>
+				I accept the <a class="condition_use" onclick="pop_up_condition()">Terms of Use and Privacy Policy
+				<span class="popuptext" id="popup">
+          <h2> Conditions of Use </h2>
+          <p> Welcome to Backpack. Backpack service provide website features and other products and services to you when you visit or use backpack. Backpack provides the Backpack Services subject to the following conditions. </p>
+
+					<h2> By using Backpack Services, you agree to following conditions. Please read carefully. </h2>
+          <p> We offer a wide range of Backpack Services and when you use a Backpack Service (for example, your Profile, Buy, Sell, or Review) you will be subject to Service Terms relating to the Backpack Service you want to use. If these Conditions of Use are inconsistent, an action towards your inconsistency will be taken by the Backpack Service Terms.  </p>
+
+					<h2> PRIVACY </h2>
+          <p> The Privacy Notice describes how Backpack collects and process your personal information through Backpack website and Services. We work to protect the security of your personal information while using the Backpack. We will automatically collect and store the information you provide in relation to Backpack Services and any of the information will not be accessible by others. We release account and other information when we believe the release is appropriate when you would like to contact the other person for Products and Services only. It is important for you to protect unauthorized access to your password and to your computers, devices, and applications. By using Backpack, you are consenting to the practices described in the Privacy Notice. </p>
+
+					<h2> COPYRIGHT </h2>
+          <p> All content included in or available in Backpack Services such as, text, design, or buttons is property of Backpack. The content included in or available in Backpack Services is protected by the copyright laws. </p>
+
+					<h2> LICENSE AND ACCESS </h2>
+	        <p> Subject to Conditions of Use and Backpack Service, Backpack grant you a limited and non-exclusive license to access and make personal and non-commercial use of Backpack Services. This license does not include any resale or commercial use of any Backpack Services, or its contents; any downloading, copying, or other use of account information for the benefit of third party, or data gathering and extraction. All rights not expressly granted to you in these Condition of Use. Licenses are granted by Backpack to agree to limited access only, if you do not comply with these Conditions of Use, Backpack will terminate your license and access. </p>
+
+					<h2> YOUR ACCOUNT </h2>
+		      <p> You will need your own Backpack account to use Backpack Services, and you are required to be logged in to the account. You are responsible for maintaining the confidentiality of your account and password and you agree to accept responsibility for all activities that occur under your account. You may choose to edit or remove your account and Backpack will be responsible for updating your account to most recent data received. Removing your account will delete the data from our Backpack Service completely. </p>
+
+					<h2> BUY, SELL, REVIEW and Other Content </h2>
+					<p> You may post review or item wanting to sell or contact seller to buy the items listed in Backpack. If you do post content in Backpack Services, you automatically grant Backpack to monitor the content posted and remove the post if inappropriate regarding to our Service Terms (for example, unrelated posts, inappropriate language, etc.). Violating any of the Condition of Use regards to posting may lead to deletion of an account from Backpack Services.</p>
+					<button type="button" class="accept"> OK </button>
+				</span>
+			</a></label>
 		</div>
 		<div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
 		</div>
-		
+
     </form>
 
 	<div class="text-center">Already have an account? <a href="/login">Login here</a></div>
@@ -178,5 +205,6 @@ body {
 	<div class="text-center">Back to Mainpage? <a href="/mainpage">Main here</a></div>
 </div>
 </body>
-<script type="text/javascript" src="../../public/script.js"></script>
+<script type="text/javascript" src="./signUp.js">
+</script>
 </html>

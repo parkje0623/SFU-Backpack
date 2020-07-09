@@ -14,4 +14,9 @@ function eye_clicked() {
 $(document).ready(function () {
     document.getElementById('eye').onclick = eye_clicked;
 });
+
+function pop_up_condition() { //When terms of use and policy is clicked, pop-up appears.
+  var popup = document.getElementById("popup");
+  popup.classList.toggle("show");
+}
 //Javascript for sign_up page finished//
