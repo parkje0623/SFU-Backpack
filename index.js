@@ -452,7 +452,7 @@ app.get("/post/:id", (req, res) => {  // This will lead to books with specific c
   var cname = req.params.id  // Get data from course name
   pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
     if (error) {res.end(error)}
-    var results = { rows: result.rows }  // Will return data from img table
+    var results = result.rows  // Will return data from img table
 
     if(isLogedin(req,res)){  // This is login and logout function
         if(req.session.ID.trim()=='admin'){
