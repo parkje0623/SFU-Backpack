@@ -18,7 +18,7 @@ pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
     // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
     connectionString:process.env.DATABASE_URL
-// })
+})
 
 var app = express();
 app.use(session({
