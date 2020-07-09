@@ -21,7 +21,7 @@ pool = new Pool({
 })
 
 var app = express();
-/*app.use(session({
+app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -33,7 +33,7 @@ var app = express();
     resave: false,
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
-}));*/
+}));
 
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -375,13 +375,13 @@ const upload = multer({
 });
 
 app.get('/upload',(req, res) =>{
-    /*if(!isLogedin(req,res)){ //if user is not login direct them to login page
+    if(!isLogedin(req,res)){ //if user is not login direct them to login page
       res.redirect('/login');
       return false;
     }
-    else{*/
+    else{
       res.render('pages/imageUpload')// else to upload page
-    //}
+    }
 });
 
 
@@ -400,7 +400,6 @@ app.post('/upload', function (req, res){
             });
           }
         else {
-            alert(req.body.condition.value)
             var path = req.file.location;
             var course = req.body.course.toLowerCase();
             var bookName = req.body.title;
