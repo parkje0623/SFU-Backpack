@@ -16,12 +16,12 @@ const { Pool } = require('pg');
 var pool;
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users'
-    connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
-    // connectionString:process.env.DATABASE_URL
-})
+    // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+    connectionString:process.env.DATABASE_URL
+// })
 
 var app = express();
-/*app.use(session({
+app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -33,7 +33,7 @@ var app = express();
     resave: false,
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
-}));*/
+}));
 
 
 app.use(bodyParser.urlencoded({extended:false}));
