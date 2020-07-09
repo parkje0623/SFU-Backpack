@@ -24,7 +24,7 @@
       <div class= "warning"> 
         <%= typeof msg != 'undefined' ? msg : '' %><br>
       </div><br>
-      <input type="text"  class="form-control" name="title" value="" placeholder="TITLE OF THE BOOK"><br>
+      <input type="text"  class="form-control" name="title" value="" placeholder="TITLE OF THE BOOK" maxlength="50"><br>
     	<select type="text" class="form-control" name="course">
 					<option> ACMA </option>
 					<option> ALS </option>
@@ -139,8 +139,8 @@
               <p> describes a book that is sufficiently worn, to the point that its only merit is as a Reading Copy because it HAS the complete text. (The text must be legible.) Any missing maps or plates should still be noted. A book or dust jacket listed as Poor (P) may be soiled, scuffed, stained or spotted and the book may have loose joints, hinges, pages, etc.</p>
             </span>
           </a><br><br>
-    	<input type="number"  class="form-control" name="cost" value="" placeholder="COST"><br>
-  		<textarea class="form-control" name="description" rows="4" cols="200" placeholder="DESCRIPTION"></textarea><br>
+    	<input type="number"  class="form-control" name="cost" value="" placeholder="COST" maxlength="20"><br>
+  		<textarea class="form-control" name="description" rows="4" cols="200" placeholder="DESCRIPTION" maxlength="300"></textarea><br>
         <input name="myImage" class="form-control" id = "file-input" type="file"><br>
       	<button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
     </form><br>
