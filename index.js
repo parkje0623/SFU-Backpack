@@ -267,7 +267,7 @@ app.post('/showpassword', (req, res) => {
             }
             else{
                 res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
-                      msg: result.rows[0].upassword
+                      msg: "PASSWORD: " + result.rows[0].upassword
                 });
             }
         })
