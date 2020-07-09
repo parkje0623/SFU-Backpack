@@ -257,7 +257,7 @@ app.post('/showpassword', (req, res) => {
     var uemail = req.body.uemail;
     var values=[uid, uname, uemail];
     if(uid && uname && uemail){
-        pool.query(`SELECT * from backpack where uid=$1 AND uemail=$2 AND uname=$3`, values, (error, result)=>{
+        pool.query(`SELECT * from backpack where uid=$1 AND uname=$2 AND uemail=$3`, values, (error, result)=>{
             if(error)
                 res.end(error);
             else if(!result||!result.rows[0]){
