@@ -37,14 +37,13 @@
         ID: <%= attr.uid %> <br>
         <p> Email: <%= attr.uemail %> <br></p>
       </div>
-
-      <div class="delete_info"> *Must Enter Password and Confirm Password Below to Delete*</div>
+      
       <button id="delete_btn" formaction="/deleteuser" formmethod="post" type="submit" class="delete"> Permanently Delete </button>
       <br><br><br>
 
       <div class="account">
         <h1> Account <br></h1>
-        <p> ID:       <input id="profid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" maxLength="10" size="40"></input><br></p> 
+        <p> ID:       <input id="profid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" maxLength="10" size="40"></input><br></p>
         <p> Username: <input id="profname" type="text" name="uname" placeholder="<%= attr.uname %>" maxLength="10" size="40"</input><br></p>
         <p> Password: <input id="profpwd" type="password" name="upassword" placeholder="<%= attr.upassword %>" maxLength="30" size="40"</input><br></p>
         <p> Confirm Password: <input id="profconfirm" type="password" name="confirm" placeholder="<%= attr.upassword %>" maxLength="30" size="40"</input><br></p>

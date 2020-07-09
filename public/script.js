@@ -40,4 +40,9 @@ function getImage(event) {
   var changeImg = document.getElementById('image');
   changeImg.value = document.getElementById('pics').value;
 }
+
+function pop_up_condition() {
+  var popup = document.getElementById("popup");
+  popup.classList.toggle("show");
+}
 /* Javascript for profile.ejs FINISHED */
