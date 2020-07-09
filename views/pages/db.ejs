@@ -30,8 +30,9 @@ td{
 body{
    font-family: Arial, Helvetica, sans-serif;
    background-color: #f1e3cb;
-  }
-
+   width: 90%;
+   margin: 40px 65px 65px 65px;
+}
 
 
 
@@ -69,6 +70,52 @@ body{
     </div>
     <div class="clear">
       <input type="submit" name="sub" value="Delete User"> <br>
+    </div>
+  </form> 
+<hr>
+  <form class="" action="/admin_edituser" method="post">
+   <div class="clear">
+      <div class="col-25">
+        <label for="UserID">User ID</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "UserID" name="uid" value="" placeholder="User ID"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <div class="col-25">
+        <label for="oldId">Old ID</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "oldId" name="oid" value="" placeholder="Old User ID"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <div class="col-25">
+        <label for="UserName"> User Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "UserName" name="uname" value="" placeholder="User Name"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <div class="col-25">
+        <label for="UserEmail"> User Email </label>
+      </div>
+      <div class="col-75">
+        <input type="text" id = "UserEmail" name="age" value="" placeholder="User Email"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <div class="col-25">
+        <label for="UserImage"> User Image </label>
+      </div>
+      <div class="col-75">
+        <input type="text" id= "UserImage" name="uimage" value="" placeholder="User Image"> <br>
+      </div>
+    </div>
+    <div class="clear">
+      <input type="submit" name="sub" value="Edit User"> <br>
     </div>
   </form> 
 </div>

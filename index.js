@@ -89,6 +89,23 @@ app.post('/admin_deleteUser',(req,res) =>{
       res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
   });
 
+  // allowing the Admin  to edit a user name information 
+   app.post('/admin_edituser',(req,res) =>{
+    var uname = req.body.uname
+    var age = req.body.age
+    var id = req.body.uid
+    var image = req.body.uimage
+    var old_id = req.body.oid
+    // update the username information using the old id
+    var getUs = "UPDATE backpack SET uname = '" + uname + "', uemail '" + email + "', uid = '" + id + "', uimage = '" + image + "' WHERE uid = '" + oid + "'" 
+    pool.query(getUs, (error, result) =>{
+      if(error)
+        res.end(error)
+      })
+    // go to the admin main page with the updated table (with the updated user)
+    res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
+  });
+
 
 app.get('/login', (req, res) => {
     res.render('pages/login', {});
