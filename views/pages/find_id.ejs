@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Findpassword</title>
+    <title>Find ID</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
@@ -29,28 +29,14 @@
                   <div class="panel-body">
                     <div class="text-center">
                       <h3><i class="fa fa-lock fa-4x"></i></h3>
-                      <h2 class="text-center">Forgot Password?</h2>
-                      <p>You can see your password here.</p>
+                      <h2 class="text-center">Forgot ID?</h2>
+                      <p>We will send your ID and PASSWORD to your email.</p>
                       <div class= "warning" style="color:red;">
                         <%= typeof msg != 'undefined' ? msg : '' %>
                       </div><br>
                       <div class="panel-body">
         
-                        <form action="/showpassword" id="register-form" role="form" autocomplete="off" class="form" method="post">
-
-                          <div class="form-group">
-                            <div class="input-group">
-                              <span class="input-group-addon"><i class="glyphicon glyphicon-barcode color-blue"></i></span>
-                              <input  name="uid" placeholder="ID" class="form-control"  type="text">
-                            </div>
-                          </div>
-        
-                          <div class="form-group">
-                            <div class="input-group">
-                              <span class="input-group-addon"><i class="glyphicon glyphicon-user color-blue"></i></span>
-                              <input  name="uname" placeholder="NAME" class="form-control"  type="text">
-                            </div>
-                          </div>
+                        <form action="/sendEmail" id="register-form" role="form" autocomplete="off" class="form" method="post">
 
                           <div class="form-group">
                             <div class="input-group">
@@ -61,14 +47,13 @@
 
 
                           <div class="form-group">
-                            <!-- <input name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Reset Password" type="submit"> -->
-                            <button type="submit" class="btn btn-lg btn-primary btn-block">SHOW</button>
+                            <button type="submit" class="btn btn-lg btn-primary btn-block">SEND</button>
                           </div>
                           
                           <input type="hidden" class="hide" name="token" id="token" value=""> 
                         </form>
                         <p class="text-center small">Back to login page? <a href="/login">login here</a></p>
-                        <p class="text-center small">Forgot ID? <a href="/find_id">Find ID</a></p>
+                        <p class="text-center small">Forgot Password? <a href="/find_pw">Find Password</a></p>
                       </div>
                     </div>
                   </div>
