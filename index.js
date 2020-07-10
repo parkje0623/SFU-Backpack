@@ -89,7 +89,7 @@ app.get('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu', (re
 app.post('/admin_deleteUser',(req,res) =>{
     var id = req.body.uid
     // delete this user id from the backpack database
-    var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id +"'" 
+    var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id +"'"
     pool.query(getUsersQuery, (error, result) =>{
        if(error)
         res.end(error)

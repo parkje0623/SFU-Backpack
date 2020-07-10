@@ -26,6 +26,9 @@ h2 {
   margin-top: 0px;
   margin-bottom: 0px;
 }
+.condition_use .popuptext h2 {
+  color:#20B2AA; 
+}
 .accept {
   height: 50px;
   width: 70px;
