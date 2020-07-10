@@ -6,7 +6,6 @@ const ejs = require('ejs');
 const multer = require('multer');
 const multerS3 = require('multer-s3')
 const fs = require('fs');
-const nodemailer = require('nodemailer');
 const AWS = require('aws-sdk');
 const AWS_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY;
