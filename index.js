@@ -97,15 +97,47 @@ app.post('/admin_deleteUser',(req,res) =>{
       res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
   });
 
+//Allows admin to delete improper posts
 app.post('/admin_deletePost', (req, res)=> {
+  var uid = req.body.uid;
+  var bookname = req.body.bookname;
+  var coursename = req.body.coursename;
+  var values = [uid, bookname];
+  if (uid && bookname) {
+    //Delete the post that has this user id and bookname from the img database.
+    pool.query(`DELETE FROM img WHERE uid=$1 AND bookname=$2`, values, (error, result)=>{
+      if (error)
+        res.end(error)
+      //After deleting, redirects user to the most recent course section from buying page.
+      var redirect_to = "post/";
+      res.redirect(redirect_to + coursename);
+    })
+  }
+})
+
+app.post('/select_page', (req, res)=> {
   var uid = req.body.uid;
   var bookname = req.body.bookname;
   var values = [uid, bookname];
   if (uid && bookname) {
-    pool.query(`DELETE FROM img WHERE uid=$1 AND bookname=$2`, values, (error, result)=>{
+    //Delete the post that has this user id and bookname from the img database.
+    pool.query(`SELECT * FROM img WHERE uid=$1 AND bookname=$2`, values, (error, result)=>{
       if (error)
         res.end(error)
-      res.redirect('/buy');
+      //After deleting, redirects user to the most recent course section from buying page.
+      var results = result.rows;
+
+      if(isLogedin(req,res)){  // This is login and logout function
+          if(req.session.ID.trim()=='admin'){
+              res.render('pages/select', {results, uname:req.session.displayName, admin:true});
+          }
+          else{
+              res.render('pages/select', {results, uname:req.session.displayName, admin:false});
+          }
+      }
+      else{
+            res.render('pages/select', {results, uname:false, admin:false});
+      }
     })
   }
 })

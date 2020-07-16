@@ -62,19 +62,20 @@
             <th>Bookname</th>
             <th>Cost</th>
             <th>Condition</th>
+            <th></th>
           </tr>
-          <% field.forEach(function(attr) { %>
+          <% field.forEach(function(r) { %>
           <tr>
-            <td><%= attr.course%></td>
-            <td><%= attr.bookname%></td>
-            <td>$<%= attr.cost%></td>
-            <td><%= attr.condition%></td>
+            <td><%= r.course%></td>
+            <td><%= r.bookname%></td>
+            <td>$<%= r.cost%></td>
+            <td><%= r.condition%></td>
+            <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
+            <input type="text" name="bookname" value="<%= r.bookname%>" style="display:none"> </input>
+            <td><button id="submit" formaction="/select_page" type="submit" formmethod="post" class="find_post">SELECT</button></td>
           </tr>
           <% }); %>
         </table>
-        <br>
-        <input id="item" type="text" name="posting" placeholder="Enter Bookname" maxLength="50" size="50" </input><br>
-        <button id="submit" formaction="notdecidedyet" type="submit" formmethod="post" class="find_post">Submit</button>
       </div>
     </form>
   </body>
