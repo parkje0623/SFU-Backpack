@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
+  <head></head>
     <meta charset="utf-8" />
     <title>Buy Page</title>
 
@@ -278,7 +278,7 @@
             <hr>
           <br>
           <!-- Displaying book image and book information  -->
-          <div class="div-display-bookname-bookimage">
+          <u2 class="div-display-bookname-bookimage">
             <img width="200px" src="<%= r.path %>" alt="image">
             <ul class="book-name-buyingpage">
               <ul><%= r.bookname %></ul>
@@ -287,11 +287,24 @@
               <ul><span>Condition: </span> <%= r.condition %></ul>
               <ul><span>Description: </span><%= r.description %></ul>
             </ul>
-            <button class="select-btn-buyingpage">Select</button>
-            </div>
+            <form>
+              <button type="button" onclick="alert('<%= r.bookname %>')" class="select-btn-buyingpage">Select</button>
+              <%if( admin == true){%>
+                <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"></input>
+                <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
+                <button type="submit" class="delete-btn-buyingpage" formaction="/admin_deletePost" formmethod="post">Delete</button>
+              <%}%>
+            </form>
+            </u2>
           <% }); %>
+<!--
+          <form>
+          <%if( admin == true){%>
+            <input type="text" name="bookname" placeholder="Enter Bookname" value=""></input>
+            <input type="text" name="uid" placeholder="Enter User ID" value=""> </input>
+            <button type="submit" class="delete-btn-buyingpage" formaction="/admin_deletePost" formmethod="post">Delete</button>
+          <%}%>
+          </form> -->
       </ul>
     <body>
-
-  </html>
 </html>

@@ -53,6 +53,30 @@
       <% }); %>
     </form>
 
+    <form class="posted_supplies">
+      <h1> Posted Supplies <br> </h1>
+      <div class="user_postings">
+        <table class="posts">
+          <tr>
+            <th>Course</th>
+            <th>Bookname</th>
+            <th>Cost</th>
+            <th>Condition</th>
+          </tr>
+          <% field.forEach(function(attr) { %>
+          <tr>
+            <td><%= attr.course%></td>
+            <td><%= attr.bookname%></td>
+            <td>$<%= attr.cost%></td>
+            <td><%= attr.condition%></td>
+          </tr>
+          <% }); %>
+        </table>
+        <br>
+        <input id="item" type="text" name="posting" placeholder="Enter Bookname" maxLength="50" size="50" </input><br>
+        <button id="submit" formaction="notdecidedyet" type="submit" formmethod="post" class="find_post">Submit</button>
+      </div>
+    </form>
   </body>
 
   <script type="text/javascript" src="./script.js">
