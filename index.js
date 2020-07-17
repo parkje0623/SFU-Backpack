@@ -493,7 +493,7 @@ app.post('/sendEmail', (req, res) => {
 
 //get id and password and email
   var email = req.body.uemail;
-  var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email 
+  var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'"
     pool.query(getEmailQuery, (error,result)=>{
       if(error){
         res.end(error);
