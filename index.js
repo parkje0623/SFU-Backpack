@@ -355,7 +355,7 @@ app.post('/changeImage', (req, res) => {
   }
 });
 
-
+/*
 
 //function for who forgot his/her ID. Shows ID to user if given information is correct
 app.post('/showid', (req, res) => {
@@ -471,10 +471,10 @@ app.post('/upload', function (req, res){
                 if(error){
                     res.end(error);
                 }
-                  else {
+                else {
                   res.render('pages/imageUpload', {
                   msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
-                });
+                  });
                 }
             });
 
