@@ -17,12 +17,11 @@ const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
 var pool;
 
-
 //user database access
 pool = new Pool({
-    //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
+    connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
     //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-    connectionString:process.env.DATABASE_URL
+    //connectionString:process.env.DATABASE_URL
 })
 
 //login session access
@@ -30,8 +29,8 @@ var app = express();
 app.use(session({
     store: new Psession({
 
-        //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        conString: process.env.DATABASE_URL
+        conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+        //conString: process.env.DATABASE_URL
         //conString:'postgres://postgres:cmpt276@localhost/postgres'
 
     }),
@@ -584,6 +583,31 @@ app.get("/post/:id", (req, res) => {  // This will lead to books with specific c
     }
   })
 })
+
+var socket = require('socket.io');
+var http = require('http');
+var server = http.createServer(app);
+var io = socket.listen(server);
+
+app.get('/chat', function (req, res) {
+    res.render('pages/chat');
+});
+
+//io.set("transports", ["xhr-polling"]);
+//io.set("polling duration",10);
+
+io.sockets.on('connection', function (socket) {
+    socket.on('username', function (username) {
+        socket.username = req.session.displayName;
+        io.emit('is_online', '<i>' +  socket.username + 'join the chat..</i>');
+    });
+    socket.on('disconnect', function (usernmae) {
+        io.emit('is_online', '<i>' + socket.username + 'left the chat..</i>');
+    });
+    socket.on('chat_message', function (message) {
+        io.emit('chat_message', '<strong>' + socket.username + '</strong>: ' + message);
+    });
+});
 
 ///////////////////////////////
 
