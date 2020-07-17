@@ -511,25 +511,25 @@ app.post('/upload', function (req, res){
                   msg: err
                   });
                 }
-                else if(result&&result.rows[0]){
+                if(result&&result.rows[0]){
                     res.render('pages/imageUpload', { //If same title exist for this user, return to selling page
                       msg: 'Error: User Already Posted Item with Same Title'
                    });
-                }
-            });
-            // insert the user info into the img database (the image in AWS and the path of image in img database)
-            var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
-                pool.query(getImageQuery, (error,result)=>{
-                if(error){
-                    res.end(error);
-                }
-                else {
-                  res.render('pages/imageUpload', {
-                  msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
+                } else {
+                  // insert the user info into the img database (the image in AWS and the path of image in img database)
+                  var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
+                      pool.query(getImageQuery, (error,result)=>{
+                      if(error){
+                          res.end(error);
+                      }
+                      else {
+                        res.render('pages/imageUpload', {
+                        msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
+                        });
+                      }
                   });
                 }
             });
-
         }
 
       }
