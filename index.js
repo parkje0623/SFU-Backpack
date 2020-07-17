@@ -505,7 +505,7 @@ app.post('/upload', function (req, res){
             var checking = [uid, bookName];
             //Checks if user wanting to post already have the post with the same title
             //Different user can post with same title, but same user cannot post the same title
-            pool.query('SELECT * FROM backpack WHERE uid=$1 AND bookname=$2', checking , (error,result)=>{
+            pool.query('SELECT * FROM img WHERE uid=$1 AND bookname=$2', checking , (error,result)=>{
                 if(error){
                     res.end(error);
                 }
