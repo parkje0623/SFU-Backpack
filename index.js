@@ -10,7 +10,6 @@ const fs = require('fs');
 const AWS = require('aws-sdk');
 const AWS_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY;
-const BUCKET_NAME = process.env.S3_BUCKET;
 const EMAIL_ACCESS = process.env.EMAIL_PASS;
 const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
@@ -304,13 +303,52 @@ app.post('/showpassword', (req, res) => {
                       msg: 'INFORMAION is not correct!'
                    });
             }
-            else{
+            /*else{
                 res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
                       msg: "PASSWORD: " + result.rows[0].upassword
                 });
-            }
-        })
-    }
+            }*/
+            else{
+         
+            const output = `
+              <p>Dear User</p> 
+              <p>You have a lost Password request from backpack</p>
+              <ul>  
+                <li> User Password: ${result.rows[0].upassword} </li>
+              </ul>
+            `;
+
+            // nodemail gmail transporter
+            var transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'cmpt276backpack@gmail.com',
+                pass: EMAIL_ACCESS
+              }
+            });
+
+
+            // setup email data with unicode symbols
+            let mailOptions = {
+              from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+              to: uemail, // list of receivers
+              subject: 'PASSWORD Request', // Subject line
+              html: output // html body
+            };
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                return console.log(error);
+              }
+              res.render('pages/find_pw', {msg:'Email has been sent'});
+            });
+          }  
+        });
+    } 
+    else{
+      res.render('pages/find_pw', {msg:'Entre your ID, Name and Email Address Please!'});
+    }  
 });
 
 //Profile page that shows information of logged-in user
@@ -546,7 +584,7 @@ app.post('/sendEmail', (req, res) => {
       });
   } 
   else{
-    res.render('pages/find_id', {msg:'Entre your Email'});
+    res.render('pages/find_id', {msg:'Entre your Email Address Please!'});
   }  
 });
 
