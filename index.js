@@ -650,7 +650,7 @@ app.get("/post/:id", (req, res) => {  // This will lead to books with specific c
 var socket = require('socket.io');
 var http = require('http');
 var server = http.createServer(app);
-var io = socket.listen(server);
+var io = socket(server, {path:'/socket.io'});
 
 app.get('/chat', function (req, res) {
     res.render('pages/chat');
@@ -676,4 +676,4 @@ io.sockets.on('connection', function (socket) {
 
 
 
-app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
