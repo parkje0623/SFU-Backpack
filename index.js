@@ -27,7 +27,7 @@ pool = new Pool({
 
 //login session access
 var app = express();
-app.use(session({
+/*app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -40,7 +40,7 @@ app.use(session({
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
-
+*/
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
@@ -409,7 +409,7 @@ const upload = multer({
     storage: multerS3({
         s3: S3,
         acl: 'public-read',
-        bucket: BUCKET_NAME,
+        bucket: 'cmpt276-uploads',
 
         // Changing the file name to be unique (put the time and date instead of filename)
         key: function (req, file, cb) {
@@ -538,8 +538,8 @@ app.post('/sendEmail', (req, res) => {
           res.render('pages/find_id', {msg:'Email has been sent'});
         });
       }  
+    });
 });
-
 
 
 
