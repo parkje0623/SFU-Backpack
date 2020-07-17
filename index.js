@@ -21,7 +21,7 @@ var pool;
 //user database access
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-    // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+    //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
     connectionString:process.env.DATABASE_URL
 })
 
@@ -32,7 +32,7 @@ var app = express();
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
         conString: process.env.DATABASE_URL
-        // conString:'postgres://postgres:@localhost/postgres'
+        //conString:'postgres://postgres:cmpt276@localhost/postgres'
 
     }),
     secret: '!@SDF$@#SDF',
@@ -99,6 +99,50 @@ app.post('/admin_deleteUser',(req,res) =>{
       res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
   });
 
+//Allows admin to delete improper posts
+app.post('/admin_deletePost', (req, res)=> {
+  var uid = req.body.uid;
+  var bookname = req.body.bookname;
+  var coursename = req.body.coursename;
+  var values = [uid, bookname];
+  if (uid && bookname) {
+    //Delete the post that has this user id and bookname from the img database.
+    pool.query(`DELETE FROM img WHERE uid=$1 AND bookname=$2`, values, (error, result)=>{
+      if (error)
+        res.end(error)
+      //After deleting, redirects user to the most recent course section from buying page.
+      var redirect_to = "post/";
+      res.redirect(redirect_to + coursename);
+    })
+  }
+})
+
+app.post('/select_page', (req, res)=> {
+  var uid = req.body.uid;
+  var bookname = req.body.bookname;
+  var values = [uid, bookname];
+  if (uid && bookname) {
+    //Delete the post that has this user id and bookname from the img database.
+    pool.query(`SELECT * FROM img WHERE uid=$1 AND bookname=$2`, values, (error, result)=>{
+      if (error)
+        res.end(error)
+      //After deleting, redirects user to the most recent course section from buying page.
+      var results = result.rows;
+
+      if(isLogedin(req,res)){  // This is login and logout function
+          if(req.session.ID.trim()=='admin'){
+              res.render('pages/select', {results, uname:req.session.displayName, admin:true});
+          }
+          else{
+              res.render('pages/select', {results, uname:req.session.displayName, admin:false});
+          }
+      }
+      else{
+            res.render('pages/select', {results, uname:false, admin:false});
+      }
+    })
+  }
+})
 
 app.get('/login', (req, res) => {
     res.render('pages/login', {});
@@ -237,14 +281,8 @@ app.post('/edituser', (req, res) => {
         pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error,result)=>{
             if(error)
                 res.end(error);
-            pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
-               if(error)
-                   res.end(error);
-               else{ //Sends all the user data towards profile.ejs file where profile page design is made
-                   var results = {'rows':result.rows};
-                   res.render('pages/profile', results);
-               }
-            });
+            //Directs user back to the profile page.
+            res.redirect('/mypage');
         });
       }
     }
@@ -288,10 +326,14 @@ app.get('/mypage', (req, res) => {
        pool.query(`SELECT * FROM backpack WHERE uid=$1`, values, (error, result)=>{
           if(error)
               res.end(error);
-          else{ //Sends the data to profile.ejs
-              var results = {'rows':result.rows};
+          pool.query(`SELECT * FROM img WHERE uid=$1`, values, (error, img_result)=>{
+            if(error)
+                res.end(error);
+            else{ //Sends the data to profile.ejs
+              var results = {'rows':result.rows, 'field':img_result.rows};
               res.render('pages/profile', results);
-          }
+            }
+          });
       });
   }
 });
@@ -307,15 +349,8 @@ app.post('/changeImage', (req, res) => {
      pool.query(`UPDATE backpack SET uimage=$1 WHERE uid=$2`, values, (error, result) => {
        if (error)
         res.end(error);
-      //Grab all the data (even modified image field) of uid equal to the user.
-      pool.query(`SELECT * FROM backpack WHERE uid=$1`, uidOnly, (error, result)=>{
-        if(error)
-          res.end(error);
-
-        //Directs user back to the profile page with the changed image.
-        var results = {'rows':result.rows};
-        res.render('pages/profile', results);
-      });
+      //Directs user back to the profile page with the changed image.
+      res.redirect('/mypage');
     });
   }
 });

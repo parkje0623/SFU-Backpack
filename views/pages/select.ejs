@@ -281,23 +281,13 @@
           <u2 class="div-display-bookname-bookimage">
             <img width="200px" src="<%= r.path %>" alt="image">
             <ul class="book-name-buyingpage">
-              <ul><%= r.bookname %></ul>
+              <ul><span>Bookname: </span><%= r.bookname %></ul>
               <ul><span>Seller: </span> <%= r.uid %></ul>
               <ul><span>Price: </span> <%= r.cost %></ul>
               <ul><span>Condition: </span> <%= r.condition %></ul>
               <ul><span>Description: </span><%= r.description %></ul>
             </ul>
-            <form>
-              <input type="text" name="coursename" value="<%= r.course %>" style="display: none"></input>
-              <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"></input>
-              <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
-              <button type="submit" class="select-btn-buyingpage" formaction="/select_page" formmethod="post">Select</button>
-
-              <%if( admin == true){%>
-                <button type="submit" class="delete-btn-buyingpage" formaction="/admin_deletePost" formmethod="post">Delete</button>
-              <%}%>
-            </form>
-            </u2>
+          </u2>
           <% }); %>
       </ul>
     <body>
