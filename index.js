@@ -544,7 +544,10 @@ app.post('/sendEmail', (req, res) => {
           });
         }  
       });
-  }   
+  } 
+  else{
+    res.render('pages/find_id', {msg:'Entre your Email'});
+  }  
 });
 
 
