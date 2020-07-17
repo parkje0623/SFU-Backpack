@@ -98,7 +98,7 @@ app.post('/admin_deleteUser',(req,res) =>{
       // go to the admin main page with the updated table (without the deleted user)
       res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
   });
-/*
+
 //Allows admin to delete improper posts
 app.post('/admin_deletePost', (req, res)=> {
   var uid = req.body.uid;
@@ -215,7 +215,7 @@ app.post('/adduser', (req, res) => {
                 }
                 else{
                     pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
-   /*                     if(error)
+                        if(error)
                             res.end(error);
                         else{
                             res.redirect('/login');
@@ -335,7 +335,7 @@ app.get('/mypage', (req, res) => {
             }
           });
       });
-  }
+    }
 });
 
 //Allows for image change in profile page
@@ -355,7 +355,6 @@ app.post('/changeImage', (req, res) => {
   }
 });
 
-*/
 
 //function for who forgot his/her ID. Shows ID to user if given information is correct
 app.post('/showid', (req, res) => {
