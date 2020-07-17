@@ -98,7 +98,7 @@ app.post('/admin_deleteUser',(req,res) =>{
       // go to the admin main page with the updated table (without the deleted user)
       res.redirect('/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu')
   });
-
+/*
 //Allows admin to delete improper posts
 app.post('/admin_deletePost', (req, res)=> {
   var uid = req.body.uid;
@@ -215,7 +215,7 @@ app.post('/adduser', (req, res) => {
                 }
                 else{
                     pool.query(`INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,values, (error,result)=>{ /*Edit Jieung*/
-                        if(error)
+   /*                     if(error)
                             res.end(error);
                         else{
                             res.redirect('/login');
