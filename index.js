@@ -489,7 +489,7 @@ app.get('/find_id', (req, res)=>{
      res.render('pages/find_id');
  });
 
-
+/*
 app.post('/sendEmail', (req, res) => {
 
 //get id and password and email
@@ -540,7 +540,7 @@ app.post('/sendEmail', (req, res) => {
       }  
     });
 });
-
+*/
 
 
 //  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS - khoa
