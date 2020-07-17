@@ -19,8 +19,8 @@ var pool;
 //user database access
 pool = new Pool({
     //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-    //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-    connectionString:process.env.DATABASE_URL
+    connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+    // connectionString:process.env.DATABASE_URL
 })
 
 //login session access
@@ -29,8 +29,8 @@ app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-        conString: process.env.DATABASE_URL
-        //conString:'postgres://postgres:cmpt276@localhost/postgres'
+        //conString: process.env.DATABASE_URL
+        conString:'postgres://postgres:cmpt276@localhost/postgres'
 
     }),
     secret: '!@SDF$@#SDF',
@@ -118,6 +118,7 @@ app.post('/admin_deletePost', (req, res)=> {
 app.post('/select_page', (req, res)=> {
   var uid = req.body.uid;
   var bookname = req.body.bookname;
+  console.log(uid + bookname);
   var values = [uid, bookname];
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
