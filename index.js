@@ -5,11 +5,12 @@ const path = require('path')
 const ejs = require('ejs');
 const multer = require('multer');
 const multerS3 = require('multer-s3')
+const nodemailer = require("nodemailer");
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const AWS_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY;
-const BUCKET_NAME = 'cmpt276-uploads';
+const EMAIL_ACCESS = process.env.EMAIL_PASS;
 const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
@@ -303,13 +304,52 @@ app.post('/showpassword', (req, res) => {
                       msg: 'INFORMAION is not correct!'
                    });
             }
-            else{
+            /*else{
                 res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
                       msg: "PASSWORD: " + result.rows[0].upassword
                 });
-            }
-        })
-    }
+            }*/
+            else{
+         
+            const output = `
+              <p>Dear User</p> 
+              <p>You have a lost Password request from backpack</p>
+              <ul>  
+                <li> User Password: ${result.rows[0].upassword} </li>
+              </ul>
+            `;
+
+            // nodemail gmail transporter
+            var transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'cmpt276backpack@gmail.com',
+                pass: EMAIL_ACCESS
+              }
+            });
+
+
+            // setup email data with unicode symbols
+            let mailOptions = {
+              from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+              to: uemail, // list of receivers
+              subject: 'PASSWORD Request', // Subject line
+              html: output // html body
+            };
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                return console.log(error);
+              }
+              res.render('pages/find_pw', {msg:'Email has been sent'});
+            });
+          }  
+        });
+    } 
+    else{
+      res.render('pages/find_pw', {msg:'Entre your ID, Name and Email Address Please!'});
+    }  
 });
 
 //Profile page that shows information of logged-in user
@@ -334,7 +374,7 @@ app.get('/mypage', (req, res) => {
             }
           });
       });
-  }
+    }
 });
 
 //Allows for image change in profile page
@@ -353,7 +393,6 @@ app.post('/changeImage', (req, res) => {
     });
   }
 });
-
 
 
 //function for who forgot his/her ID. Shows ID to user if given information is correct
@@ -408,7 +447,7 @@ const upload = multer({
     storage: multerS3({
         s3: S3,
         acl: 'public-read',
-        bucket: BUCKET_NAME,
+        bucket: 'cmpt276-uploads',
 
         // Changing the file name to be unique (put the time and date instead of filename)
         key: function (req, file, cb) {
@@ -470,10 +509,10 @@ app.post('/upload', function (req, res){
                 if(error){
                     res.end(error);
                 }
-                  else {
+                else {
                   res.render('pages/imageUpload', {
                   msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
-                });
+                  });
                 }
             });
 
@@ -481,6 +520,73 @@ app.post('/upload', function (req, res){
 
       }
   });
+});
+
+
+app.get('/find_id', (req, res)=>{
+     res.render('pages/find_id');
+ });
+
+
+app.post('/sendEmail', (req, res) => {
+
+//get id and password and email
+  var email = req.body.uemail;
+  if(email){
+    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'"
+      pool.query(getEmailQuery, (error,result)=>{
+        if(error){
+          res.end(error);
+        }
+        else if(!result||!result.rows[0]){
+                res.render('pages/find_id', { // all the input enter have to be true to show the PASSWORD
+                      msg: 'INFORMAION is not correct!'
+                   });
+        }
+        else{
+          //var results = {'rows':result.rows}
+          const output = `
+            <p>Dear User</p> 
+            <p>You have a lost ID and Password request from backpack</p>
+            <ul>  
+              <li> User ID: ${result.rows[0].uid} </li>
+              <li> User Password: ${result.rows[0].upassword} </li>
+            </ul>
+          `;
+
+          // nodemail gmail transporter
+          var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'cmpt276backpack@gmail.com',
+              pass: EMAIL_ACCESS
+            }
+          });
+
+
+          // setup email data with unicode symbols
+          let mailOptions = {
+            from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+            to: email, // list of receivers
+            subject: 'ID and PASSWORD Request', // Subject line
+            html: output // html body
+          };
+
+          // send mail with defined transport object
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log('Message sent');   
+
+            res.render('pages/find_id', {msg:'Email has been sent'});
+          });
+        }  
+      });
+  } 
+  else{
+    res.render('pages/find_id', {msg:'Entre your Email Address Please!'});
+  }  
 });
 
 
