@@ -10,7 +10,6 @@ const fs = require('fs');
 const AWS = require('aws-sdk');
 const AWS_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY;
-const BUCKET_NAME = process.env.S3_BUCKET;
 const EMAIL_ACCESS = process.env.EMAIL_PASS;
 const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
@@ -303,12 +302,51 @@ app.post('/showpassword', (req, res) => {
                       msg: 'INFORMAION is not correct!'
                    });
             }
-            else{
+            /*else{
                 res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
                       msg: "PASSWORD: " + result.rows[0].upassword
                 });
-            }
-        })
+            }*/
+            else{
+
+            const output = `
+              <p>Dear User</p>
+              <p>You have a lost Password request from backpack</p>
+              <ul>
+                <li> User Password: ${result.rows[0].upassword} </li>
+              </ul>
+            `;
+
+            // nodemail gmail transporter
+            var transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'cmpt276backpack@gmail.com',
+                pass: EMAIL_ACCESS
+              }
+            });
+
+
+            // setup email data with unicode symbols
+            let mailOptions = {
+              from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+              to: uemail, // list of receivers
+              subject: 'PASSWORD Request', // Subject line
+              html: output // html body
+            };
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                return console.log(error);
+              }
+              res.render('pages/find_pw', {msg:'Email has been sent'});
+            });
+          }
+        });
+    }
+    else{
+      res.render('pages/find_pw', {msg:'Entre your ID, Name and Email Address Please!'});
     }
 });
 
@@ -460,22 +498,37 @@ app.post('/upload', function (req, res){
             var course = req.body.course.toLowerCase();
             var bookName = req.body.title;
             var uid =  req.session.ID;
-            var cost = req.body.cost
-            var condition = req.body.condition
-            var description = req.body.description
-            // insert the user info into the img database (the image in AWS and the path of image in img database)
-            var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
-                pool.query(getImageQuery, (error,result)=>{
+            var cost = req.body.cost;
+            var condition = req.body.condition;
+            var description = req.body.description;
+            var checking = [uid, bookName];
+            //Checks if user wanting to post already have the post with the same title
+            //Different user can post with same title, but same user cannot post the same title
+            pool.query(`SELECT * FROM img WHERE uid=$1 AND bookname=$2`, checking , (error,result)=>{
                 if(error){
-                    res.end(error);
+                  res.render('pages/imageUpload', { // if the file is not an image
+                  msg: err
+                  });
                 }
-                else {
-                  res.render('pages/imageUpload', {
-                  msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
+                if(result&&result.rows[0]){
+                    res.render('pages/imageUpload', { //If same title exist for this user, return to selling page
+                      msg: 'Error: User Already Posted Item with Same Title'
+                   });
+                } else {
+                  // insert the user info into the img database (the image in AWS and the path of image in img database)
+                  var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
+                      pool.query(getImageQuery, (error,result)=>{
+                      if(error){
+                          res.end(error);
+                      }
+                      else {
+                        res.render('pages/imageUpload', {
+                        msg: 'File Uploaded!', // Sending the path to the database and the image to AWS Storage
+                        });
+                      }
                   });
                 }
             });
-
         }
 
       }
@@ -492,51 +545,61 @@ app.post('/sendEmail', (req, res) => {
 
 //get id and password and email
   var email = req.body.uemail;
-  var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "')"
-    pool.query(getEmailQuery, (error,result)=>{
-      if(error){
-        res.end(error);
-      }
-      else{
-        //var results = {'rows':result.rows}
-        const output = `
-          <p>Dear User</p> 
-          <p>You have a lost ID and Password request from backpack</p>
-          <ul>  
-            <li> User ID: ${result.rows[0].uid} </li>
-            <li> User Password: ${result.rows[0].upassword} </li>
-          </ul>
-        `;
+  if(email){
+    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'"
+      pool.query(getEmailQuery, (error,result)=>{
+        if(error){
+          res.end(error);
+        }
+        else if(!result||!result.rows[0]){
+                res.render('pages/find_id', { // all the input enter have to be true to show the PASSWORD
+                      msg: 'INFORMAION is not correct!'
+                   });
+        }
+        else{
+          //var results = {'rows':result.rows}
+          const output = `
+            <p>Dear User</p>
+            <p>You have a lost ID and Password request from backpack</p>
+            <ul>
+              <li> User ID: ${result.rows[0].uid} </li>
+              <li> User Password: ${result.rows[0].upassword} </li>
+            </ul>
+          `;
 
-        // nodemail gmail transporter
-        var transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-            user: 'cmpt276backpack@gmail.com',
-            pass: EMAIL_ACCESS
-          }
-        });
+          // nodemail gmail transporter
+          var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'cmpt276backpack@gmail.com',
+              pass: EMAIL_ACCESS
+            }
+          });
 
 
-        // setup email data with unicode symbols
-        let mailOptions = {
-          from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
-          to: email, // list of receivers
-          subject: 'ID and PASSWORD Request', // Subject line
-          html: output // html body
-        };
+          // setup email data with unicode symbols
+          let mailOptions = {
+            from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+            to: email, // list of receivers
+            subject: 'ID and PASSWORD Request', // Subject line
+            html: output // html body
+          };
 
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            return console.log(error);
-          }
-          console.log('Message sent');   
+          // send mail with defined transport object
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log('Message sent');
 
-          res.render('pages/find_id', {msg:'Email has been sent'});
-        });
-      }  
-    });
+            res.render('pages/find_id', {msg:'Email has been sent'});
+          });
+        }
+      });
+  }
+  else{
+    res.render('pages/find_id', {msg:'Entre your Email Address Please!'});
+  }
 });
 
 

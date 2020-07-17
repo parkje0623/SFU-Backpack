@@ -21,7 +21,7 @@
   <div class="login-form">
     <form action="/upload" method="POST" enctype="multipart/form-data">
     	<h2 class="text-center">File Upload</h2>
-      <div class= "warning"> 
+      <div class= "warning">
         <%= typeof msg != 'undefined' ? msg : '' %>
       </div><br>
       <input type="text"  class="form-control" name="title" value="" placeholder="TITLE OF THE BOOK" maxlength="50"><br>
@@ -128,9 +128,9 @@
               <h4>BN - Brand New</h4>
               <p> describes a book that is in the same perfect condition as when it was issued by the printer. There are no flaws. None at all. This book or dust jacket is in pristine condition, just as it came from the publisher. The book is tight. It has not been read or its pages turned. Brand New is the highest grade possible for a book or dust jacket.</p>
               <h4> F - Fine </h4>
-              <p> describes a book or dust jacket that is not quite as crisp as an AN book. Many new books sold in large bookshops are in Fine condition and not As New because the books have been out on the shelves and have been picked up and handled by prospective buyers. In fact, some books sold in mega stores may have dust jackets only in VG (Very Good) condition. If there is any flaw to a book or dj labeled Fine (F), the bookseller needs to describe it. (Eg. DJ - Slightest edge wear bottom edge.) If the book has a remainder mark (a mark, usually on the bottom edge, placed by a publisher selling off books at a discount) that must be stated. As a collector you want to avoid books with remainder marks.</p> 
+              <p> describes a book or dust jacket that is not quite as crisp as an AN book. Many new books sold in large bookshops are in Fine condition and not As New because the books have been out on the shelves and have been picked up and handled by prospective buyers. In fact, some books sold in mega stores may have dust jackets only in VG (Very Good) condition. If there is any flaw to a book or dj labeled Fine (F), the bookseller needs to describe it. (Eg. DJ - Slightest edge wear bottom edge.) If the book has a remainder mark (a mark, usually on the bottom edge, placed by a publisher selling off books at a discount) that must be stated. As a collector you want to avoid books with remainder marks.</p>
               <h4>VG - Very Good</h4>
-              <p> describes a book that does show some small signs of wear - but no tears - on either binding or paper.</p>  
+              <p> describes a book that does show some small signs of wear - but no tears - on either binding or paper.</p>
               <h4>G - Good</h4>
               <p> describes the average used book that has all pages or leaves present.</p>
               <h4>Fair</h4>
@@ -147,9 +147,9 @@
   </div>
   <script type="text/javascript">
     function pop_up_condition() {
-   var popup = document.getElementById("popup");
-   popup.classList.toggle("show");
- }
+      var popup = document.getElementById("popup");
+      popup.classList.toggle("show");
+    }
   </script>
 </body>
 </html>
