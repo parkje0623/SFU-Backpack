@@ -5,11 +5,13 @@ const path = require('path')
 const ejs = require('ejs');
 const multer = require('multer');
 const multerS3 = require('multer-s3')
+const nodemailer = require("nodemailer");
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const AWS_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY;
-const BUCKET_NAME = 'cmpt276-uploads';
+const BUCKET_NAME = process.env.S3_BUCKET;
+const EMAIL_ACCESS = process.env.EMAIL_PASS;
 const PORT = process.env.PORT || 5000
 const Psession = require('connect-pg-simple')(session);
 const { Pool } = require('pg');
@@ -25,7 +27,7 @@ pool = new Pool({
 
 //login session access
 var app = express();
-app.use(session({
+/*app.use(session({
     store: new Psession({
 
         //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
@@ -38,7 +40,7 @@ app.use(session({
     cookie:{ maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: true
 }));
-
+*/
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
@@ -446,6 +448,63 @@ app.post('/upload', function (req, res){
       }
   });
 });
+
+
+app.get('/find_id', (req, res)=>{
+     res.render('pages/find_id');
+ });
+
+
+app.post('/sendEmail', (req, res) => {
+
+//get id and password and email
+  var email = req.body.uemail;
+  var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "')"
+    pool.query(getEmailQuery, (error,result)=>{
+      if(error){
+        res.end(error);
+      }
+      else{
+        //var results = {'rows':result.rows}
+        const output = `
+          <p>Dear User</p> 
+          <p>You have a lost ID and Password request from backpack</p>
+          <ul>  
+            <li> User ID: ${result.rows[0].uid} </li>
+            <li> User Password: ${result.rows[0].upassword} </li>
+          </ul>
+        `;
+
+        // nodemail gmail transporter
+        var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'cmpt276backpack@gmail.com',
+            pass: EMAIL_ACCESS
+          }
+        });
+
+
+        // setup email data with unicode symbols
+        let mailOptions = {
+          from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+          to: email, // list of receivers
+          subject: 'ID and PASSWORD Request', // Subject line
+          html: output // html body
+        };
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            return console.log(error);
+          }
+          console.log('Message sent');   
+
+          res.render('pages/find_id', {msg:'Email has been sent'});
+        });
+      }  
+});
+
 
 
 
