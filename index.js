@@ -119,7 +119,6 @@ app.post('/admin_deletePost', (req, res)=> {
 app.post('/select_page', (req, res)=> {
   var uid = req.body.uid;
   var bookname = req.body.bookname;
-  console.log(uid + bookname);
   var values = [uid, bookname];
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
@@ -310,11 +309,11 @@ app.post('/showpassword', (req, res) => {
                 });
             }*/
             else{
-         
+
             const output = `
-              <p>Dear User</p> 
+              <p>Dear User</p>
               <p>You have a lost Password request from backpack</p>
-              <ul>  
+              <ul>
                 <li> User Password: ${result.rows[0].upassword} </li>
               </ul>
             `;
@@ -344,12 +343,12 @@ app.post('/showpassword', (req, res) => {
               }
               res.render('pages/find_pw', {msg:'Email has been sent'});
             });
-          }  
+          }
         });
-    } 
+    }
     else{
       res.render('pages/find_pw', {msg:'Entre your ID, Name and Email Address Please!'});
-    }  
+    }
 });
 
 //Profile page that shows information of logged-in user
@@ -500,9 +499,22 @@ app.post('/upload', function (req, res){
             var course = req.body.course.toLowerCase();
             var bookName = req.body.title;
             var uid =  req.session.ID;
-            var cost = req.body.cost
-            var condition = req.body.condition
-            var description = req.body.description
+            var cost = req.body.cost;
+            var condition = req.body.condition;
+            var description = req.body.description;
+            var checking = [uid, bookName];
+            //Checks if user wanting to post already have the post with the same title
+            //Different user can post with same title, but same user cannot post the same title
+            pool.query('SELECT * FROM backpack WHERE uid=$1 AND bookname=$2', checking , (error,result)=>{
+                if(error){
+                    res.end(error);
+                }
+                else if(result&&result.rows[0]){
+                    res.render('pages/imageUpload', { //If same title exist for this user, return to selling page
+                      msg: 'Error: User Already Posted Item with Same Title'
+                   });
+                }
+            });
             // insert the user info into the img database (the image in AWS and the path of image in img database)
             var getImageQuery="INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" + course + "','" + path + "','" + bookName + "','"  + uid + "','" + cost + "','" + condition + "','"  + description + "')"
                 pool.query(getImageQuery, (error,result)=>{
@@ -546,9 +558,9 @@ app.post('/sendEmail', (req, res) => {
         else{
           //var results = {'rows':result.rows}
           const output = `
-            <p>Dear User</p> 
+            <p>Dear User</p>
             <p>You have a lost ID and Password request from backpack</p>
-            <ul>  
+            <ul>
               <li> User ID: ${result.rows[0].uid} </li>
               <li> User Password: ${result.rows[0].upassword} </li>
             </ul>
@@ -577,16 +589,16 @@ app.post('/sendEmail', (req, res) => {
             if (error) {
               return console.log(error);
             }
-            console.log('Message sent');   
+            console.log('Message sent');
 
             res.render('pages/find_id', {msg:'Email has been sent'});
           });
-        }  
+        }
       });
-  } 
+  }
   else{
     res.render('pages/find_id', {msg:'Entre your Email Address Please!'});
-  }  
+  }
 });
 
 
