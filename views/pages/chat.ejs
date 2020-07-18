@@ -21,8 +21,12 @@
       <input id="txt" autocomplete="off" placeholder="type your message here..." /><button>Send</button>
     </form>
     <script>
+            var username="<%=uname%>";
+            //https://sfu-backpack.herokuapp.com/chat
+            //http://localhost:5000
             var socket = io.connect('https://sfu-backpack.herokuapp.com/chat');
             // submit text message without reload/refresh the page
+            socket.emit('username', username);
             $('form').submit(function(e){
                 e.preventDefault(); // prevents page reloading
                 socket.emit('chat_message', $('#txt').val());
@@ -32,10 +36,6 @@
             // append the chat text message
             socket.on('chat_message', function(msg){
                 $('#messages').append($('<li>').html(msg));
-            });
-            // append text if someone is online
-            socket.on('is_online', function(username) {
-                $('#messages').append($('<li>').html(username));
             });
     </script>
   </body>

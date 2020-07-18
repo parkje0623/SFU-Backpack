@@ -653,22 +653,16 @@ var server = http.createServer(app);
 var io = socket(server, {path:'/socket.io'});
 
 app.get('/chat', function (req, res) {
-    res.render('pages/chat');
+    res.render('pages/chat', {uname:req.session.displayName});
 });
 
-//io.set("transports", ["xhr-polling"]);
-//io.set("polling duration",10);
 
 io.sockets.on('connection', function (socket) {
     socket.on('username', function (username) {
-        socket.username = req.session.displayName;
-        io.emit('is_online', '<i>' +  socket.username + 'join the chat..</i>');
+        socket.username = username;
     });
-    socket.on('disconnect', function (usernmae) {
-        io.emit('is_online', '<i>' + socket.username + 'left the chat..</i>');
-    });
-    socket.on('chat_message', function (message) {
-        io.emit('chat_message', '<strong>' + socket.username + '</strong>: ' + message);
+    socket.on('chat_message', function (msg) {
+        io.emit('chat_message', '<strong>' + socket.username + '</strong>: ' + msg);
     });
 });
 
