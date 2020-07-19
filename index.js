@@ -550,6 +550,12 @@ app.get("/upload", (req, res) => {
 
 const image_upload = upload.single("myImage")
 app.post("/upload", async function (req, res) { // async function here
+  let getCoordinates = await geocodingClient  // function get lat and lng from location
+  .forwardGeocode({
+    query: req.body.location,
+    limit: 1,
+  })
+  .send()
   image_upload(req, res, function (err) {   
     if (err) {
       res.render("pages/imageUpload", {
@@ -573,13 +579,6 @@ app.post("/upload", async function (req, res) { // async function here
         var checking = [uid, bookName]
         var location = req.body.location  // location 
 
-
-        let getCoordinates = await geocodingClient  // function get lat and lng from location
-        .forwardGeocode({
-          query: req.body.location,
-          limit: 1,
-        })
-        .send()
         // get coordinate here
         var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
 
