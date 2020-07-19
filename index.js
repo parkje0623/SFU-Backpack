@@ -20,7 +20,7 @@ var pool
 
 //khoa mapbox
 require("dotenv").config() // khoa map
-MAPBOX_TOKEN=pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXNoYmMxM3VvMzhtZmQzZTc5NzBwIn0.Td0tHVZ33wJtMwtpdhO03A
+MAPBOX_TOKEN= 'pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXNoYmMxM3VvMzhtZmQzZTc5NzBwIn0.Td0tHVZ33wJtMwtpdhO03A'
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
 const geocodingClient = mbxGeocoding({ accessToken:MAPBOX_TOKEN })
 /////////
