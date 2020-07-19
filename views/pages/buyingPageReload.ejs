@@ -34,6 +34,40 @@
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
+    <!-- Mapbox link -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.47.0/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        width: 350px;
+        height: 200px;
+      }
+
+      .marker {
+        background-image: url('/images/mapbox-icon.png');
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .mapboxgl-popup {
+        max-width: 200px;
+      }
+      .mapboxgl-popup-content {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+      }
+
+    </style>
     <body>
       <div class="top-container">
         <nav class="search-bar">
@@ -280,6 +314,7 @@
           <!-- Displaying book image and book information  -->
           <u2 class="div-display-bookname-bookimage">
             <img width="200px" src="<%= r.path %>" alt="image">
+            <div id='map'></div>
             <ul class="book-name-buyingpage">
               <ul><%= r.bookname %></ul>
               <ul><span>Seller: </span> <%= r.uid %></ul>
@@ -287,9 +322,7 @@
               <ul><span>Condition: </span> <%= r.condition %></ul>
               <ul><span>Description: </span><%= r.description %></ul>
               <ul><span>Location: </span><%= r.location %></ul>
-              <ul><span>Lat: </span><%= r.lat %></ul>
-              <ul><span>Lng: </span><%= r.lng %></ul>
-
+              <ul><span>Coordinates: </span><%= r.coordinates %></ul>
             </ul>
             <form>
               <input type="text" name="coursename" value="<%= r.course %>" style="display: none"></input>
@@ -305,4 +338,28 @@
           <% }); %>
       </ul>
     <body>
+      <script>
+        var post = <%- JSON.stringify(img) %>;
+        mapboxgl.accessToken = 'pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXA2Y3ExbXEzMnlzNWp5enlqdzd6In0.rBi6Aos5IGciaKkNI-Z9MA';
+        
+        var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/light-v9',
+          center: post.coordinates,
+          zoom: 5
+        });
+        
+        // create a HTML element for our post location/marker
+        var el = document.createElement('div');
+        el.className = 'marker';
+        
+        // make a marker for our location and add to the map
+        new mapboxgl.Marker(el)
+        .setLngLat(post.coordinates)
+        .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+        .setHTML('<h3>' + post.title + '</h3><p>' + post.location + '</p>'))
+        .addTo(map);
+        
+        
+        </script>
 </html>
