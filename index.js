@@ -1,4 +1,3 @@
-
 const express = require("express")
 const session = require("express-session")
 const bodyParser = require("body-parser")
@@ -24,6 +23,8 @@ MAPBOX_TOKEN= 'pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXNoYmMxM3VvMzhtZmQzZTc5Nz
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
 const geocodingClient = mbxGeocoding({ accessToken:MAPBOX_TOKEN })
 /////////
+
+
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
@@ -544,9 +545,32 @@ app.get("/upload", (req, res) => {
   }
 })
 
+/// khoa /////
+function geocode(location) {
+  axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+    params: {
+      address: location,
+      key: 'AIzaSyDaBRerrDAKoli8p1531MquCGg1Jna9I8I'
+    }
+  })
+  .then (function(response) {
+    console.log(response);
+
+    console.log(response.data.results[0].geometry.location);
+    var coord = response.data.results[0].geometry.location;
+    return coord;
+  })
+  .catch (function(error){
+    console.log(error);
+  })
+}
+///////////////////
+
+
+
 const image_upload = upload.single("myImage")
 app.post("/upload", function (req, res) { // async function here
-  image_upload(req, res, function (err) {   
+  image_upload(req, res, function (err) {
     if (err) {
       res.render("pages/imageUpload", {
         // if the file is not an image
@@ -567,17 +591,8 @@ app.post("/upload", function (req, res) { // async function here
         var condition = req.body.condition
         var description = req.body.description
         var checking = [uid, bookName]
-        var location = req.body.location  // location 
-
-        // get coordinate here
-        let getCoordinates = geocodingClient  // function get lat and lng from location
-        .forwardGeocode({
-          query: req.body.location,
-          limit: 1,
-        })
-        .send()
-        console.log(getCoordinates)
-        var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
+        var location = req.body.location  // location
+        var coordinates = geocode(location);
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
         pool.query(
