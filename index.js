@@ -18,6 +18,11 @@ const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
 var pool
 
+
+//khoa mapbox
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
+const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN })
+/////////
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
@@ -704,6 +709,7 @@ app.post("/uploadfortest", async function (req, res) { // async function here
           msg: "Error: No File Selected!",
         })
       }
+    }
     })
 
     let getCoordinates = await geocodingClient  // function get lat and lng from location
