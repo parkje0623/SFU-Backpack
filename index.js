@@ -571,18 +571,18 @@ app.post("/upload", function (req, res) {
         var condition = req.body.condition
         var description = req.body.description
         var checking = [uid, bookName]
+        var location = req.body.location  // location 
 
-        // Khoa insert something here ------
-        // geocoder.geocode(req.body.location, function (err, data) {
-        //   if (err || !data.length) {
-        //     req.flash("error", "Invalid address")
-        //     return res.redirect("back")
-        //   }
-        //   var lat = data[0].latitude
-        //   var lng = data[0].longitude
-        //   var location = data[0].formattedAddress
 
-        /////////////////////
+        let getCoordinates = await geocodingClient  // function get lat and lng from location
+        .forwardGeocode({
+          query: req.body.location,
+          limit: 1,
+        })
+        .send()
+        // get coordinate here
+        var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
+
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
         pool.query(
@@ -603,7 +603,7 @@ app.post("/upload", function (req, res) {
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery =
-                "INSERT INTO img (course, path, bookname, uid, cost, condition, description) VALUES('" +
+                "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, coordinates) VALUES('" +
                 course +
                 "','" +
                 path +
@@ -617,6 +617,10 @@ app.post("/upload", function (req, res) {
                 condition +
                 "','" +
                 description +
+                "','" +
+                location +
+                "','" +
+                coordinates +
                 "')"
               pool.query(getImageQuery, (error, result) => {
                 if (error) {
@@ -630,7 +634,6 @@ app.post("/upload", function (req, res) {
             }
           }
         ) // end query
-        // })
       }
     }
   })

@@ -34,268 +34,331 @@
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
-    <body>
-      <div class="top-container">
-        <nav class="search-bar">
-          <form>
-            <input
-              class="search-input"
-              type="search"
-              placeholder="Search"
-              aria-label="Search.."
-            />
-            <button class="search-btn" type="submit">Search</button>
-          </form>
-        </nav>
-        <!-- LOGIN FEATURE -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: relative;
+        width: 400px;
+        height: 300px;
+      }
+
+      .marker {
+        background-image: url('/image/mapbox-icon.png');
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .mapboxgl-popup {
+        max-width: 200px;
+      }
+
+      .mapboxgl-popup-content {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+      }
+    </style>
+
+  <body>
+    <div class="top-container">
+      <nav class="search-bar">
         <form>
-          <nav class="login-bar">
-            <%if( uname ===false){%>
-            <a href="/login">login</a>
-          <%}%>
-            <%if( uname !=false){%>
-              <a href="/auth/logout">logout</a>
-              <a href="/mypage"><%= uname %></a>
-          <%}%>
-            <%if( admin == true){%>
-            <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
-          <%}%>
-          </nav>
+          <input
+            class="search-input"
+            type="search"
+            placeholder="Search"
+            aria-label="Search.."
+          />
+          <button class="search-btn" type="submit">Search</button>
         </form>
+      </nav>
+      <!-- LOGIN FEATURE -->
+      <form>
+        <nav class="login-bar">
+          <%if( uname ===false){%>
+          <a href="/login">login</a>
+        <%}%>
+          <%if( uname !=false){%>
+            <a href="/auth/logout">logout</a>
+            <a href="/mypage"><%= uname %></a>
+        <%}%>
+          <%if( admin == true){%>
+          <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+        <%}%>
+        </nav>
+      </form>
 
-        <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-                <p class="logo-font">sfu-backpack</p>
+      <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
+              <p class="logo-font">sfu-backpack</p>
+    </div>
+
+                <!-- Drop-down menu -->
+    <div class="buying-menu">
+      <div class="navigationDesktop">
+        <nav class="nav-buying-dropdown-menu">
+          <ul class="ul-buying-dropdown-menu">
+            <li class="li-buying-dropdown-menu">
+              <a href="/buy">A</a>
+              <ul>
+                <li><a href="/post/acma">ACMA</a></li>
+                <li><a href="/post/als">ALS</a></li>
+                <li><a href="/post/apma">APMA</a></li>
+                <li><a href="/post/arab">ARAB</a></li>
+                <li><a href="/post/arch">ARCH</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">B</a>
+              <ul>
+                <li><a href="/post/bisc">BISC</a></li>
+                <li><a href="/post/bpk">BPK</a></li>
+                <li><a href="/post/bus">BUS</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">C</a>
+              <ul>
+                <li><a href="/post/chem">CHEM</a></li>
+                <li><a href="/post/chin">CHIN</a></li>
+                <li><a href="/post/cogs">COGS</a></li>
+                <li><a href="/post/cmns">CMNS</a></li>
+                <li><a href="/post/cmpt">CMPT</a></li>
+                <li><a href="/post/ca">CA</a></li>
+                <li><a href="/post/crim">CRIM</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">D</a>
+              <ul>
+                <li><a href="/post/data">DATA</a></li>
+                <li><a href="/post/dial">DIAL</a></li>
+                <li><a href="/post/dmed">DMED</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">E</a>
+              <ul>
+                <li><a href="/post/easc">EASC</a></li>
+                <li><a href="/post/eco">ECO</a></li>
+                <li><a href="/post/econ">ECON</a></li>
+                <li><a href="/post/educ">EDUC</a></li>
+                <li><a href="/post/edpr">EDPR</a></li>
+                <li><a href="/post/etec">ETEC</a></li>
+                <li><a href="/post/encs">ENCS</a></li>
+                <li><a href="/post/engl">ENGL</a></li>
+                <li><a href="/post/eas">EAS</a></li>
+                <li><a href="/post/env">ENV</a></li>
+                <li><a href="/post/evcs">EVCS</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">F</a>
+              <ul>
+                <li><a href="/post/fass">FASS</a></li>
+                <li><a href="/post/fnlg">FNLG</a></li>
+                <li><a href="/post/fal">FAL</a></li>
+                <li><a href="/post/fan">FAN</a></li>
+                <li><a href="/post/fren">FREN</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="/buy">G</a>
+              <ul>
+                <li><a href="/post/gsws">GSWS</a></li>
+                <li><a href="/post/gs">GS</a></li>
+                <li><a href="/post/geog">GEOG</a></li>
+                <li><a href="/post/germ">GERM</a></li>
+                <li><a href="/post/ga">GA</a></li>
+                <li><a href="grk">GRK</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">H</a>
+              <ul>
+                <li><a href="/post/hsci">HSCI</a></li>
+                <li><a href="/post/hs">HS</a></li>
+                <li><a href="/post/hist">HIST</a></li>
+                <li><a href="/post/hum">HUM</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">I</a>
+              <ul>
+                <li><a href="/post/indg">INDG</a></li>
+                <li><a href="/post/ins">INS</a></li>
+                <li><a href="/post/iat">IAT</a></li>
+                <li><a href="/post/is">IS</a></li>
+                <li><a href="/post/ispo">ISPO</a></li>
+                <li><a href="/post/ital">ITAL</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">J</a>
+              <ul>
+                <li><a href="/post/japn">JAPN</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">L</a>
+              <ul>
+                <li><a href="/post/lbst">LBST</a></li>
+                <li><a href="/post/lang">LANG</a></li>
+                <li><a href="/post/las">LAS</a></li>
+                <li><a href="/post/lbrl">LBRL</a></li>
+                <li><a href="/post/ls">LS</a></li>
+                <li><a href="/post/ling">LING</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">M</a>
+              <ul>
+                <li><a href="/post/mtec">MTEC</a></li>
+                <li><a href="/post/masc">MASC</a></li>
+                <li><a href="/post/math">MATH</a></li>
+                <li><a href="/post/macm">MACM</a></li>
+                <li><a href="/post/mse">MSE</a></li>
+                <li><a href="/post/mbb">MBB</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">N</a>
+              <ul>
+                <li><a href="/post/neur">NEUR</a></li>
+                <li><a href="/post/nusc">NUSC</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">O</a>
+              <ul>
+                <li><a href="/post/onc">ONC</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">P</a>
+              <ul>
+                <li><a href="/post/pers">PERS</a></li>
+                <li><a href="/post/phil">PHIL</a></li>
+                <li><a href="/post/phys">PHYS</a></li>
+                <li><a href="/post/plan">PLAN</a></li>
+                <li><a href="/post/pol">POL</a></li>
+                <li><a href="/post/psyc">PSYC</a></li>
+                <li><a href="/post/plcy">PLCY</a></li>
+                <li><a href="/post/pub">PUB</a></li>
+                <li><a href="/post/punj">PUNJ</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">R</a>
+              <ul>
+                <li><a href="/post/rem">REM</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">S</a>
+              <ul>
+                <li><a href="/post/sci">SCI</a></li>
+                <li><a href="/post/sda">SDA</a></li>
+                <li><a href="/post/sa">SA</a></li>
+                <li><a href="/post/span">SPAN</a></li>
+                <li><a href="/post/stat">STAT</a></li>
+                <li><a href="/post/sd">SD</a></li>
+                <li><a href="/post/see">SEE</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">T</a>
+              <ul>
+                <li><a href="/post/tekx">TEKX</a></li>
+                <li><a href="/post/trss">TRSS</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">U</a>
+              <ul>
+                <li><a href="/post/urb">URB</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="/buy">W</a>
+              <ul>
+                <li><a href="/post/wl">WL</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
       </div>
+    </div>
 
-                  <!-- Drop-down menu -->
-      <div class="buying-menu">
-        <div class="navigationDesktop">
-          <nav class="nav-buying-dropdown-menu">
-            <ul class="ul-buying-dropdown-menu">
-              <li class="li-buying-dropdown-menu">
-                <a href="/buy">A</a>
-                <ul>
-                  <li><a href="/post/acma">ACMA</a></li>
-                  <li><a href="/post/als">ALS</a></li>
-                  <li><a href="/post/apma">APMA</a></li>
-                  <li><a href="/post/arab">ARAB</a></li>
-                  <li><a href="/post/arch">ARCH</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">B</a>
-                <ul>
-                  <li><a href="/post/bisc">BISC</a></li>
-                  <li><a href="/post/bpk">BPK</a></li>
-                  <li><a href="/post/bus">BUS</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">C</a>
-                <ul>
-                  <li><a href="/post/chem">CHEM</a></li>
-                  <li><a href="/post/chin">CHIN</a></li>
-                  <li><a href="/post/cogs">COGS</a></li>
-                  <li><a href="/post/cmns">CMNS</a></li>
-                  <li><a href="/post/cmpt">CMPT</a></li>
-                  <li><a href="/post/ca">CA</a></li>
-                  <li><a href="/post/crim">CRIM</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">D</a>
-                <ul>
-                  <li><a href="/post/data">DATA</a></li>
-                  <li><a href="/post/dial">DIAL</a></li>
-                  <li><a href="/post/dmed">DMED</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">E</a>
-                <ul>
-                  <li><a href="/post/easc">EASC</a></li>
-                  <li><a href="/post/eco">ECO</a></li>
-                  <li><a href="/post/econ">ECON</a></li>
-                  <li><a href="/post/educ">EDUC</a></li>
-                  <li><a href="/post/edpr">EDPR</a></li>
-                  <li><a href="/post/etec">ETEC</a></li>
-                  <li><a href="/post/encs">ENCS</a></li>
-                  <li><a href="/post/engl">ENGL</a></li>
-                  <li><a href="/post/eas">EAS</a></li>
-                  <li><a href="/post/env">ENV</a></li>
-                  <li><a href="/post/evcs">EVCS</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">F</a>
-                <ul>
-                  <li><a href="/post/fass">FASS</a></li>
-                  <li><a href="/post/fnlg">FNLG</a></li>
-                  <li><a href="/post/fal">FAL</a></li>
-                  <li><a href="/post/fan">FAN</a></li>
-                  <li><a href="/post/fren">FREN</a></li>
-                </ul>
-              </li>
+    <!-- Create a condition to print the course name only one time -->
+    <% var i = 1; %>
+    <ul>
+      <!-- Get data from img table and display it -->
+        <% results.forEach(function(r) { %>
+          <!-- Make an if statement to print course name only one time -->
+        <% if ( i == 1) {%>
+          <li class="course-heading-buyingpage"><%= r.course %> </li>
+          <% i = 0; %>
+        <%};%>
+          <hr>
+        <br>
+        <!-- Displaying book image and book information  -->
+        <u2 class="div-display-bookname-bookimage">
+          <img width="200px" src="<%= r.path %>" alt="image">
+          <ul class="book-name-buyingpage">
+            <ul><span>Bookname: </span><%= r.bookname %></ul>
+            <ul><span>Seller: </span> <%= r.uid %></ul>
+            <ul><span>Price: </span> <%= r.cost %></ul>
+            <ul><span>Condition: </span> <%= r.condition %></ul>
+            <ul><span>Description: </span><%= r.description %></ul>
+          </ul>
+        </u2>
+      <% }); %>
+      <div id='map'></div>
 
-              <li>
-                <a href="/buy">G</a>
-                <ul>
-                  <li><a href="/post/gsws">GSWS</a></li>
-                  <li><a href="/post/gs">GS</a></li>
-                  <li><a href="/post/geog">GEOG</a></li>
-                  <li><a href="/post/germ">GERM</a></li>
-                  <li><a href="/post/ga">GA</a></li>
-                  <li><a href="grk">GRK</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">H</a>
-                <ul>
-                  <li><a href="/post/hsci">HSCI</a></li>
-                  <li><a href="/post/hs">HS</a></li>
-                  <li><a href="/post/hist">HIST</a></li>
-                  <li><a href="/post/hum">HUM</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">I</a>
-                <ul>
-                  <li><a href="/post/indg">INDG</a></li>
-                  <li><a href="/post/ins">INS</a></li>
-                  <li><a href="/post/iat">IAT</a></li>
-                  <li><a href="/post/is">IS</a></li>
-                  <li><a href="/post/ispo">ISPO</a></li>
-                  <li><a href="/post/ital">ITAL</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">J</a>
-                <ul>
-                  <li><a href="/post/japn">JAPN</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">L</a>
-                <ul>
-                  <li><a href="/post/lbst">LBST</a></li>
-                  <li><a href="/post/lang">LANG</a></li>
-                  <li><a href="/post/las">LAS</a></li>
-                  <li><a href="/post/lbrl">LBRL</a></li>
-                  <li><a href="/post/ls">LS</a></li>
-                  <li><a href="/post/ling">LING</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">M</a>
-                <ul>
-                  <li><a href="/post/mtec">MTEC</a></li>
-                  <li><a href="/post/masc">MASC</a></li>
-                  <li><a href="/post/math">MATH</a></li>
-                  <li><a href="/post/macm">MACM</a></li>
-                  <li><a href="/post/mse">MSE</a></li>
-                  <li><a href="/post/mbb">MBB</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">N</a>
-                <ul>
-                  <li><a href="/post/neur">NEUR</a></li>
-                  <li><a href="/post/nusc">NUSC</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">O</a>
-                <ul>
-                  <li><a href="/post/onc">ONC</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">P</a>
-                <ul>
-                  <li><a href="/post/pers">PERS</a></li>
-                  <li><a href="/post/phil">PHIL</a></li>
-                  <li><a href="/post/phys">PHYS</a></li>
-                  <li><a href="/post/plan">PLAN</a></li>
-                  <li><a href="/post/pol">POL</a></li>
-                  <li><a href="/post/psyc">PSYC</a></li>
-                  <li><a href="/post/plcy">PLCY</a></li>
-                  <li><a href="/post/pub">PUB</a></li>
-                  <li><a href="/post/punj">PUNJ</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">R</a>
-                <ul>
-                  <li><a href="/post/rem">REM</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">S</a>
-                <ul>
-                  <li><a href="/post/sci">SCI</a></li>
-                  <li><a href="/post/sda">SDA</a></li>
-                  <li><a href="/post/sa">SA</a></li>
-                  <li><a href="/post/span">SPAN</a></li>
-                  <li><a href="/post/stat">STAT</a></li>
-                  <li><a href="/post/sd">SD</a></li>
-                  <li><a href="/post/see">SEE</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">T</a>
-                <ul>
-                  <li><a href="/post/tekx">TEKX</a></li>
-                  <li><a href="/post/trss">TRSS</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">U</a>
-                <ul>
-                  <li><a href="/post/urb">URB</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">W</a>
-                <ul>
-                  <li><a href="/post/wl">WL</a></li>
-                </ul>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
+    </ul>
+    <h2> CONTACT USER goes here </h2><br>
+    Do we want to send email to user? <br>
+    Chat system w/ user? <br><br><br> 
 
-      <!-- Create a condition to print the course name only one time -->
-      <% var i = 1; %>
-      <ul>
-        <!-- Get data from img table and display it -->
-          <% results.forEach(function(r) { %>
-            <!-- Make an if statement to print course name only one time -->
-          <% if ( i == 1) {%>
-            <li class="course-heading-buyingpage"><%= r.course %> </li>
-            <% i = 0; %>
-          <%};%>
-            <hr>
-          <br>
-          <!-- Displaying book image and book information  -->
-          <u2 class="div-display-bookname-bookimage">
-            <img width="200px" src="<%= r.path %>" alt="image">
-            <ul class="book-name-buyingpage">
-              <ul><span>Bookname: </span><%= r.bookname %></ul>
-              <ul><span>Seller: </span> <%= r.uid %></ul>
-              <ul><span>Price: </span> <%= r.cost %></ul>
-              <ul><span>Condition: </span> <%= r.condition %></ul>
-              <ul><span>Description: </span><%= r.description %></ul>
-            </ul>
-          </u2>
-        <% }); %>
-      </ul>
-      <h2> CONTACT USER goes here </h2><br>
-      Do we want to send email to user? <br>
-      Chat system w/ user? <br><br><br> 
+    <h2> REVIEW goes here</h2> <br>
+    Do we want user's review? or item review? <br>
+    Item's quantity is only one, so I don't think there's point of having item review
+  <body>
 
-      <h2> REVIEW goes here</h2> <br>
-      Do we want user's review? or item review? <br>
-      Item's quantity is only one, so I don't think there's point of having item review
-    <body>
+
+
+  <script>
+    var post = <%- JSON.stringify(results) %>;
+    console.log(post);
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXA2Y3ExbXEzMnlzNWp5enlqdzd6In0.rBi6Aos5IGciaKkNI-Z9MA';
+    
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/light-v9',
+      center: post.coordinates,
+      zoom: 10
+    });
+
+    // create a HTML element for our post location/marker
+    var el = document.createElement('div');
+    el.className = 'marker';
+
+    // make a marker for our location and add to the map
+    new mapboxgl.Marker(el)
+    .setLngLat(post.coordinates)
+    .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+    .setHTML('<h3>' + post.course + '</h3><p>' + post.location + '</p>'))
+    .addTo(map);
+  </script>
 </html>
