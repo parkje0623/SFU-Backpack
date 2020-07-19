@@ -609,7 +609,7 @@ app.post("/upload", function (req, res) { // async function here
               })
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
-              var getImageQuery = `INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+              var getImageQuery = `INSERT INTO img (course, path, bookName, uid, cost, condition, description, location, lat, lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
               // khoa comment out for test
               // var getImageQuery =
               //   "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES('" +
