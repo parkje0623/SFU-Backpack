@@ -311,20 +311,19 @@
   <body>
 
     <script type="text/javascript">
-      var getlat = <%= 49.2827 %>;
-      var getlng = <%= -123.1207  %>;
+
         function initMap(){
           // map otions
           var options = {
             zoom: 12,
-            center: {lat: getlat, lng: getlng}
+            center: {lat: 49.2827, lng: -123.1207}
           }
           //new map
         var map = new google.maps.Map(document.getElementById('map'), options);
 
         //add marker
         var marker = new google.maps.Marker({
-          position:{lat: getlat, lng: getlng},
+          position:{lat: 49.2827, lng: -123.1207},
           map:map  // the map we want to add it too
         });
 
