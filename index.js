@@ -546,7 +546,7 @@ app.get("/upload", (req, res) => {
 
 const image_upload = upload.single("myImage")
 app.post("/upload", function (req, res) { // async function here
-  async image_upload(req, res, function (err) {   
+  image_upload(req, res, function (err) {   
     if (err) {
       res.render("pages/imageUpload", {
         // if the file is not an image
@@ -570,7 +570,7 @@ app.post("/upload", function (req, res) { // async function here
         var location = req.body.location  // location 
 
         // get coordinate here
-        let getCoordinates = await geocodingClient  // function get lat and lng from location
+        let getCoordinates = geocodingClient  // function get lat and lng from location
         .forwardGeocode({
           query: req.body.location,
           limit: 1,
