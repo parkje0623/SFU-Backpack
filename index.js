@@ -549,8 +549,8 @@ app.get("/upload", (req, res) => {
 })
 
 const image_upload = upload.single("myImage")
-app.post("/upload", function (req, res) {
-  async image_upload(req, res, function (err) {   // changed async function here
+app.post("/upload", async function (req, res) { // async function here
+  image_upload(req, res, function (err) {   
     if (err) {
       res.render("pages/imageUpload", {
         // if the file is not an image
