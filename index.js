@@ -546,27 +546,6 @@ app.get("/upload", (req, res) => {
   }
 })
 
-/// khoa /////
-function geocode(location) {
-  axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-    params: {
-      address: location,
-      key: 'AIzaSyDaBRerrDAKoli8p1531MquCGg1Jna9I8I'
-    }
-  })
-  .then (function(response) {
-    console.log(response);
-
-    console.log(response.data.results[0].geometry.location);
-    var coord = response.data.results[0].geometry.location;
-  })
-  .catch (function(error){
-    console.log(error);
-  })
-}
-///////////////////
-
-
 
 const image_upload = upload.single("myImage")
 app.post("/upload", function (req, res) { // async function here
@@ -592,8 +571,7 @@ app.post("/upload", function (req, res) { // async function here
         var description = req.body.description
         var checking = [uid, bookName]
         var location = req.body.location  // location
-        coordinates = [-123.1207375,49.2827291]
-        geocode(location);
+
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
         pool.query(
@@ -614,7 +592,7 @@ app.post("/upload", function (req, res) { // async function here
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery =
-                "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, coordinates) VALUES('" +
+                "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location) VALUES('" +
                 course +
                 "','" +
                 path +
@@ -630,8 +608,6 @@ app.post("/upload", function (req, res) { // async function here
                 description +
                 "','" +
                 location +
-                "','" +
-                coordinates +
                 "')"
               pool.query(getImageQuery, (error, result) => {
                 if (error) {
