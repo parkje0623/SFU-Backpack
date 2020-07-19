@@ -25,7 +25,7 @@ var options = {
   formatter: null
 };
 
-var geocoder = NoderGeocoder(options);
+var geocoder = NodeGeocoder(options);
 
 //khoa mapbox
 require("dotenv").config() // khoa map
