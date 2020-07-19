@@ -311,33 +311,35 @@
   <body>
 
     <script type="text/javascript">
-    var getlat = <%= lat  %>
-    var getlng = <%= lng  %>
-      function initMap(){
-        // map otions
-        var options = {
-          zoom: 12,
-          center: {getlat, getlng}
+      var post = <%- JSON.stringify(results) %>;
+      var getlat = <%= post[0].lat %>;
+      var getlng = <%= post[0].lng  %>;
+      console.log(post[0].lat);
+        function initMap(){
+          // map otions
+          var options = {
+            zoom: 12,
+            center: {lat: getlat, lng: getlng}
+          }
+          //new map
+        var map = new google.maps.Map(document.getElementById('map'), options);
+
+        //add marker
+        var marker = new google.maps.Marker({
+          position:{lat: getlat, lng: getlng},
+          map:map  // the map we want to add it too
+        });
+
+        var infoWindow = new google.maps.InfoWindow ({
+          content: '<h1>Vancouver</h1>'
+        });
+        marker.addListener ('click', function(){
+          infoWindow.open(map, marker);
+        });
         }
-        //new map
-      var map = new google.maps.Map(document.getElementById('map'), options);
-
-      //add marker
-      var marker = new google.maps.Marker({
-        position:{getlat, getlng},
-        map:map  // the map we want to add it too
-      });
-
-      var infoWindow = new google.maps.InfoWindow ({
-        content: '<h1>Vancouver</h1>'
-      });
-      marker.addListener ('click', function(){
-        infoWindow.open(map, marker);
-      });
-      }
-    </script>
-    <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
-    </script>
+      </script>
+      <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
+      </script>
 
 </html>
