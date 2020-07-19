@@ -1,4 +1,3 @@
-require("dotenv").config() // khoa map
 
 const express = require("express")
 const session = require("express-session")
@@ -20,8 +19,9 @@ var pool
 
 
 //khoa mapbox
+require("dotenv").config() // khoa map
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
-const geocodingClient = mbxGeocoding({ accessToken: process.env.pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXNoYmMxM3VvMzhtZmQzZTc5NzBwIn0.Td0tHVZ33wJtMwtpdhO03A })
+const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN })
 /////////
 //user database access
 pool = new Pool({
