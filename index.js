@@ -587,7 +587,8 @@ app.post("/upload", function (req, res) { // async function here
         var description = req.body.description
         var checking = [uid, bookName]
         var location = data[0].formattedAddress;  // location
-        var coordinates = data[0].geometry.location
+        var lat = data[0].lat;
+        var lng = data[0].lng;
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
@@ -609,7 +610,7 @@ app.post("/upload", function (req, res) { // async function here
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery =
-                "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location) VALUES('" +
+                "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES('" +
                 course +
                 "','" +
                 path +
@@ -625,6 +626,10 @@ app.post("/upload", function (req, res) { // async function here
                 description +
                 "','" +
                 location +
+                "','" +
+                lat +
+                "','" +
+                lng +
                 "')"
               pool.query(getImageQuery, (error, result) => {
                 if (error) {
