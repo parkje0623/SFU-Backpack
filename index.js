@@ -587,6 +587,7 @@ app.post("/upload", function (req, res) { // async function here
         var description = req.body.description
         var checking = [uid, bookName]
         var location = data[0].formattedAddress;  // location
+        var coordinates = data[0].geometry.location
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
