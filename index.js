@@ -559,7 +559,6 @@ function geocode(location) {
 
     console.log(response.data.results[0].geometry.location);
     var coord = response.data.results[0].geometry.location;
-    return coord;
   })
   .catch (function(error){
     console.log(error);
@@ -593,7 +592,8 @@ app.post("/upload", function (req, res) { // async function here
         var description = req.body.description
         var checking = [uid, bookName]
         var location = req.body.location  // location
-        var coordinates = geocode(location.toString());
+        Coordinates = [-123.1207375,49.2827291]
+        geocode(location);
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
         pool.query(
