@@ -21,7 +21,7 @@ var pool
 
 //khoa mapbox
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
-const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN })
+const geocodingClient = mbxGeocoding({ accessToken: process.env.pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXNoYmMxM3VvMzhtZmQzZTc5NzBwIn0.Td0tHVZ33wJtMwtpdhO03A })
 /////////
 //user database access
 pool = new Pool({
