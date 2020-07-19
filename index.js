@@ -552,7 +552,8 @@ app.post("/upload", async function (req, res) { // async function here
     limit: 1,
   })
   .send()
-  await image_upload(req, res, function (err) {   
+  console.log(getCoordinates)
+  image_upload(req, res, function (err) {   
     if (err) {
       res.render("pages/imageUpload", {
         // if the file is not an image
