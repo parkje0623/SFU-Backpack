@@ -16,7 +16,16 @@ const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
 var pool
 const axios = require('axios');
+var NodeGeocoder = require('node-geocoder');
 
+var options = {
+  provider: 'google',
+  httpAdapter: 'https',
+  apiKey: process.env.GEOCODER_API_KEY,
+  formatter: null
+};
+
+var geocoder = NoderGeocoder(options);
 
 //khoa mapbox
 require("dotenv").config() // khoa map
@@ -562,6 +571,13 @@ app.post("/upload", function (req, res) { // async function here
           msg: "Error: No File Selected!",
         })
       } else {
+
+        gepcpder.geocode(req.body.location, function (err, data){
+          if (err || !data.length) {
+            req.flash('error', 'Invalid address');
+            return res.redirect('back')
+          }
+
         var path = req.file.location
         var course = req.body.course.toLowerCase()
         var bookName = req.body.title
@@ -570,7 +586,7 @@ app.post("/upload", function (req, res) { // async function here
         var condition = req.body.condition
         var description = req.body.description
         var checking = [uid, bookName]
-        var location = req.body.location  // location
+        var location = data[0].formattedAddress;  // location
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
@@ -621,6 +637,7 @@ app.post("/upload", function (req, res) { // async function here
             }
           }
         ) // end query
+      })
       }
     }
   })

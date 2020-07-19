@@ -6,13 +6,48 @@
   <title>Geocoding</title>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link rel="shortcut icon" href="">
-
+<style media="screen">
+  #map {
+    height: 400px;
+    width: 100%
+  }
+</style>
 </head>
 <body>
+  <h1>My Google Map</h1>
+<div id="map">
 
+</div>
 </body>
+<script type="text/javascript">
+  function initMap(){
+    // map otions
+    var options = {
+      zoom: 12,
+      center: {lat: 49.2827, lng: -123.1207}
+    }
+    //new map
+  var map = new google.maps.Map(document.getElementById('map'), options);
+
+  //add marker
+  var marker = new google.maps.Marker({
+    position:{lat:49.2827, lng: -123.1207},
+    map:map  // the map we want to add it too
+  });
+
+  var infoWindow = new google.maps.InfoWindow ({
+    content: '<h1>Vancouver</h1>'
+  });
+  marker.addListener ('click', function(){
+    infoWindow.open(map, marker);
+  });
+  }
+</script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
+</script>
+
 <script>
-  geocode();
   function geocode() {
     var location = 'Vancouver';
     axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
@@ -23,12 +58,40 @@
     })
     .then (function(response) {
       console.log(response);
+      return (response.data.results[0].geometry.location)
 
-      console.log(response.data.results[0].geometry.location);
     })
     .catch (function(error){
       console.log(error);
     })
+  }
+
+  async function initMap(){
+    // map otions
+
+    let t = await geocode();
+
+
+  var options = {
+    zoom: 12,
+    center: {lat: 49.2827, lng: -123.1207}
+  }
+    //new map
+  var map = new google.maps.Map(document.getElementById('map'), options);
+
+  //add marker
+  var marker = new google.maps.Marker({
+    position: t,
+    map: map
+    });
+
+  var infoWindow = new google.maps.InfoWindow ({
+    content: '<h1>Vancouver</h1>'
+  });
+  // click to open pop up window
+  marker.addListener ('click', function(){
+    infoWindow.open(map, marker);
+  });
   }
 </script>
 </html></html>
