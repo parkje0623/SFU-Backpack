@@ -49,6 +49,19 @@ app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
 app.get("/", (req, res) => res.render("pages/index"))
 
+//////// khoa map here //////
+var NodeGeocoder = require("node-geocoder")
+
+var options = {
+  provider: "google",
+  httpAdapter: "https",
+  apiKey: process.env.GEOCODER_API_KEY,
+  formatter: null,
+}
+
+var geocoder = NodeGeocoder(options)
+///////////////////////
+
 //check whether a user did log-in or not before accessing the mainpage to show different contents
 app.get("/mainpage", (req, res) => {
   if (isLogedin(req, res)) {
@@ -559,7 +572,17 @@ app.post("/upload", function (req, res) {
         var description = req.body.description
         var checking = [uid, bookName]
 
-<<<<<<< HEAD
+        // Khoa insert something here ------
+        // geocoder.geocode(req.body.location, function (err, data) {
+        //   if (err || !data.length) {
+        //     req.flash("error", "Invalid address")
+        //     return res.redirect("back")
+        //   }
+        //   var lat = data[0].latitude
+        //   var lng = data[0].longitude
+        //   var location = data[0].formattedAddress
+
+        /////////////////////
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
         pool.query(
@@ -607,75 +630,7 @@ app.post("/upload", function (req, res) {
             }
           }
         ) // end query
-=======
-        // Khoa insert something here ------
-        geocoder.geocode(req.body.location, function (err, data) {
-          if (err || !data.length) {
-            req.flash("error", "Invalid address")
-            return res.redirect("back")
-          }
-          var lat = data[0].latitude
-          var lng = data[0].longitude
-          var location = data[0].formattedAddress
-
-          /////////////////////
-          //Checks if user wanting to post already have the post with the same title
-          //Different user can post with same title, but same user cannot post the same title
-          pool.query(
-            `SELECT * FROM img WHERE uid=$1 AND bookname=$2`,
-            checking,
-            (error, result) => {
-              if (error) {
-                res.render("pages/imageUpload", {
-                  // if the file is not an image
-                  msg: err,
-                })
-              }
-              if (result && result.rows[0]) {
-                res.render("pages/imageUpload", {
-                  //If same title exist for this user, return to selling page
-                  msg: "Error: User Already Posted Item with Same Title",
-                })
-              } else {
-                // insert the user info into the img database (the image in AWS and the path of image in img database)
-                var getImageQuery =
-                  "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES('" +
-                  course +
-                  "','" +
-                  path +
-                  "','" +
-                  bookName +
-                  "','" +
-                  uid +
-                  "','" +
-                  cost +
-                  "','" +
-                  condition +
-                  "','" +
-                  description +
-                  // khoa from here
-                  "','" +
-                  location +
-                  "','" +
-                  lat +
-                  "','" +
-                  lng +
-                  //to here
-                  "')"
-                pool.query(getImageQuery, (error, result) => {
-                  if (error) {
-                    res.end(error)
-                  } else {
-                    res.render("pages/imageUpload", {
-                      msg: "File Uploaded!", // Sending the path to the database and the image to AWS Storage
-                    })
-                  }
-                })
-              }
-            }
-          ) // end query
-        })
->>>>>>> parent of 1daa5a3... map not working ...
+        // })
       }
     }
   })
@@ -773,7 +728,6 @@ app.get("/buy", (req, res) => {
     }
   })
 })
-
 
 app.get("/post/:id", (req, res) => {
   // This will lead to books with specific course
