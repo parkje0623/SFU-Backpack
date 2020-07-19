@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./stylesheets/imageUpload.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Image Upload</title>
+    <nav class="username">
+      <a href="/auth/logout">logout</a>
+    </nav>
+    <img
+      id="logo"
+      src="logo.png"
+      alt="logo"
+      onclick="location.href='/mainpage'"
+    />
+    <p class="logo-font">sfu-backpack</p>
+    <ul>
+      <li><a class="link" href="/mypage">Back to My Page</a></li>
+      <li><a class="link" href="/buy"> Go to Buy</a></li>
+    </ul>
+  </head>
+  <body>
+    <div class="login-form">
+      <form action="/uploadfortest" method="POST" enctype="multipart/form-data">
+        <h2 class="text-center">File Upload</h2>
+        <div class="warning">
+          <%= typeof msg != 'undefined' ? msg : '' %>
+        </div>
+        <br />
+        <input
+          type="text"
+          class="form-control"
+          name="title"
+          value=""
+          placeholder="TITLE OF THE BOOK"
+          maxlength="50"
+        /><br />
+        <select type="text" class="form-control" name="course">
+          <option> ACMA </option>
+          <option> ALS </option>
+          <option> APMA </option>
+          <option> ARAB </option>
+          <option> ARCH </option>
+          <option> BISC </option>
+          <option> BPK </option>
+          <option> BUS </option>
+          <option> CHEM </option>
+          <option> CHIN </option>
+          <option> COGS </option>
+          <option> CMNS </option>
+          <option> CMPT </option>
+          <option> CA </option>
+          <option> CRIM </option>
+          <option> DATA </option>
+          <option> DIAL </option>
+          <option> DMED </option>
+          <option> EASC </option>
+          <option> ECO </option>
+          <option> ECON </option>
+          <option> EDUC </option>
+          <option> EDPR </option>
+          <option> ETEC </option>
+          <option> ENCS </option>
+          <option> ENGL </option>
+          <option> EAS </option>
+          <option> ENV </option>
+          <option> EVCS </option>
+          <option> FASS </option>
+          <option> FNLG </option>
+          <option> FAL </option>
+          <option> FAN </option>
+          <option> FREN </option>
+          <option> GSWS </option>
+          <option> GS </option>
+          <option> GEOG </option>
+          <option> GERM </option>
+          <option> GA </option>
+          <option> GRK </option>
+          <option> HSCI </option>
+          <option> HS </option>
+          <option> HIST </option>
+          <option> HUM </option>
+          <option> INDG </option>
+          <option> INS </option>
+          <option> IAT </option>
+          <option> IS </option>
+          <option> ISPO </option>
+          <option> ITAL </option>
+          <option> JAPN </option>
+          <option> LBST </option>
+          <option> LANG </option>
+          <option> LAS </option>
+          <option> LBRL </option>
+          <option> LS </option>
+          <option> LING </option>
+          <option> MTEC </option>
+          <option> MASC </option>
+          <option> MATH </option>
+          <option> MACM </option>
+          <option> MSE </option>
+          <option> MBB </option>
+          <option> NEUR </option>
+          <option> NUSC </option>
+          <option> ONC </option>
+          <option> PERS </option>
+          <option> PHIL </option>
+          <option> PHYS </option>
+          <option> PLAN </option>
+          <option> POL </option>
+          <option> PSYC </option>
+          <option> PLCY </option>
+          <option> PUB </option>
+          <option> PUNJ </option>
+          <option> REM </option>
+          <option> SCI </option>
+          <option> SDA </option>
+          <option> SA </option>
+          <option> SPAN </option>
+          <option> STAT </option>
+          <option> SD </option>
+          <option> SEE </option>
+          <option> TEKX </option>
+          <option> TRSS </option>
+          <option> URB </option>
+          <option> WL </option>
+          <option> Others </option> </select
+        ><br />
+        <select type="text" class="form-control" name="condition">
+          <option> Brand New </option>
+          <option> Fine </option>
+          <option> Very Good </option>
+          <option> Good </option>
+          <option> Fair </option>
+          <option> Poor </option>
+        </select>
+        <a class="condition_use" onclick="pop_up_condition()"
+          >Definitions of Book Conditions
+          <span class="popuptext" id="popup">
+            <h4>BN - Brand New</h4>
+            <p>
+              describes a book that is in the same perfect condition as when it
+              was issued by the printer. There are no flaws. None at all. This
+              book or dust jacket is in pristine condition, just as it came from
+              the publisher. The book is tight. It has not been read or its
+              pages turned. Brand New is the highest grade possible for a book
+              or dust jacket.
+            </p>
+            <h4>F - Fine</h4>
+            <p>
+              describes a book or dust jacket that is not quite as crisp as an
+              AN book. Many new books sold in large bookshops are in Fine
+              condition and not As New because the books have been out on the
+              shelves and have been picked up and handled by prospective buyers.
+              In fact, some books sold in mega stores may have dust jackets only
+              in VG (Very Good) condition. If there is any flaw to a book or dj
+              labeled Fine (F), the bookseller needs to describe it. (Eg. DJ -
+              Slightest edge wear bottom edge.) If the book has a remainder mark
+              (a mark, usually on the bottom edge, placed by a publisher selling
+              off books at a discount) that must be stated. As a collector you
+              want to avoid books with remainder marks.
+            </p>
+            <h4>VG - Very Good</h4>
+            <p>
+              describes a book that does show some small signs of wear - but no
+              tears - on either binding or paper.
+            </p>
+            <h4>G - Good</h4>
+            <p>
+              describes the average used book that has all pages or leaves
+              present.
+            </p>
+            <h4>Fair</h4>
+            <p>
+              describes a worn book that has complete text pages (including
+              those with maps or plates) but may lack endpapers, half-title
+              page, etc. (Such missing pieces must be noted in the description).
+              The binding, jacket (if any) may also be worn.
+            </p>
+            <h4>Poor</h4>
+            <p>
+              describes a book that is sufficiently worn, to the point that its
+              only merit is as a Reading Copy because it HAS the complete text.
+              (The text must be legible.) Any missing maps or plates should
+              still be noted. A book or dust jacket listed as Poor (P) may be
+              soiled, scuffed, stained or spotted and the book may have loose
+              joints, hinges, pages, etc.
+            </p>
+          </span> </a
+        ><br /><br />
+
+        <input type="number" class="form-control" name="cost" value="" placeholder="COST" maxlength="20"/><br />
+        <input type="text" class="form-control" name="location" value="" placeholder="LOCATION" maxlength="100"/><br />
+        <textarea class="form-control" name="description" rows="4" cols="200" placeholder="DESCRIPTION" maxlength="300"></textarea><br />
+        <input name="myImage" class="form-control" id="file-input" type="file"/><br />
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+
+      </form>
+      <br />
+    </div>
+    <script type="text/javascript">
+      function pop_up_condition() {
+        var popup = document.getElementById("popup")
+        popup.classList.toggle("show")
+      }
+    </script>
+  </body>
+</html>

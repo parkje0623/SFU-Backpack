@@ -49,18 +49,6 @@ app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
 app.get("/", (req, res) => res.render("pages/index"))
 
-//////// khoa map here //////
-var NodeGeocoder = require("node-geocoder")
-
-var options = {
-  provider: "google",
-  httpAdapter: "https",
-  apiKey: process.env.GEOCODER_API_KEY,
-  formatter: null,
-}
-
-var geocoder = NodeGeocoder(options)
-///////////////////////
 
 //check whether a user did log-in or not before accessing the mainpage to show different contents
 app.get("/mainpage", (req, res) => {
@@ -538,6 +526,8 @@ const upload = multer({
   },
 })
 
+
+
 app.get("/upload", (req, res) => {
   if (!isLogedin(req, res)) {
     //if user is not login direct them to login page
@@ -549,7 +539,14 @@ app.get("/upload", (req, res) => {
 })
 
 const image_upload = upload.single("myImage")
-app.post("/upload", function (req, res) { // async function here
+app.post("/upload", async function (req, res) { // async function here
+  let getCoordinates = await geocodingClient  // function get lat and lng from location
+  .forwardGeocode({
+    query: req.body.location,
+    limit: 1,
+  })
+  .send()
+  var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
   image_upload(req, res, function (err) {   
     if (err) {
       res.render("pages/imageUpload", {
@@ -574,13 +571,6 @@ app.post("/upload", function (req, res) { // async function here
         var location = req.body.location  // location 
 
         // get coordinate here
-        let getCoordinates = geocodingClient  // function get lat and lng from location
-        .forwardGeocode({
-          query: req.body.location,
-          limit: 1,
-        })
-        .send()
-        var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
@@ -700,6 +690,97 @@ app.post("/sendEmail", (req, res) => {
 })
 
 //  BUYINGPAGE WORK HERE - ASK ME IF THERE IS ANY PROBLEMS - khoa
+app.post("/uploadfortest", async function (req, res) { // async function here
+  await image_upload(req, res, function (err) {   
+    if (err) {
+      res.render("pages/imageUpload", {
+        // if the file is not an image
+        msg: err,
+      })
+    } else {
+      if (req.file == undefined) {
+        res.render("pages/imageUpload", {
+          // if no file was selected
+          msg: "Error: No File Selected!",
+        })
+      }
+    })
+
+    let getCoordinates = await geocodingClient  // function get lat and lng from location
+    .forwardGeocode({
+      query: req.body.location,
+      limit: 1,
+    })
+    .send()
+
+     await (res, req, next) {
+        var path = req.file.location
+        var course = req.body.course.toLowerCase()
+        var bookName = req.body.title
+        var uid = req.session.ID
+        var cost = req.body.cost
+        var condition = req.body.condition
+        var description = req.body.description
+        var checking = [uid, bookName]
+        var location = req.body.location  // location 
+        var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
+
+        // get coordinate here
+
+        //Checks if user wanting to post already have the post with the same title
+        //Different user can post with same title, but same user cannot post the same title
+        pool.query(
+          `SELECT * FROM img WHERE uid=$1 AND bookname=$2`,
+          checking,
+          (error, result) => {
+            if (error) {
+              res.render("pages/uploadfortest", {
+                // if the file is not an image
+                msg: err,
+              })
+            }
+            if (result && result.rows[0]) {
+              res.render("pages/uploadfortest", {
+                //If same title exist for this user, return to selling page
+                msg: "Error: User Already Posted Item with Same Title",
+              })
+            } else {
+              // insert the user info into the img database (the image in AWS and the path of image in img database)
+              var getImageQuery =
+                "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, coordinates) VALUES('" +
+                course +
+                "','" +
+                path +
+                "','" +
+                bookName +
+                "','" +
+                uid +
+                "','" +
+                cost +
+                "','" +
+                condition +
+                "','" +
+                description +
+                "','" +
+                location +
+                "','" +
+                coordinates +
+                "')"
+              pool.query(getImageQuery, (error, result) => {
+                if (error) {
+                  res.end(error)
+                } else {
+                  res.render("pages/uploadfortest", {
+                    msg: "File Uploaded!", // Sending the path to the database and the image to AWS Storage
+                  })
+                }
+              })
+            }
+          }
+        ) 
+      }
+})
+
 
 app.get("/buy", (req, res) => {
   // This will return a first buying page and have login function
