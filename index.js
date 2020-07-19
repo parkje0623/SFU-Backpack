@@ -545,8 +545,14 @@ app.get("/upload", (req, res) => {
 })
 
 const image_upload = upload.single("myImage")
-app.post("/upload", function (req, res) { // async function here
-  image_upload(req, res, function (err) {   
+app.post("/upload", async function (req, res) { // async function here
+  let getCoordinates = await geocodingClient  // function get lat and lng from location
+  .forwardGeocode({
+    query: req.body.location,
+    limit: 1,
+  })
+  .send()
+  await image_upload(req, res, function (err) {   
     if (err) {
       res.render("pages/imageUpload", {
         // if the file is not an image
@@ -570,12 +576,6 @@ app.post("/upload", function (req, res) { // async function here
         var location = req.body.location  // location 
 
         // get coordinate here
-        let getCoordinates = geocodingClient  // function get lat and lng from location
-        .forwardGeocode({
-          query: req.body.location,
-          limit: 1,
-        })
-        .send()
         var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
