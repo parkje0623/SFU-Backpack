@@ -704,12 +704,12 @@ app.post("/uploadfortest", async function (req, res) { // async function here
       })
     } 
     else (req.file == undefined) {
-        res.render("pages/imageUpload", {
-          // if no file was selected
-          msg: "Error: No File Selected!",
-        })
-      }
-    })
+      res.render("pages/imageUpload", {
+        // if no file was selected
+        msg: "Error: No File Selected!",
+      })
+    }
+  })
 
     let getCoordinates = await geocodingClient  // function get lat and lng from location
     .forwardGeocode({
@@ -718,7 +718,7 @@ app.post("/uploadfortest", async function (req, res) { // async function here
     })
     .send()
 
-     await (res, req, next) => {
+     await  function ((res, req) => {
         var path = req.file.location
         var course = req.body.course.toLowerCase()
         var bookName = req.body.title
@@ -783,7 +783,7 @@ app.post("/uploadfortest", async function (req, res) { // async function here
             }
           }
         ) 
-      } //
+      }) //
 })
 
 
