@@ -556,6 +556,8 @@ app.post("/upload", async function (req, res) { // async function here
     limit: 1,
   })
   .send()
+  var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
+
   image_upload(req, res, function (err) {   
     if (err) {
       res.render("pages/imageUpload", {
@@ -580,7 +582,6 @@ app.post("/upload", async function (req, res) { // async function here
         var location = req.body.location  // location 
 
         // get coordinate here
-        var coordinates = getCoordinates.body.feature[0].geometry.coordinates; 
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
