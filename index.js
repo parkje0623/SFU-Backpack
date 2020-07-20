@@ -778,12 +778,15 @@ app.post("/chatready", function (req, res) {
         if(opponent===NULL){
             res.redirect("/mainpage");
         }
+        console.log("ready");
         pool.query(`SELECT * FROM chatlist WHERE (user1=$1 AND user2=$2) OR (user2=$1 AND user1=$2)`,[opponent, req.session.ID], (err,res)=>{
+            console.log("select");
             if(error){
                 res.end(error);
             }
             if (!result || !result.rows[0]) {
                 pool.query(`INSERT INTO chatlist (user1, user2) VALUES ($1, $2)`, [opponent, req.session.ID], (err,res)=>{
+                    console.log("insert");
                     if(error){
                         res.end(error);
                     }
