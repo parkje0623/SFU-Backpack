@@ -34,38 +34,11 @@
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css' rel='stylesheet' />
-
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-      }
-
+    <style media="screen">
       #map {
-        position: relative;
-        width: 400px;
-        height: 300px;
-      }
-
-      .marker {
-        background-image: url('/images/mapbox-icon.png');
-        background-size: cover;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        cursor: pointer;
-      }
-
-      .mapboxgl-popup {
-        max-width: 200px;
-      }
-
-      .mapboxgl-popup-content {
-        text-align: center;
-        font-family: 'Open Sans', sans-serif;
+        margin-top: 20px;
+        height: 400px;
+        width: 50%
       }
     </style>
 
@@ -321,11 +294,11 @@
             <ul><span>Price: </span> <%= r.cost %></ul>
             <ul><span>Condition: </span> <%= r.condition %></ul>
             <ul><span>Description: </span><%= r.description %></ul>
+
           </ul>
         </u2>
       <% }); %>
-      <div id='map'></div>
-
+      <div id="map"> </div>
     </ul>
     <form method = "post" action="/chat">
       <input type = "hidden" name=opponent value="<%= r.uid %>">
@@ -333,36 +306,47 @@
     </form>
     <h2> CONTACT USER goes here </h2><br>
     Do we want to send email to user? <br>
-    Chat system w/ user? <br><br><br> 
+    Chat system w/ user? <br><br><br>
 
     <h2> REVIEW goes here</h2> <br>
     Do we want user's review? or item review? <br>
     Item's quantity is only one, so I don't think there's point of having item review
   <body>
 
-
-
-  <script>
+    <script type="text/javascript">
     var post = <%- JSON.stringify(results) %>;
-    console.log(post);
-    mapboxgl.accessToken = 'pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXA2Y3ExbXEzMnlzNWp5enlqdzd6In0.rBi6Aos5IGciaKkNI-Z9MA';
-    
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/light-v9',
-      center: post.coordinates,
-      zoom: 10
-    });
+    var glat = post[0].lat;    // latitude
+    var glng = post[0].lng;    // longitude
+    var title = post[0].bookname;
+    console.log(title);
 
-    // create a HTML element for our post location/marker
-    var el = document.createElement('div');
-    el.className = 'marker';
+        function initMap(){
+          // map otions
+          var options = {
+            zoom: 12,
+            center: {lat: glat, lng: glng}    // set up map with location
+          }
+          //new map
+        var map = new google.maps.Map(document.getElementById('map'), options);
 
-    // make a marker for our location and add to the map
-    new mapboxgl.Marker(el)
-    .setLngLat(post.coordinates)
-    .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-    .setHTML('<h3>' + post.course + '</h3><p>' + post.location + '</p>'))
-    .addTo(map);
-  </script>
+        //add marker
+        var marker = new google.maps.Marker({
+          position:{lat: glat, lng: glng},    // add marker with this position
+          map:map  // the map we want to add it too
+        });
+
+        var infoWindow = new google.maps.InfoWindow ({
+          content: title + '<a href="https://www.sfu.ca/">' + 'https://www.sfu.ca/</a> '
+        });
+        marker.addListener ('click', function(){
+          infoWindow.open(map, marker);
+        });
+        }
+      </script>
+      <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
+      </script>
+
+
+
 </html>

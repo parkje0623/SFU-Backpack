@@ -15,16 +15,17 @@ const PORT = process.env.PORT || 5000
 const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
 var pool
-const axios = require('axios');
 
+var NodeGeocoder = require('node-geocoder');   // map
 
-//khoa mapbox
-require("dotenv").config() // khoa map
-MAPBOX_TOKEN= 'pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXNoYmMxM3VvMzhtZmQzZTc5NzBwIn0.Td0tHVZ33wJtMwtpdhO03A'
-const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
-const geocodingClient = mbxGeocoding({ accessToken:MAPBOX_TOKEN })
-/////////
+var options = {
+  provider: 'google',
+  httpAdapter: 'https',
+  apiKey: process.env.GEOCODER_API_KEY,
+  formatter: null
+};
 
+var geocoder = NodeGeocoder(options); /// google map geocoding
 
 //user database access
 pool = new Pool({
@@ -562,6 +563,13 @@ app.post("/upload", function (req, res) { // async function here
           msg: "Error: No File Selected!",
         })
       } else {
+
+        geocoder.geocode(req.body.location, function (err, data){
+          if (err || !data.length) {
+            req.flash('error', 'Invalid address');
+            return res.redirect('back')
+          }
+
         var path = req.file.location
         var course = req.body.course.toLowerCase()
         var bookName = req.body.title
@@ -570,7 +578,9 @@ app.post("/upload", function (req, res) { // async function here
         var condition = req.body.condition
         var description = req.body.description
         var checking = [uid, bookName]
-        var location = req.body.location  // location
+        var location = data[0].formattedAddress;  // location
+        var lat = data[0].latitude;
+        var lng = data[0].longitude;
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
@@ -591,25 +601,29 @@ app.post("/upload", function (req, res) { // async function here
               })
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
-              var getImageQuery =
-                "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location) VALUES('" +
-                course +
-                "','" +
-                path +
-                "','" +
-                bookName +
-                "','" +
-                uid +
-                "','" +
-                cost +
-                "','" +
-                condition +
-                "','" +
-                description +
-                "','" +
-                location +
-                "')"
-              pool.query(getImageQuery, (error, result) => {
+              var getImageQuery = `INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+              // khoa comment out for testing
+              // var getImageQuery =
+              //   "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES('" +
+              //   course +
+              //   "','" +
+              //   path +
+              //   "','" +
+              //   bookName +
+              //   "','" +
+              //   uid +
+              //   "','" +
+              //   cost +
+              //   "','" +
+              //   condition +
+              //   "','" +
+              //   description +
+              //   "','" +
+              //   location + "','" +lat +  "'',''" + lng +
+              //   "')"
+
+                ////////////////
+              pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng], (error, result) => {
                 if (error) {
                   res.end(error)
                 } else {
@@ -621,6 +635,7 @@ app.post("/upload", function (req, res) { // async function here
             }
           }
         ) // end query
+      })
       }
     }
   })
