@@ -295,8 +295,8 @@
             <ul><span>Condition: </span> <%= r.condition %></ul>
             <ul><span>Description: </span><%= r.description %></ul>
             <form method = "post" action="/chat">
-              <input type = "hidden" name=opponent value=<%= r.uid %>>
-              <button type = "submit" >chatting</button>
+              <input type = "hidden" name=opponent value=<%= r.uid %>><br>
+              <input type = "submit" value="chatting"><br>
             </form>
           </ul>
         </u2>
