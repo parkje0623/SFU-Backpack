@@ -775,6 +775,9 @@ var io = socket(server, { path: "/socket.io" })
 app.post("/chat", function (req, res) {
     if(isLogedin(req, res)) {
         var opponent=req.body.opponent;
+        if(opponent===NULL){
+            res.redirect("/mainpage");
+        }
         pool.query(`SELECT * FROM chatlist WHERE (user1=$1 AND user2=$2) OR (user2=$1 AND user1=$2)`,[opponent, req.session.ID], (err,res)=>{
             if(error){
                 res.end(error);
