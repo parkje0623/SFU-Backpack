@@ -772,7 +772,7 @@ var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
-app.post("/chat", function (req, res) {
+app.post("/chatready", function (req, res) {
     if(isLogedin(req, res)) {
         var opponent=req.body.opponent;
         if(opponent===NULL){
