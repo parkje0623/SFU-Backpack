@@ -757,17 +757,66 @@ var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
-app.get("/chat", function (req, res) {
-  res.render("pages/chat", { uname: req.session.displayName })
+app.post("/chat", function (req, res) {
+    if(isLogedin(req, res)) {
+        var opponent=req.body.opponent;
+        pool.query(`SELECT * FROM chatlist WHERE (user1=$1 AND user2=$2) OR (user2=$1 AND user1=$2)`,[opponent, req.session.ID], (err,res)=>{
+            if(error){
+                res.end(error);
+            }
+            if (!result || !result.rows[0]) {
+                pool.query(`INSERT INTO chatlist (user1, user2) VALUES ($1, $2)`, [opponent, req.session.ID], (err,res)=>{
+                    if(error){
+                        res.end(error);
+                    }
+                    res.render("pages/chat",{uname: req.session.displayName, db:false, oname:opponent});
+                })
+            }
+            var results = {'rows':result.rows}
+            res.render("pages/chat",{uname: req.session.displayName, db:true ,results, oname:opponent});
+        })
+    }
+    else{
+        res.redirect("/login");
+    }
 })
 
+app.post("/chatlist", function (req, res) {
+    if(isLogedin(req, res)) {
+        pool.query(`SELECT * FROM chatlist WHERE (user1=$1 OR user2=$1)`,[req.session.ID], (err,res)=>{
+            if(error){
+                res.end(error);
+            }
+            if (!result || !result.rows[0]) {
+                res.render("pages/chatlist",{db:false});
+             }
+            var results = {'rows':result.rows}
+            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results});
+        })
+    }
+    else{
+        res.redirect("/login");
+    }
+})
+
+
+let opponame;
+
 io.sockets.on("connection", function (socket) {
-  socket.on("username", function (username) {
-    socket.username = username
-  })
-  socket.on("chat_message", function (msg) {
-    io.emit("chat_message", "<strong>" + socket.username + "</strong>: " + msg)
-  })
+    socket.on("username", function (username) {
+        socket.username = username;
+    })
+    socket.on("opponame", function(oppoID){
+        oppoID=oppoID;
+    })
+    socket.on("chat_message", function (msg) {
+        io.emit("chat_message", "<strong>" + socket.username + "</strong>: " + msg);
+        pool.query(`INSERT INTO chatlist (texts) VALUES ($3) WHERE (user1=$1 AND user2=$2) OR (user2=$1 AND user1=$2)`,[oppoID, req.session.ID, msg], (err,res)=>{
+            if(error){
+                res.end(error);
+            }
+        })
+    })
 })
 
 ///////////////////////////////

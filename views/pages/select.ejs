@@ -327,6 +327,10 @@
       <div id='map'></div>
 
     </ul>
+    <form method = "post" action="/chat">
+      <input type = "hidden" name=opponent value="<%= r.uid %>">
+      <input type = "submit" value="chatting">
+    </form>
     <h2> CONTACT USER goes here </h2><br>
     Do we want to send email to user? <br>
     Chat system w/ user? <br><br><br> 
