@@ -773,6 +773,7 @@ var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
 app.post("/chatready", function (req, res) {
+    console.log("start");
     if(isLogedin(req, res)) {
         var opponent=req.body.opponent;
         if(opponent===NULL){
@@ -821,7 +822,7 @@ app.post("/chatlist", function (req, res) {
 })
 
 
-let opponame;
+let oppoID;
 
 io.sockets.on("connection", function (socket) {
     socket.on("username", function (username) {
