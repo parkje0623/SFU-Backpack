@@ -15,8 +15,8 @@ const PORT = process.env.PORT || 5000
 const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
 var pool
-const axios = require('axios');
-var NodeGeocoder = require('node-geocoder');
+
+var NodeGeocoder = require('node-geocoder');   // map
 
 var options = {
   provider: 'google',
@@ -25,15 +25,7 @@ var options = {
   formatter: null
 };
 
-var geocoder = NodeGeocoder(options);
-
-//khoa mapbox
-require("dotenv").config() // khoa map
-MAPBOX_TOKEN= 'pk.eyJ1Ijoia2hvYWF1MTk5OCIsImEiOiJja2NzOXNoYmMxM3VvMzhtZmQzZTc5NzBwIn0.Td0tHVZ33wJtMwtpdhO03A'
-const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
-const geocodingClient = mbxGeocoding({ accessToken:MAPBOX_TOKEN })
-/////////
-
+var geocoder = NodeGeocoder(options); /// google map geocoding
 
 //user database access
 pool = new Pool({
@@ -610,7 +602,7 @@ app.post("/upload", function (req, res) { // async function here
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery = `INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
-              // khoa comment out for test
+              // khoa comment out for testing
               // var getImageQuery =
               //   "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES('" +
               //   course +
