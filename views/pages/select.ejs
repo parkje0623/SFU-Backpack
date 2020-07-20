@@ -294,13 +294,10 @@
             <ul><span>Price: </span> <%= r.cost %></ul>
             <ul><span>Condition: </span> <%= r.condition %></ul>
             <ul><span>Description: </span><%= r.description %></ul>
-            <form method = "post" action="/chat">
-              <input type = "hidden" name=opponent value=<%= r.uid %>><br>
-              <input type = "submit" value="chatting"><br>
-            </form>
+
           </ul>
         </u2>
-      <% }); %>
+
       <div id="map"> </div>
     </ul>
     
@@ -312,7 +309,11 @@
     Do we want user's review? or item review? <br>
     Item's quantity is only one, so I don't think there's point of having item review
   <body>
-
+    <form method = "post" action="/chat">
+      <input type = "hidden" name=opponent value=<%= r.uid %>><br>
+      <input type = "submit" value="chatting"><br>
+    </form>
+    <% }); %>
     <script type="text/javascript">
     var post = <%- JSON.stringify(results) %>;
     var glat = post[0].lat;    // latitude
