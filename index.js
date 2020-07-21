@@ -659,7 +659,7 @@ app.post("/report", (req, res) => {
   var description = req.body.description
   var uid = req.session.ID
 
-  if (id) {
+  if (id && description) {
     var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
