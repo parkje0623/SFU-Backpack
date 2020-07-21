@@ -297,9 +297,10 @@
 
           </ul>
         </u2>
-      <% }); %>
+
       <div id="map"> </div>
     </ul>
+    
     <h2> CONTACT USER goes here </h2><br>
     Do we want to send email to user? <br>
     Chat system w/ user? <br><br><br>
@@ -308,7 +309,11 @@
     Do we want user's review? or item review? <br>
     Item's quantity is only one, so I don't think there's point of having item review
   <body>
-
+    <form method = "post" action="/chat">
+      <input type = "hidden" name=receiver value=<%= r.uid %>><br>
+      <input type = "submit" value="chatting"><br>
+    </form>
+    <% }); %>
     <script type="text/javascript">
     var post = <%- JSON.stringify(results) %>;
     var glat = post[0].lat;    // latitude

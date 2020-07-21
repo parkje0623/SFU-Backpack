@@ -187,8 +187,8 @@ app.post("/auth/login", (req, res) => {
       "SELECT * FROM backpack WHERE uid=$1 AND upassword=$2",
       values,
       (error, result) => {
-        if (error) res.end(error)
-        else if (!result || !result.rows[0]) {
+          if (error) res.end(error)
+          else if (!result || !result.rows[0]) {
           res.render("pages/login", {
             // if wrong password or ID
             msg: "Error: Wrong USER ID or PASSWORD!",
@@ -641,6 +641,75 @@ app.post("/upload", function (req, res) { // async function here
   })
 })
 
+app.get("/reportUser", (req, res) => {
+  if (!isLogedin(req, res)) {
+    //if user is not login direct them to login page
+    res.redirect("/login")
+    return false
+  } else {
+  res.render("pages/reportUser")
+  }
+})
+
+///////////////////////////////////////////////////////////////////
+
+app.post("/report", (req, res) => {
+  //
+  var id = req.body.uid
+  var description = req.body.description
+  var uid = req.session.ID
+
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
+    pool.query(getEmailQuery, (error, result) => {
+      if (error) {
+        res.end(error)
+      } 
+      else if (!result || !result.rows[0]) {
+        res.render("pages/reportUser", {
+          msg: "INFORMAION about the User ID is not correct!",
+        })
+      }    
+    }) 
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    pool.query(getEmailQuery, (error, result) => {
+      if (error) {
+        res.end(error)
+      }
+      else{
+        const output = `
+          <p> REPORT of USER: </p>
+          <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
+          <p> Report: ${description}</p>
+        `
+        // nodemail gmail transporter
+        var transporter = nodemailer.createTransport({
+          service: "gmail",
+            auth: {
+              user: "cmpt276backpack@gmail.com",
+              pass: EMAIL_ACCESS,
+            },
+        })
+
+        // setup email data with unicode symbols
+        let mailOptions = {
+          from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+          to: 'cmpt276backpack@gmail.com', // list of receivers
+          subject: "Reporting A User", // Subject line
+          html: output, // html body
+        }
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            return console.log(error)
+          }
+          res.render("pages/reportUser", { msg: "Report has been sent" })
+        })
+      }
+    })                 
+});
+
+
 app.get("/find_id", (req, res) => {
   res.render("pages/find_id")
 })
@@ -772,17 +841,68 @@ var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
-app.get("/chat", function (req, res) {
-  res.render("pages/chat", { uname: req.session.displayName })
+app.post("/chat", (req, res)=> {
+    if(isLogedin(req, res)) {
+        var receiver=req.body.receiver;
+        if(!receiver){
+            res.redirect("/mainpage");
+        }
+        else{
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{
+                if(error){
+                    res.end(error);
+                }
+                if (!result || !result.rows[0]) {
+                    res.render("pages/chat",{uname: req.session.displayName, db:false, receiver:receiver, sender:req.session.ID});
+                }
+                else{
+                    var results = result.rows;
+                    res.render("pages/chat",{uname: req.session.displayName, db:true ,results, receiver:receiver, sender:req.session.ID});
+                }
+            })
+        }
+    }
+    else{
+        res.redirect("/login");
+    }
+})
+
+app.post("/chatlist", (req, res)=>{
+    if(isLogedin(req, res)) {
+        pool.query(`SELECT * FROM chatlist WHERE (user1=$1 OR user2=$1)`,[req.session.ID], (err,res)=>{
+            if(error){
+                res.end(error);
+            }
+            if (!result || !result.rows[0]) {
+                res.render("pages/chatlist",{db:false});
+             }
+            var results = {'rows':result.rows}
+            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results});
+        })
+    }
+    else{
+        res.redirect("/login");
+    }
 })
 
 io.sockets.on("connection", function (socket) {
-  socket.on("username", function (username) {
-    socket.username = username
-  })
-  socket.on("chat_message", function (msg) {
-    io.emit("chat_message", "<strong>" + socket.username + "</strong>: " + msg)
-  })
+    socket.on("username", function (username) {
+        socket.username = username;
+    })
+    socket.on("receiver", function(receiver){
+        socket.receiver=receiver;
+    })
+    socket.on("sender", function(sender){
+        socket.sender=sender;
+    })
+    socket.on("chat_message", function(msg){
+        io.emit("chat_message", "<strong>" + socket.username + "</strong>: " + msg);
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts) VALUES ($1, $2, $3)`,[socket.receiver,socket.sender, msg], (error, result)=>{
+            if(error){
+                throw(error);
+            }
+        })
+    })
 })
 
 ///////////////////////////////
