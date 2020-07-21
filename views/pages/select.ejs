@@ -309,8 +309,8 @@
     Do we want user's review? or item review? <br>
     Item's quantity is only one, so I don't think there's point of having item review
   <body>
-    <form method = "post" action="/chatready">
-      <input type = "hidden" name=opponent value=<%= r.uid %>><br>
+    <form method = "post" action="/chat">
+      <input type = "hidden" name=receiver value=<%= r.uid %>><br>
       <input type = "submit" value="chatting"><br>
     </form>
     <% }); %>

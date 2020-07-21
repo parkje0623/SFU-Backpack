@@ -187,8 +187,8 @@ app.post("/auth/login", (req, res) => {
       "SELECT * FROM backpack WHERE uid=$1 AND upassword=$2",
       values,
       (error, result) => {
-        if (error) res.end(error)
-        else if (!result || !result.rows[0]) {
+          if (error) res.end(error)
+          else if (!result || !result.rows[0]) {
           res.render("pages/login", {
             // if wrong password or ID
             msg: "Error: Wrong USER ID or PASSWORD!",
@@ -772,38 +772,33 @@ var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
-app.post("/chatready", function (req, res) {
-    console.log("start");
+app.post("/chat", (req, res)=> {
     if(isLogedin(req, res)) {
-        var opponent=req.body.opponent;
-        if(opponent===NULL){
+        var receiver=req.body.receiver;
+        if(!receiver){
             res.redirect("/mainpage");
         }
-        console.log("ready");
-        pool.query(`SELECT * FROM chatlist WHERE (user1=$1 AND user2=$2) OR (user2=$1 AND user1=$2)`,[opponent, req.session.ID], (err,res)=>{
-            console.log("select");
-            if(error){
-                res.end(error);
-            }
-            if (!result || !result.rows[0]) {
-                pool.query(`INSERT INTO chatlist (user1, user2) VALUES ($1, $2)`, [opponent, req.session.ID], (err,res)=>{
-                    console.log("insert");
-                    if(error){
-                        res.end(error);
-                    }
-                    res.render("pages/chat",{uname: req.session.displayName, db:false, oname:opponent});
-                })
-            }
-            var results = {'rows':result.rows}
-            res.render("pages/chat",{uname: req.session.displayName, db:true ,results, oname:opponent});
-        })
+        else{
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{
+                if(error){
+                    res.end(error);
+                }
+                if (!result || !result.rows[0]) {
+                    res.render("pages/chat",{uname: req.session.displayName, db:false, receiver:receiver, sender:req.session.ID});
+                }
+                else{
+                    var results = result.rows;
+                    res.render("pages/chat",{uname: req.session.displayName, db:true ,results, receiver:receiver, sender:req.session.ID});
+                }
+            })
+        }
     }
     else{
         res.redirect("/login");
     }
 })
 
-app.post("/chatlist", function (req, res) {
+app.post("/chatlist", (req, res)=>{
     if(isLogedin(req, res)) {
         pool.query(`SELECT * FROM chatlist WHERE (user1=$1 OR user2=$1)`,[req.session.ID], (err,res)=>{
             if(error){
@@ -821,21 +816,21 @@ app.post("/chatlist", function (req, res) {
     }
 })
 
-
-let oppoID;
-
 io.sockets.on("connection", function (socket) {
     socket.on("username", function (username) {
         socket.username = username;
     })
-    socket.on("opponame", function(oppoID){
-        oppoID=oppoID;
+    socket.on("receiver", function(receiver){
+        socket.receiver=receiver;
     })
-    socket.on("chat_message", function (msg) {
+    socket.on("sender", function(sender){
+        socket.sender=sender;
+    })
+    socket.on("chat_message", function(msg){
         io.emit("chat_message", "<strong>" + socket.username + "</strong>: " + msg);
-        pool.query(`INSERT INTO chatlist (texts) VALUES ($3) WHERE (user1=$1 AND user2=$2) OR (user2=$1 AND user1=$2)`,[oppoID, req.session.ID, msg], (err,res)=>{
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts) VALUES ($1, $2, $3)`,[socket.receiver,socket.sender, msg], (error, result)=>{
             if(error){
-                res.end(error);
+                throw(error);
             }
         })
     })

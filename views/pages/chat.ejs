@@ -18,7 +18,9 @@
   <body>
     <ul id="messages">
       <%if(db===true){%>
-        <li><%= results[0].texts %></li>
+        <% results.forEach(function(r) { %>
+          <li><strong><%= r.sender%>:</strong> <%= r.texts %></li>
+        <%});%>
       <%}%>
     </ul>
     <form action="/" method="POST" id="chatForm">
@@ -26,13 +28,15 @@
     </form>
     <script>
             var username="<%=uname%>";
-            var oppoID="<%=oname%>";
+            var receiver="<%=receiver%>";
+            var sender="<%=sender%>";
             //https://sfu-backpack.herokuapp.com/chat
             //http://localhost:5000
             var socket = io.connect();
             // submit text message without reload/refresh the page
             socket.emit('username', username);
-            socket.emit('oppoID', oppoID);
+            socket.emit('receiver', receiver);
+            socket.emit('sender', sender);
             $('form').submit(function(e){
                 e.preventDefault(); // prevents page reloading
                 socket.emit('chat_message', $('#txt').val());
