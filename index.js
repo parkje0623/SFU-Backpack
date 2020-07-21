@@ -651,7 +651,7 @@ app.get("/reportUser", (req, res) => {
   }
 })
 
-
+///////////////////////////////////////////////////////////////////
 
 app.post("/report", (req, res) => {
   //
@@ -662,6 +662,8 @@ app.post("/report", (req, res) => {
   console.log(id)
   console.log(uid)
   console.log(description)
+  console.log(req.body)
+
     var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
