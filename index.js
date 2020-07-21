@@ -641,6 +641,75 @@ app.post("/upload", function (req, res) { // async function here
   })
 })
 
+app.get("/reportUser", (req, res) => {
+  if (!isLogedin(req, res)) {
+    //if user is not login direct them to login page
+    res.redirect("/login")
+    return false
+  } else {
+  res.render("pages/reportUser")
+  }
+})
+
+///////////////////////////////////////////////////////////////////
+
+app.post("/report", (req, res) => {
+  //
+  var id = req.body.uid
+  var description = req.body.description
+  var uid = req.session.ID
+
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
+    pool.query(getEmailQuery, (error, result) => {
+      if (error) {
+        res.end(error)
+      } 
+      else if (!result || !result.rows[0]) {
+        res.render("pages/reportUser", {
+          msg: "INFORMAION about the User ID is not correct!",
+        })
+      }    
+    }) 
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    pool.query(getEmailQuery, (error, result) => {
+      if (error) {
+        res.end(error)
+      }
+      else{
+        const output = `
+          <p> REPORT of USER: </p>
+          <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
+          <p> Report: ${description}</p>
+        `
+        // nodemail gmail transporter
+        var transporter = nodemailer.createTransport({
+          service: "gmail",
+            auth: {
+              user: "cmpt276backpack@gmail.com",
+              pass: EMAIL_ACCESS,
+            },
+        })
+
+        // setup email data with unicode symbols
+        let mailOptions = {
+          from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+          to: 'cmpt276backpack@gmail.com', // list of receivers
+          subject: "Reporting A User", // Subject line
+          html: output, // html body
+        }
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            return console.log(error)
+          }
+          res.render("pages/reportUser", { msg: "Report has been sent" })
+        })
+      }
+    })                 
+});
+
+
 app.get("/find_id", (req, res) => {
   res.render("pages/find_id")
 })
