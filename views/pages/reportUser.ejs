@@ -1,16 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./stylesheets/imageUpload.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
+      rel="stylesheet"
+    />
   <title>Report</title>
   <div class="warning">
     <%= typeof msg != 'undefined' ? msg : '' %>
    </div>
 </head>
 <body>
-<form action="/report" method="POST">
-  <input type="text" name="uid">
-  <input type="text" name="description">
-  <button type="submit">send</button>
-</form>
+  <div class="login-form">
+    <form action="/report" method="POST">
+    <h2 class="text-center">Reporting a User</h2>
+      <div class="warning">
+        <%= typeof msg != 'undefined' ? msg : '' %>
+      </div>
+      <br/>
+      <input type="text" name="uid" class="form-control" placeholder="THE USER ID being REPORTED" required="required"><br>
+      <textarea type="text" name="description" class="form-control" placeholder="Description" required="required"></textarea><br>
+      <button type="submit">SEND</button>
+    </form>
+    <br/>
+    </div>
 </body>
 </html>
