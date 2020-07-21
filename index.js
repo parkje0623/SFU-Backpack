@@ -670,50 +670,44 @@ app.post("/report", (req, res) => {
         })
       }    
     }) 
-      else{
-        var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
-          pool.query(getEmailQuery, (error, result) => {
-            if (error) {
-              res.end(error)
-            }
-            else{
-              const output = `
-                <p> REPORT of USER: </p>
-                <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
-                <p>${description}</p>
-                    
-                `
-
-              // nodemail gmail transporter
-              var transporter = nodemailer.createTransport({
-                service: "gmail",
-                auth: {
-                  user: "cmpt276backpack@gmail.com",
-                  pass: EMAIL_ACCESS,
-                },
-              })
-
-              // setup email data with unicode symbols
-              let mailOptions = {
-                from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
-                to: 'cmpt276backpack@gmail.com', // list of receivers
-                subject: "Reporting A User", // Subject line
-                html: output, // html body
-              }
-
-                  // send mail with defined transport object
-              transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                  return console.log(error)
-                }
-                res.render("pages/reportUser", { msg: "Report has been sent" })
-              })
-            }
-          })           
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    pool.query(getEmailQuery, (error, result) => {
+      if (error) {
+        res.end(error)
       }
+      else{
+        const output = `
+          <p> REPORT of USER: </p>
+          <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
+          <p> Report: ${description}</p>
+        `
+        // nodemail gmail transporter
+        var transporter = nodemailer.createTransport({
+          service: "gmail",
+            auth: {
+              user: "cmpt276backpack@gmail.com",
+              pass: EMAIL_ACCESS,
+            },
+        })
+
+        // setup email data with unicode symbols
+        let mailOptions = {
+          from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+          to: 'cmpt276backpack@gmail.com', // list of receivers
+          subject: "Reporting A User", // Subject line
+          html: output, // html body
+        }
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            return console.log(error)
+          }
+          res.render("pages/reportUser", { msg: "Report has been sent" })
+        })
+      }
+    })                 
 });
-
-
 
 
 app.get("/find_id", (req, res) => {
