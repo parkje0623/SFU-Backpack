@@ -659,14 +659,13 @@ app.post("/report", (req, res) => {
   var description = req.body.description
   var uid = req.session.ID
 
-  
+  console.log(id)
     var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       } else if (!result || !result.rows[0]) {
         res.render("pages/reportUser", {
-          // 
           msg: "INFORMAION about the User ID is not correct!",
         })
         }    
