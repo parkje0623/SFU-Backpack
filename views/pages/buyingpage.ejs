@@ -301,9 +301,8 @@
        
           var j;
           for (j = 0; j < arraylat.length; j++) {
-            addmarker(49.274897,-122.993188, 'testinggg', 'cmpt' );
 
-            addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j]);
+            addmarker(49.274897, -122.993188, arraytitle[j], arraycourse[j]);
           }
           function addmarker(lat, lng, title, course){
             var link = '<a href="/post/' + course + '">';
