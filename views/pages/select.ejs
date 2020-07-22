@@ -1,3 +1,4 @@
+  
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head></head>
@@ -37,8 +38,8 @@
     <style media="screen">
       #map {
         margin-top: 20px;
-        height: 400px;
-        width: 50%
+        height: 300px;
+        width: 30%
       }
     </style>
 
@@ -48,11 +49,12 @@
         <form>
           <input
             class="search-input"
-            type="search"
+            type="text"
+            name='text'
             placeholder="Search"
             aria-label="Search.."
           />
-          <button class="search-btn" type="submit">Search</button>
+          <button class="search-btn" formaction="/search" type="submit">Search</button>
         </form>
       </nav>
       <!-- LOGIN FEATURE -->
@@ -294,23 +296,20 @@
             <ul><span>Price: </span> <%= r.cost %></ul>
             <ul><span>Condition: </span> <%= r.condition %></ul>
             <ul><span>Description: </span><%= r.description %></ul>
-
           </ul>
         </u2>
-
       <div id="map"> </div>
     </ul>
     
     <h2> CONTACT USER goes here </h2><br>
     Do we want to send email to user? <br>
     Chat system w/ user? <br><br><br>
-
     <h2> REVIEW goes here</h2> <br>
     Do we want user's review? or item review? <br>
     Item's quantity is only one, so I don't think there's point of having item review
   <body>
-    <form method = "post" action="/chatready">
-      <input type = "hidden" name=opponent value=<%= r.uid %>><br>
+    <form method = "post" action="/chat">
+      <input type = "hidden" name=receiver value=<%= r.uid %>><br>
       <input type = "submit" value="chatting"><br>
     </form>
     <% }); %>
@@ -320,7 +319,6 @@
     var glng = post[0].lng;    // longitude
     var title = post[0].bookname;
     console.log(title);
-
         function initMap(){
           // map otions
           var options = {
@@ -329,13 +327,11 @@
           }
           //new map
         var map = new google.maps.Map(document.getElementById('map'), options);
-
         //add marker
         var marker = new google.maps.Marker({
           position:{lat: glat, lng: glng},    // add marker with this position
           map:map  // the map we want to add it too
         });
-
         var infoWindow = new google.maps.InfoWindow ({
           content: title + '<a href="https://www.sfu.ca/">' + 'https://www.sfu.ca/</a> '
         });
@@ -347,7 +343,4 @@
       <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
       </script>
-
-
-
 </html>

@@ -103,6 +103,7 @@ body {
 .nav-buying-dropdown-menu ul ul li {
   position: relative;
   display: none;
+  z-index: 2000;
 }
 
 
