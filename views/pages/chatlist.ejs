@@ -82,7 +82,7 @@
       <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
               <p class="logo-font">sfu-backpack</p>
     </div>
-    <form>
+    <div>
       <%if(db===true){%>
         <%var users=[];%>
         <%var check=true;%>
@@ -97,7 +97,7 @@
             <%if(check===true){%>
               <form method = "post" action="/chat">
                 <input type = "hidden" name=receiver value=<%= r.receiver %>><br>
-                <button type = "submit" value=<%= r.receiver %>><br>
+                <input type = "submit" value=<%= r.receiver %>><br>
               </form>
               <%users.push(r.receiver);%>
             <%}%>
@@ -111,13 +111,13 @@
             <%if(check===true){%>
               <form method = "post" action="/chat">
                 <input type = "hidden" name=receiver value=<%= r.sender %>><br>
-                <button type = "submit" value=<%= r.sender %>><br>
+                <input type = "submit" value=<%= r.sender %>><br>
               </form>
               <%users.push(r.sender);%>
             <%}%>
           <%}%>
         <%})%>
       <%}%>
-    </form>
+    </div>
 </body>
 </html>
