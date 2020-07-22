@@ -298,9 +298,11 @@
           }
             //new map
           var map = new google.maps.Map(document.getElementById('map'), options);
-          addmarker(49.274897,-122.993188, 'testinggg', 'cmpt' );
+       
           var j;
-          for (j = 0; j < 2; j++) {
+          for (j = 0; j < arraylat.length; j++) {
+            addmarker(49.274897,-122.993188, 'testinggg', 'cmpt' );
+
             addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j]);
           }
           function addmarker(lat, lng, title, course){
