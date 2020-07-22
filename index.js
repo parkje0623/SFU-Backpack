@@ -895,12 +895,17 @@ io.sockets.on("connection", function (socket) {
     socket.on("sender", function(sender){
         socket.sender=sender;
     })
-    socket.on("room", function(room){
+    socket.on("room1", function(room){
         socket.join(room);
+        socket.room1=room;
     })
-    socket.on("chat_message", function(data){
-        io.in(room1).in(room2).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts) VALUES ($1, $2, $3)`,[socket.receiver,socket.sender, msg], (error, result)=>{
+    socket.on("room2", function(room){
+        socket.join(room);
+        socket.room2=room;
+    })
+    socket.on("chat_message", function(message){
+        io.in(socket.room1).in(socket.room2).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts) VALUES ($1, $2, $3)`,[socket.receiver,socket.sender, message], (error, result)=>{
             if(error){
                 throw(error);
             }
