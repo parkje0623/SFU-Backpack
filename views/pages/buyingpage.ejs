@@ -278,9 +278,6 @@
     <body>
       <script type="text/javascript">
         var post = <%- JSON.stringify(results) %>;
-        console.log(post);
-        var glat = post[0].lat;    // latitude
-         var glng = post[0].lng;    // longitude
         var i = 0;
         var arraylng = [ ];
         var arraylat = [ ];
@@ -297,7 +294,7 @@
           // map otions
           var options = {
             zoom: 12,
-            center: {lat: glat, lng: glng}
+            center: {lat: 49.274897, lng: -122.993188}
           }
             //new map
           var map = new google.maps.Map(document.getElementById('map'), options);
@@ -305,7 +302,6 @@
           var j;
           addmarker(arraylat[0], arraylng[0], arraytitle[0], arraycourse[0]);
           for (j = 0; j < arraylat.length; j++) {
-
             addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j]);
           }
           function addmarker(lat, lng, title, course){
