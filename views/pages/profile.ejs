@@ -16,6 +16,7 @@
         <nav class="username">
             <a href="/auth/logout">logout</a>
             <a href="/mypage"><%= attr.uname %></a>
+            <a href="/chatlist">chat list</a>
         </nav>
         <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
         <p class="logo-font">sfu-backpack</p> <br><br><br>
@@ -49,7 +50,6 @@
         <p> Confirm Password: <input id="profconfirm" type="password" name="confirm" placeholder="Confirm New Password" maxLength="30" size="40"</input><br></p>
         <p> Email:    <input id="profemail" type="text" name="uemail" placeholder="<%= attr.uemail %>" maxLength="20" size="40"</input><br></p>
         <button id="submit_btn" formaction="/edituser" type="submit" formmethod="post" class="edit">Edit</button>
-        <a href="/chatlist">chat list</a>
       </div>
       <% }); %>
     </form>
