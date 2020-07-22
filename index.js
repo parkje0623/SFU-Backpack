@@ -30,8 +30,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  connectionString: process.env.DATABASE_URL,
+  connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+  // connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -40,8 +40,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
-      //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      // conString: process.env.DATABASE_URL,
+      conString:'postgres://postgres:@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -789,6 +789,7 @@ app.get("/buy", (req, res) => {
           uname: req.session.displayName,
           admin: true,
         })
+        
       } else {
         res.render("pages/buyingpage", {
           results,
@@ -931,11 +932,32 @@ app.get('/search', function(req, res) {
   if (typeof req.query.text !== 'undefined') {
       search(req.query.text, function(data_items) {
         var results = data_items
-          res.render("pages/search",{results})
+        if (isLogedin(req,res)){
+          if (req.session.ID.trim() == "admin"){
+            res.render("pages/searchReload", {
+              results,
+              uname: req.session.displayName,
+              admin: true,
+            })
+          }
+          else {
+            res.render("pages/searchReload",{
+              results,
+              uname: req.session.displayName,
+              admin: true,
+            })
+          }
+        }
+        else{
+          res.render("pages/searchReload", {results, uname: false, admin: false})
+        }
       })
   } else {
-      res.send({error : '[100] Not search params text in query.'})
+     res.redirect("pages/buyingpageReload")
   }
 })
+
+
+
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))

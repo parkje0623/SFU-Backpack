@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
+  <head></head>
     <meta charset="utf-8" />
-    <title>Buy Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search page</title>
 
     <!-- BOOTSTRAP -->
     <script
@@ -34,15 +35,6 @@
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
-    <style media="screen">
-      #map { 
-        height: 500px;
-        width :80%; 
-        margin-top: 20px;
-        margin-left:auto; 
-        margin-right:auto;
-      }
-      </style>
     <body>
       <div class="top-container">
         <nav class="search-bar">
@@ -56,8 +48,8 @@
             <button class="search-btn" formaction="/search" type="submit">Search</button>
           </form>
         </nav>
-        <form>
-          <!-- LOGIN FEATURE -->
+        <!-- LOGIN FEATURE -->
+        <form >
           <nav class="login-bar">
             <%if( uname ===false){%>
             <a href="/login">login</a>
@@ -73,11 +65,10 @@
         </form>
 
         <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-        <p class="logo-font">sfu-backpack</p>
+                <p class="logo-font">sfu-backpack</p>
       </div>
 
-
-      <!-- Drop-down menu -->
+                  <!-- Drop-down menu -->
       <div class="buying-menu">
         <div class="navigationDesktop">
           <nav class="nav-buying-dropdown-menu">
@@ -274,59 +265,47 @@
           </nav>
         </div>
       </div>
-      <div id="map"></div>
+
+      <!-- Create a condition to print the course name only one time -->
+      <% var i = 1; %>
+      <ul>
+        <!-- Get data from img table and display it -->
+          <% results.forEach(function(r) { %>
+            <!-- Make an if statement to print course name only one time -->
+          <% if ( i == 1) {%>
+            <li class="course-heading-buyingpage"><%= r.course %> </li>
+            <% i = 0; %>
+          <%};%>
+            <hr>
+          <br>
+          <!-- Displaying book image and book information  -->
+          <u2 class="div-display-bookname-bookimage">
+            <img width="200px" src="<%= r.path %>" alt="image">
+            <!-- <div id='map'></div> -->
+            <ul class="book-name-buyingpage">
+                <ul><%= r.course %></ul>
+              <ul><%= r.bookname %></ul>
+              <ul><span>Seller: </span> <%= r.uid %></ul>
+              <ul><span>Price: </span> <%= r.cost %></ul>
+              <ul><span>Condition: </span> <%= r.condition %></ul>
+              <ul><span>Description: </span><%= r.description %></ul>
+              <ul><span>Location: </span><%= r.location %></ul>
+              <ul><span>Lat: </span><%= r.lat %></ul>
+              <ul><span>Lng: </span><%= r.lng %></ul>
+
+            </ul>
+            <form>
+              <input type="text" name="coursename" value="<%= r.course %>" style="display: none"></input>
+              <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"></input>
+              <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
+              <button type="submit" class="select-btn-buyingpage" formaction="/select_page" formmethod="post">Select</button>
+
+              <%if( admin == true){%>
+                <button type="submit" class="delete-btn-buyingpage" formaction="/admin_deletePost" formmethod="post">Delete</button>
+              <%}%>
+            </form>
+            </u2>
+          <% }); %>
+      </ul>
     <body>
-      <script type="text/javascript">
-        var post = <%- JSON.stringify(results) %>;
-        var i = 0;
-        var arraylng = [ ];
-        var arraylat = [ ];
-        var arraytitle = [ ];
-        var arraycourse = [ ];
-        Object.keys(post).forEach(function (key){
-          arraylat[i] = parseFloat(post[key].lat);
-          arraylng[i] = parseFloat(post[key].lng);
-          arraytitle[i] = post[key].bookname;
-          arraycourse[i] = post[key].course;
-          i++;
-        });
-        function initMap(){
-          // map otions
-          var options = {
-            zoom: 12,
-            center: {lat: 49.274897, lng: -122.993188}
-          }
-            //new map
-          var map = new google.maps.Map(document.getElementById('map'), options);
-       
-          var j;
-          addmarker(arraylat[0], arraylng[0], arraytitle[0], arraycourse[0]);
-          for (j = 0; j < arraylat.length; j++) {
-            addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j]);
-          }
-          function addmarker(lat, lng, title, course){
-            var link = '<a href="/post/' + course + '">';
-            var marker = new google.maps.Marker({
-              position:{lat: lat, lng: lng},
-              map:map,
-              //icon:props.iconImage
-            });
-            // Check content
-            if(title){
-              var infoWindow = new google.maps.InfoWindow({
-                content: title + link + course
-              });
-
-              marker.addListener('click', function(){
-                infoWindow.open(map, marker);
-              });
-            }
-          }
-        }
-
-    </script>
-      <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
-    </script>
-  </html>
 </html>
