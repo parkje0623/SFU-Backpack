@@ -97,7 +97,7 @@
             <%if(check===true){%>
               <form method = "post" action="/chat">
                 <input type = "hidden" name=receiver value=<%= r.receiver %>><br>
-                <input type = "submit" value=<%= r.receiver %>><br>
+                <button type = "submit" value=<%= r.receiver %>><br>
               </form>
               <%users.push(r.receiver);%>
             <%}%>
@@ -111,7 +111,7 @@
             <%if(check===true){%>
               <form method = "post" action="/chat">
                 <input type = "hidden" name=receiver value=<%= r.sender %>><br>
-                <input type = "submit" value=<%= r.sender %>><br>
+                <button type = "submit" value=<%= r.sender %>><br>
               </form>
               <%users.push(r.sender);%>
             <%}%>
