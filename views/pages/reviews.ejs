@@ -65,10 +65,25 @@
       <img id="logo" src="logo.png" alt="logo" />
       <p class="logo-font">sfu-backpack</p>
     </div>
-    <div class="middle-container">
-      <a href="/upload"><button class="btn btn-primary button">Sell</button></a>
-      <a href="/buy"><button class="btn btn-primary button">Buy</button></a>
-      <a href="/reviewpage"><button class="btn btn-primary button">Review</button></a>
+
+    <div class="all_reviews">
+      <h1> Reviews About <%= uname %> </h1>
+      <% other_reviews.forEach(function(attr) { %>
+        <div class="About_me">
+          Date Written: <%= attr.date %> <br>
+          Review by: <%= attr.written_user %> <br> </p>
+          <%= attr.description %>
+        </div>
+      <%});%>
+
+      <h1> Reviews Written By <%= uname %> </h1>
+      <% my_reviews.forEach(function(attr) { %>
+        <div class="Written_by_me">
+          Date Written: <%= attr.date %> <br>
+          Review by: <%= attr.written_user %> <br> </p>
+          <%= attr.description %>
+        </div>
+      <%});%>
     </div>
   </body>
 </html>

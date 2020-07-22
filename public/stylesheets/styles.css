@@ -217,6 +217,16 @@ body {
   width: 300px;
   height: 50px;
 }
+.boldReview {
+  font-weight: bold;
+}
+.all_reviews {
+  position: absolute;
+  left: 50px;
+  top: 150px;
+  margin: 16px;
+  margin-bottom: 5px;
+}
 #file {
   position: absolute;
   top: 400px;
@@ -224,7 +234,7 @@ body {
 }
 h1, p {
   margin-bottom: 30px;
-} 
+}
 input[id=profid], [id=profname], [id=profpwd], [id=profconfirm], [id=profemail] {
   line-height: 2em;
   font-size: 18px;
@@ -258,5 +268,29 @@ input[id=profid], [id=profname], [id=profpwd], [id=profconfirm], [id=profemail] 
   font-size: 22px;
   width: 100px;
   margin-bottom: 20px;
+}
+#reviews, .About_me, .Written_by_me {
+  border: 2px solid #ccc;
+  background-color: white;
+  border-radius: 5px;
+  padding: 16px;
+  margin: 16px;
+  width: 700px;
+}
+#reviewing {
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 6px;
+  margin: 16px;
+  margin-bottom: 5px;
+  width: 700px;
+  height: 100px;
+}
+#submit_review {
+  text-align: center;
+  margin: 16px;
+  margin-top: 0px;
+  width: 100px;
+  height: 30px;
 }
 /* Style for profile.ejs (profile) FINISIHED */
