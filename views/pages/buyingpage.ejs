@@ -277,22 +277,23 @@
       <div id="map"></div>
     <body>
       <script type="text/javascript">
-        var post = <%- JSON.stringify(results) %>;
-        var i = 0;
-        let arraylng = [ ];
-        let arraylat = [ ];
-        let arraytitle = [ ];
-        let arraycourse = [ ];
-        post.forEach(function (arrayItem) {
-          var x = arrayItem.lat;
-          arraylat[i] = arrayItem.lat;
-          arraylng[i] = arrayItem.lng;
-          arraytitle[i] = arrayItem.bookname;
-          arraycourse[i] = arrayItem.course;
-          i++;
-        });
+
 
         function initMap(){
+          var post = <%- JSON.stringify(results) %>;
+          var i = 0;
+          let arraylng = [ ];
+          let arraylat = [ ];
+          let arraytitle = [ ];
+          let arraycourse = [ ];
+          post.forEach(function (arrayItem) {
+            var x = arrayItem.lat;
+            arraylat[i] = arrayItem.lat;
+            arraylng[i] = arrayItem.lng;
+            arraytitle[i] = arrayItem.bookname;
+            arraycourse[i] = arrayItem.course;
+            i++;
+          });
           // map otions
           var options = {
             zoom: 12,
