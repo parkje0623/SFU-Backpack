@@ -779,7 +779,7 @@ app.get("/buy", (req, res) => {
     if (error) {
       res.end(error)
     }
-    var results = { rows: result.rows }
+    var results = result.rows
 
     if (isLogedin(req, res)) {
       // This is login and logout function
