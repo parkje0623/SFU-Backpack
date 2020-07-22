@@ -905,7 +905,7 @@ io.sockets.on("connection", function (socket) {
     })
     socket.on("chat_message", function(message){
         io.in(socket.room1).in(socket.room2).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts) VALUES ($1, $2, $3)`,[socket.receiver,socket.sender, message], (error, result)=>{
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
             if(error){
                 throw(error);
             }
