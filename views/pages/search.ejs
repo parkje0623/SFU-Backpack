@@ -1,0 +1,25 @@
+<html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+</head>
+<body>
+    <% results.forEach(function(r) { %>
+        <!-- Make an if statement to print course name only one time -->
+        <ul class="book-name-buyingpage">
+          <ul><%= r.course %></ul>
+          <ul><%= r.bookname %></ul>
+          <ul><span>Seller: </span> <%= r.uid %></ul>
+          <ul><span>Price: </span> <%= r.cost %></ul>
+          <ul><span>Condition: </span> <%= r.condition %></ul>
+          <ul><span>Description: </span><%= r.description %></ul>
+          <ul><span>Location: </span><%= r.location %></ul>
+          <ul><span>Lat: </span><%= r.lat %></ul>
+          <ul><span>Lng: </span><%= r.lng %></ul>
+
+        </ul>
+        <% }); %>
+</body>
+</html></html>

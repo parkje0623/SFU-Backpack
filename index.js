@@ -907,4 +907,27 @@ io.sockets.on("connection", function (socket) {
 
 ///////////////////////////////
 
+// SEARCH //////////
+function search(search_string, func) {
+  pool.query( "SELECT * FROM img WHERE  fts @@ to_tsquery('english', $1)", [search_string],
+  function(err, result) {
+    if (err) {
+      func([])
+    } else {
+      func(result.rows)
+    }
+  }
+  );
+}
+app.get('/search', function(req, res) {
+  if (typeof req.query.text !== 'undefined') {
+      search(req.query.text, function(data_items) {
+        var results = data_items
+          res.render("pages/search",{results})
+      })
+  } else {
+      res.send({error : '[100] Not search params text in query.'})
+  }
+})
+
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
