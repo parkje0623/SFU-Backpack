@@ -277,23 +277,21 @@
       <div id="map"></div>
     <body>
       <script type="text/javascript">
-
-
+        var post = <%- JSON.stringify(results) %>;
+        var i = 0;
+        var arraylng = [ ];
+        var arraylat = [ ];
+        var arraytitle = [ ];
+        var arraycourse = [ ];
+        post.forEach(function (arrayItem) {
+          var x = arrayItem.lat;
+          arraylat[i] = parseFloat(arrayItem.lat);
+          arraylng[i] = parseFloat(arrayItem.lng);
+          arraytitle[i] = arrayItem.bookname;
+          arraycourse[i] = arrayItem.course;
+          i++;
+        });
         function initMap(){
-          var post = <%- JSON.stringify(results) %>;
-          var i = 0;
-          let arraylng = [ ];
-          let arraylat = [ ];
-          let arraytitle = [ ];
-          let arraycourse = [ ];
-          post.forEach(function (arrayItem) {
-            var x = arrayItem.lat;
-            arraylat[i] = arrayItem.lat;
-            arraylng[i] = arrayItem.lng;
-            arraytitle[i] = arrayItem.bookname;
-            arraycourse[i] = arrayItem.course;
-            i++;
-          });
           // map otions
           var options = {
             zoom: 12,
@@ -301,9 +299,8 @@
           }
             //new map
           var map = new google.maps.Map(document.getElementById('map'), options);
-          let marker = [ ];
           for (var j= 0; j < arraylat.length; j++) {
-            marker[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j]);
+            addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j]);
           }
           function addmarker(lat, lng, title, course){
             var link = '<a href="/post/' + course + '">';
@@ -324,6 +321,7 @@
             }
           }
         }
+
     </script>
       <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
