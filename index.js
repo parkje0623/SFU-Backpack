@@ -867,17 +867,26 @@ app.post("/chat", (req, res)=> {
     }
 })
 
-app.post("/chatlist", (req, res)=>{
+app.get("/chatlist", (req, res)=>{
+    var admin;
     if(isLogedin(req, res)) {
-        pool.query(`SELECT * FROM chatlist WHERE (user1=$1 OR user2=$1)`,[req.session.ID], (err,res)=>{
+        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
             if(error){
                 res.end(error);
             }
+
+            if (req.session.ID.trim() == "admin") {
+                admin=true;
+            }
+            else{
+                admin=false;
+            }
+
             if (!result || !result.rows[0]) {
-                res.render("pages/chatlist",{db:false});
-             }
-            var results = {'rows':result.rows}
-            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results});
+                res.render("pages/chatlist",{db:false,  uname:req.session.displayName, admin});
+            }
+            var results = result.rows;
+            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
         })
     }
     else{
