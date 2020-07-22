@@ -16,7 +16,6 @@
         <nav class="username">
             <a href="/auth/logout">logout</a>
             <a href="/mypage"><%= attr.uname %></a>
-            <a href="/chatlist">chat list</a>
         </nav>
         <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
         <p class="logo-font">sfu-backpack</p> <br><br><br>
@@ -53,7 +52,9 @@
       </div>
       <% }); %>
     </form>
-
+    <form>
+      <button type="submit" action="/chatlist" method="post">chatting list</button>
+    </form>
     <form class="posted_supplies">
       <h1> Posted Supplies <br> </h1>
       <div class="user_postings">
