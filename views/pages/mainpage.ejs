@@ -40,11 +40,12 @@
         <form>
           <input
             class="search-input"
-            type="search"
+            type="text"
+            name='text'
             placeholder="Search"
             aria-label="Search.."
           />
-          <button class="search-btn" type="submit">Search</button>
+          <button class="search-btn" formaction="/search" type="submit">Search</button>
         </form>
       </nav>
       <form>
@@ -69,7 +70,7 @@
       <a href="/upload"><button class="btn btn-primary button">Sell</button></a>
       <a href="/buy"><button class="btn btn-primary button">Buy</button></a>
       <a href="#"><button class="btn btn-primary button">Review</button></a>
-      <a href="/chatlist">chat list</a>
+      <a href="/reportUser"><button class="btn btn-primary button">Report Abuse</button></a>
     </div>
   </body>
 </html>

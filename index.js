@@ -30,7 +30,7 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
   connectionString: process.env.DATABASE_URL,
 })
 
@@ -41,7 +41,7 @@ app.use(
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
-      //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      // conString:'postgres://postgres:@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -789,6 +789,7 @@ app.get("/buy", (req, res) => {
           uname: req.session.displayName,
           admin: true,
         })
+        
       } else {
         res.render("pages/buyingpage", {
           results,
@@ -923,5 +924,49 @@ io.sockets.on("connection", function (socket) {
 })
 
 ///////////////////////////////
+
+// SEARCH //////////
+function search(search_string, func) {
+  pool.query( "SELECT * FROM img WHERE  fts @@ to_tsquery('english', $1)", [search_string],
+  function(err, result) {
+    if (err) {
+      func([])
+    } else {
+      func(result.rows)
+    }
+  }
+  );
+}
+app.get('/search', function(req, res) {
+  if (typeof req.query.text !== 'undefined') {
+      search(req.query.text, function(data_items) {
+        var results = data_items
+        if (isLogedin(req,res)){
+          if (req.session.ID.trim() == "admin"){
+            res.render("pages/searchReload", {
+              results,
+              uname: req.session.displayName,
+              admin: true,
+            })
+          }
+          else {
+            res.render("pages/searchReload",{
+              results,
+              uname: req.session.displayName,
+              admin: true,
+            })
+          }
+        }
+        else{
+          res.render("pages/searchReload", {results, uname: false, admin: false})
+        }
+      })
+  } else {
+     res.redirect("pages/buyingpageReload")
+  }
+})
+
+
+
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
