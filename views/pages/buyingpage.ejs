@@ -283,12 +283,11 @@
         var arraylat = [ ];
         var arraytitle = [ ];
         var arraycourse = [ ];
-        post.forEach(function (arrayItem) {
-          var x = arrayItem.lat;
-          arraylat[i] = parseFloat(arrayItem.lat);
-          arraylng[i] = parseFloat(arrayItem.lng);
-          arraytitle[i] = arrayItem.bookname;
-          arraycourse[i] = arrayItem.course;
+        Object.keys(post).forEach(function (key){
+          arraylat[i] = parseFloat(post[key].lat);
+          arraylng[i] = parseFloat(post[key].lng);
+          arraytitle[i] = post[key].bookname;
+          arraycourse[i] = post[key].course;
           i++;
         });
         function initMap(){
