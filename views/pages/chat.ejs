@@ -30,6 +30,8 @@
             var username="<%=uname%>";
             var receiver="<%=receiver%>";
             var sender="<%=sender%>";
+            var room1="<%=receiver_sender%>";
+            var room2="<%=sender_receiver%>"
             //https://sfu-backpack.herokuapp.com/chat
             //http://localhost:5000
             var socket = io.connect();
@@ -37,9 +39,11 @@
             socket.emit('username', username);
             socket.emit('receiver', receiver);
             socket.emit('sender', sender);
+            socket.emit('room', room1);
+            socket.emit('room', room2);
             $('form').submit(function(e){
                 e.preventDefault(); // prevents page reloading
-                socket.emit('chat_message', $('#txt').val());
+                socket.emit('chat_message', {message:$('#txt').val(), room1:room1, room2:room2});
                 $('#txt').val('');
                 return false;
             });

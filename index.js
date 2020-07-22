@@ -895,8 +895,11 @@ io.sockets.on("connection", function (socket) {
     socket.on("sender", function(sender){
         socket.sender=sender;
     })
-    socket.on("chat_message", function(msg){
-        io.emit("chat_message", "<strong>" + socket.username + "</strong>: " + msg);
+    socket.on("room", function(room){
+        socket.join(room);
+    })
+    socket.on("chat_message", function(data){
+        io.in(room1).in(room2).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
         pool.query(`INSERT INTO chatlist (receiver, sender, texts) VALUES ($1, $2, $3)`,[socket.receiver,socket.sender, msg], (error, result)=>{
             if(error){
                 throw(error);
