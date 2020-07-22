@@ -2,7 +2,8 @@
 <html lang="en" dir="ltr">
   <head></head>
     <meta charset="utf-8" />
-    <title>Buy Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search page</title>
 
     <!-- BOOTSTRAP -->
     <script
@@ -44,11 +45,11 @@
               placeholder="Search"
               aria-label="Search.."
             />
-            <button class="search-btn" type="submit">Search</button>
+            <button class="search-btn" formaction="/search" type="submit">Search</button>
           </form>
         </nav>
         <!-- LOGIN FEATURE -->
-        <form>
+        <form >
           <nav class="login-bar">
             <%if( uname ===false){%>
             <a href="/login">login</a>
@@ -288,6 +289,7 @@
             <img width="200px" src="<%= r.path %>" alt="image">
             <!-- <div id='map'></div> -->
             <ul class="book-name-buyingpage">
+                <ul><%= r.course %></ul>
               <ul><%= r.bookname %></ul>
               <ul><span>Seller: </span> <%= r.uid %></ul>
               <ul><span>Price: </span> <%= r.cost %></ul>

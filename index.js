@@ -30,8 +30,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  //connectionString: process.env.DATABASE_URL,
+  // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+  connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -40,8 +40,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      //conString: process.env.DATABASE_URL,
-      conString:'postgres://postgres:cmpt276@localhost/postgres'
+      conString: process.env.DATABASE_URL,
+      // conString:'postgres://postgres:@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -885,7 +885,7 @@ app.get("/buy", (req, res) => {
     if (error) {
       res.end(error)
     }
-    var results = { rows: result.rows }
+    var results = result.rows
 
     if (isLogedin(req, res)) {
       // This is login and logout function
@@ -895,6 +895,7 @@ app.get("/buy", (req, res) => {
           uname: req.session.displayName,
           admin: true,
         })
+
       } else {
         res.render("pages/buyingpage", {
           results,
@@ -973,17 +974,26 @@ app.post("/chat", (req, res)=> {
     }
 })
 
-app.post("/chatlist", (req, res)=>{
+app.get("/chatlist", (req, res)=>{
+    var admin;
     if(isLogedin(req, res)) {
-        pool.query(`SELECT * FROM chatlist WHERE (user1=$1 OR user2=$1)`,[req.session.ID], (err,res)=>{
+        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
             if(error){
                 res.end(error);
             }
+
+            if (req.session.ID.trim() == "admin") {
+                admin=true;
+            }
+            else{
+                admin=false;
+            }
+
             if (!result || !result.rows[0]) {
-                res.render("pages/chatlist",{db:false});
-             }
-            var results = {'rows':result.rows}
-            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results});
+                res.render("pages/chatlist",{db:false,  uname:req.session.displayName, admin});
+            }
+            var results = result.rows;
+            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
         })
     }
     else{
@@ -1001,9 +1011,17 @@ io.sockets.on("connection", function (socket) {
     socket.on("sender", function(sender){
         socket.sender=sender;
     })
-    socket.on("chat_message", function(msg){
-        io.emit("chat_message", "<strong>" + socket.username + "</strong>: " + msg);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts) VALUES ($1, $2, $3)`,[socket.receiver,socket.sender, msg], (error, result)=>{
+    socket.on("room1", function(room){
+        socket.join(room);
+        socket.room1=room;
+    })
+    socket.on("room2", function(room){
+        socket.join(room);
+        socket.room2=room;
+    })
+    socket.on("chat_message", function(message){
+        io.in(socket.room1).in(socket.room2).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
             if(error){
                 throw(error);
             }
@@ -1012,5 +1030,49 @@ io.sockets.on("connection", function (socket) {
 })
 
 ///////////////////////////////
+
+// SEARCH //////////
+function search(search_string, func) {
+  pool.query( "SELECT * FROM img WHERE  fts @@ to_tsquery('english', $1)", [search_string],
+  function(err, result) {
+    if (err) {
+      func([])
+    } else {
+      func(result.rows)
+    }
+  }
+  );
+}
+app.get('/search', function(req, res) {
+  if (typeof req.query.text !== 'undefined') {
+      search(req.query.text, function(data_items) {
+        var results = data_items
+        if (isLogedin(req,res)){
+          if (req.session.ID.trim() == "admin"){
+            res.render("pages/searchReload", {
+              results,
+              uname: req.session.displayName,
+              admin: true,
+            })
+          }
+          else {
+            res.render("pages/searchReload",{
+              results,
+              uname: req.session.displayName,
+              admin: true,
+            })
+          }
+        }
+        else{
+          res.render("pages/searchReload", {results, uname: false, admin: false})
+        }
+      })
+  } else {
+     res.redirect("pages/buyingpageReload")
+  }
+})
+
+
+
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))

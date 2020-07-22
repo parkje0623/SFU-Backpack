@@ -94,7 +94,7 @@ body {
 
 .nav-buying-dropdown-menu ul li {
   float: left;
-  width: 50px;
+  width: 75px;
   height: 40px;
   line-height: 40px;
   background: #fc575e;
@@ -103,6 +103,7 @@ body {
 .nav-buying-dropdown-menu ul ul li {
   position: relative;
   display: none;
+  z-index: 2000;
 }
 
 

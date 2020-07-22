@@ -19,7 +19,7 @@
     <ul id="messages">
       <%if(db===true){%>
         <% results.forEach(function(r) { %>
-          <li><strong><%= r.sender%>:</strong> <%= r.texts %></li>
+          <li><strong><%= r.senderid%>:</strong> <%= r.texts %></li>
         <%});%>
       <%}%>
     </ul>
@@ -30,6 +30,8 @@
             var username="<%=uname%>";
             var receiver="<%=receiver%>";
             var sender="<%=sender%>";
+            var room1="<%=receiver%>"+"_"+"<%=sender%>";
+            var room2="<%=sender%>"+"_"+"<%=receiver%>";
             //https://sfu-backpack.herokuapp.com/chat
             //http://localhost:5000
             var socket = io.connect();
@@ -37,6 +39,8 @@
             socket.emit('username', username);
             socket.emit('receiver', receiver);
             socket.emit('sender', sender);
+            socket.emit('room1', room1);
+            socket.emit('room2', room2);
             $('form').submit(function(e){
                 e.preventDefault(); // prevents page reloading
                 socket.emit('chat_message', $('#txt').val());
