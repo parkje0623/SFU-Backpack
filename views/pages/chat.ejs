@@ -43,7 +43,7 @@
             socket.emit('room2', room2);
             $('form').submit(function(e){
                 e.preventDefault(); // prevents page reloading
-                socket.emit('chat_message', $('#txt').val());
+                socket.in(room1).in(room2).emit('chat_message', $('#txt').val());
                 $('#txt').val('');
                 return false;
             });
