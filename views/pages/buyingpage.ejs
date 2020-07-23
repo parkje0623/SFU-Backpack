@@ -291,6 +291,8 @@
         var arraytitle = [ ];
         var arraycourse = [ ];
         var arrayID = [ ];
+        var min = .999999;
+        var max = 1.000001;
         Object.keys(post).forEach(function (key){
           arraylat[i] = parseFloat(post[key].lat);
           arraylng[i] = parseFloat(post[key].lng);
@@ -300,7 +302,15 @@
           i++;
         });
        
-        console.log(arraylng);
+        for (i=0; i < arraylng.length - 1; i++) {
+          var curlat = arraylat[i];
+          var curlng = arraylng[i];
+          for (var k = i + 1; k < arraylat.length; k++) {
+            if (curlat == arraylat[k] && curlng == arraylng[k]) {
+              arraylat[i] = curlat * (Math.random() * (max - min) + min);
+              arraylng[i] = curlng * (Math.random() * (max - min) + min);
+            }
+          }
         function initMap(){
           // map otions
           var options = {
