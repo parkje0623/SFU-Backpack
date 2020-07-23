@@ -31,12 +31,13 @@
             var receiver="<%=receiver%>";
             var sender="<%=sender%>";
             var room;
-            if("<%=receiver%>" > "<%=sender%>"){
-              room="<%=receiver%>"+"_"+"<%=sender%>";
+            if("<%=receiver%>".trim() > "<%=sender%>".trim()){
+              room="<%=receiver%>".trim()+"_"+"<%=sender%>".trim();
             }
             else{
-              room="<%=sender%>"+"_"+"<%=receiver%>";
+              room="<%=sender%>".trim()+"_"+"<%=receiver%>".trim();
             }
+            console.log(room);
             //https://sfu-backpack.herokuapp.com/chat
             //http://localhost:5000
             var socket = io.connect();
