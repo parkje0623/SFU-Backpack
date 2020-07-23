@@ -297,8 +297,9 @@
           arraytitle[i] = post[key].bookname;
           arraycourse[i] = post[key].course;
           arrayID[i] = post[key].postid;
-          i++;
         });
+       
+        console.log(arraylng);
         function initMap(){
           // map otions
           var options = {
@@ -307,17 +308,20 @@
           }
             //new map
           var map = new google.maps.Map(document.getElementById('map'), options);
-       
+
+
           var j;
           var markers = [ ];
           for (j = 0; j < arraylat.length; j++) {
             markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j], arrayID[j]);
-          }
+        };
+          
           var markerCluster = new MarkerClusterer(map, markers,
             {imagePath: '/images'});
 
+
           function addmarker(lat, lng, title, course, postID){
-            var link = '<a href="/select_page/' + postID + '">';
+            var link = '<a href="/select_page/' + postID + '">';                   
             var marker = new google.maps.Marker({
               position:{lat: lat, lng: lng},
               map:map,
@@ -328,14 +332,15 @@
               var infoWindow = new google.maps.InfoWindow({
                 content: link + title
               });
-
               marker.addListener('click', function(){
                 infoWindow.open(map, marker);
               });
+              return marker;
+
             }
+            return marker;
           }
         }
-        
     </script>
       <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
 
