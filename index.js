@@ -890,8 +890,10 @@ app.get("/chatlist", (req, res)=>{
             if (!result || !result.rows[0]) {
                 res.render("pages/chatlist",{db:false,  uname:req.session.displayName, admin});
             }
-            var results = result.rows;
-            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
+            else{
+                var results = result.rows;
+                res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
+            }
         })
     }
     else{
