@@ -16,6 +16,7 @@
         <nav class="username">
             <a href="/auth/logout">logout</a>
             <a href="/mypage"><%= attr.uname %></a>
+            <a href="/chatlist">chat list</a>
         </nav>
         <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
         <p class="logo-font">sfu-backpack</p> <br><br><br>
@@ -62,7 +63,7 @@
           <form class="supplies">
             <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
             <input type="text" name="bookname" value="<%= r.bookname%>" style="display:none"> </input>
-            <button id="submit" type="submit" formaction="/select_page" formmethod="post" class="find_post">SELECT</button>
+            <button id="submit" type="submit" formaction="/select_page/<%= r.postid %>" formmethod="GET" class="find_post">SELECT</button>
           </form>
         <% }); %>
       </div>

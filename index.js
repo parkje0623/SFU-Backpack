@@ -30,7 +30,7 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
   connectionString: process.env.DATABASE_URL,
 })
 
@@ -41,7 +41,7 @@ app.use(
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
-      // conString:'postgres://postgres:@localhost/postgres'
+       //conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -136,41 +136,117 @@ app.post("/admin_deletePost", (req, res) => {
   }
 })
 
-app.post("/select_page", (req, res) => {
-  var uid = req.body.uid
-  var bookname = req.body.bookname
-  var values = [uid, bookname]
-  if (uid && bookname) {
+app.get("/select_page/:id", (req, res) => {
+  var postid = req.params.id;
+  if (postid) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
-      `SELECT * FROM img WHERE uid=$1 AND bookname=$2`,
-      values,
+      `SELECT * FROM img WHERE postid=$1`,
+      [postid],
       (error, result) => {
-        if (error) res.end(error)
-        //After deleting, redirects user to the most recent course section from buying page.
-        var results = result.rows
-
+        if (error) {
+          res.end(error)
+        }
+        var results = result.rows;
+        var uidOnly = result.rows[0].uid;
+        pool.query(`SELECT * FROM review WHERE about_user=$1`, [uidOnly], (error, result) => {
+          if (error) {
+            res.end(error);
+          }
+          var reviews = result.rows;
         if (isLogedin(req, res)) {
           // This is login and logout function
           if (req.session.ID.trim() == "admin") {
             res.render("pages/select", {
-              results,
+              results, reviews,
               uname: req.session.displayName,
+              userID: req.session.ID,
               admin: true,
             })
           } else {
             res.render("pages/select", {
-              results,
+              results, reviews,
               uname: req.session.displayName,
+              userID: req.session.ID,
               admin: false,
             })
           }
         } else {
-          res.render("pages/select", { results, uname: false, admin: false })
+          res.render("pages/select", { results, reviews, uname: false, admin: false, userID: req.session.ID })
         }
-      }
-    )
+      });
+      })
   }
+})
+
+
+//Posts the review written by the buyer
+app.post("/post_review", (req, res) => {
+  var uid = req.session.ID;
+  var sellerid = req.body.sellerID;
+  var review = req.body.review;
+  var postID = req.body.postID;
+  // current date + time
+  var date_ob = new Date();
+  var date = ("0" + date_ob.getDate()).slice(-2);
+  var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+  var year = date_ob.getFullYear();
+  var hours = date_ob.getHours();
+  var minutes = date_ob.getMinutes();
+  var seconds = date_ob.getSeconds();
+  var timestamp = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+
+  var values = [timestamp, uid, sellerid, review];
+  var uidOnly = [sellerid];
+  var post_number = [postID];
+  if (uid && sellerid && review) {
+    //Inserting the review written to the database
+    pool.query(`INSERT INTO review (date, written_user, about_user, description) VALUES ($1, $2, $3, $4)`, values, (error, result)=>{
+      if (error)
+        res.end(error)
+      var backTo = "/select_page/" + postID;
+      res.redirect(backTo);
+    });
+  }
+})
+
+//This page allows user to view what reviews he/she got from other users, and what reviews user haven written to others
+app.get('/reviewpage', (req, res) => {
+  var uid = req.session.ID;
+  var value = [uid];
+
+  // This is login and logout checking functino
+  if (isLogedin(req, res)) {
+    //Selects all the reviews that were written by the current user
+    pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
+      if (error)
+        res.end(error)
+      var my_reviews = result.rows;
+      //Selects all the reviews that were written to the current user
+      pool.query(`SELECT * FROM review WHERE about_user=$1`, value, (error, result) => {
+        if (error)
+          res.end(error)
+        var other_reviews = result.rows;
+        if (req.session.ID.trim() == "admin") {
+          res.render("pages/reviews", {
+            my_reviews, other_reviews,
+            uname: req.session.displayName,
+            admin: true,
+
+          })
+        } else {
+          res.render("pages/reviews", {
+            my_reviews, other_reviews,
+              uname: req.session.displayName,
+              admin: false,
+            })
+          }
+        });
+      });
+    } else {
+        //Redirects to the select page
+        res.redirect("login")
+      }
 })
 
 app.get("/login", (req, res) => {
@@ -663,13 +739,13 @@ app.post("/report", (req, res) => {
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
-      } 
+      }
       else if (!result || !result.rows[0]) {
         res.render("pages/reportUser", {
           msg: "INFORMAION about the User ID is not correct!",
         })
-      }    
-    }) 
+      }
+    })
     var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
@@ -706,7 +782,7 @@ app.post("/report", (req, res) => {
           res.render("pages/reportUser", { msg: "Report has been sent" })
         })
       }
-    })                 
+    })
 });
 
 
@@ -789,7 +865,7 @@ app.get("/buy", (req, res) => {
           uname: req.session.displayName,
           admin: true,
         })
-        
+
       } else {
         res.render("pages/buyingpage", {
           results,
@@ -868,17 +944,28 @@ app.post("/chat", (req, res)=> {
     }
 })
 
-app.post("/chatlist", (req, res)=>{
+app.get("/chatlist", (req, res)=>{
+    var admin;
     if(isLogedin(req, res)) {
-        pool.query(`SELECT * FROM chatlist WHERE (user1=$1 OR user2=$1)`,[req.session.ID], (err,res)=>{
+        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
             if(error){
                 res.end(error);
             }
+
+            if (req.session.ID.trim() == "admin") {
+                admin=true;
+            }
+            else{
+                admin=false;
+            }
+
             if (!result || !result.rows[0]) {
-                res.render("pages/chatlist",{db:false});
-             }
-            var results = {'rows':result.rows}
-            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results});
+                res.render("pages/chatlist",{db:false,  uname:req.session.displayName, admin});
+            }
+            else{
+                var results = result.rows;
+                res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
+            }
         })
     }
     else{
@@ -896,16 +983,12 @@ io.sockets.on("connection", function (socket) {
     socket.on("sender", function(sender){
         socket.sender=sender;
     })
-    socket.on("room1", function(room){
+    socket.on("room", function(room){
         socket.join(room);
-        socket.room1=room;
-    })
-    socket.on("room2", function(room){
-        socket.join(room);
-        socket.room2=room;
+        socket.room=room;
     })
     socket.on("chat_message", function(message){
-        io.in(socket.room1).in(socket.room2).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
+        io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
         pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
             if(error){
                 throw(error);
@@ -918,7 +1001,7 @@ io.sockets.on("connection", function (socket) {
 
 // SEARCH //////////
 function search(search_string, func) {
-  pool.query( "SELECT * FROM img WHERE  fts @@ to_tsquery('english', $1)", [search_string],
+  pool.query( "SELECT * FROM img WHERE fts @@ to_tsquery('english', $1)", [search_string],
   function(err, result) {
     if (err) {
       func([])

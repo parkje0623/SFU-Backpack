@@ -49,7 +49,8 @@
           <form>
             <input
               class="search-input"
-              type="search"
+              type="text"
+              name='text'
               placeholder="Search"
               aria-label="Search.."
             />
@@ -289,11 +290,13 @@
         var arraylat = [ ];
         var arraytitle = [ ];
         var arraycourse = [ ];
+        var arrayID = [ ];
         Object.keys(post).forEach(function (key){
           arraylat[i] = parseFloat(post[key].lat);
           arraylng[i] = parseFloat(post[key].lng);
           arraytitle[i] = post[key].bookname;
           arraycourse[i] = post[key].course;
+          arrayID[i] = post[key].postid;
           i++;
         });
         function initMap(){
@@ -306,12 +309,11 @@
           var map = new google.maps.Map(document.getElementById('map'), options);
        
           var j;
-          addmarker(arraylat[0], arraylng[0], arraytitle[0], arraycourse[0]);
           for (j = 0; j < arraylat.length; j++) {
-            addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j]);
+            addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j], arrayID[j]);
           }
-          function addmarker(lat, lng, title, course){
-            var link = '<a href="/post/' + course + '">';
+          function addmarker(lat, lng, title, course, postID){
+            var link = '<a href="/select_page/' + postID + '">';
             var marker = new google.maps.Marker({
               position:{lat: lat, lng: lng},
               map:map,
@@ -320,7 +322,7 @@
             // Check content
             if(title){
               var infoWindow = new google.maps.InfoWindow({
-                content: title + link + course
+                content: title + link + "link"
               });
 
               marker.addListener('click', function(){

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head></head>
+  <head>
     <meta charset="utf-8" />
-    <title>Buy Page</title>
-
+    <title>Main Page</title>
     <!-- BOOTSTRAP -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -27,30 +26,13 @@
       crossorigin="anonymous"
     ></script>
     <!-- BOOTSTRAP -->
-    <!-- <base href="/"> -->
 
-    <link rel="stylesheet" href="/./stylesheets/styles.css" />
+    <link rel="stylesheet" href="./stylesheets/styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css' rel='stylesheet' />
-
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-      }
-
-      #map {
-        position: relative;
-        width: 400px;
-        height: 300px;
-      }
-    </style>
-
+  </head>
   <body>
     <div class="top-container">
       <nav class="search-bar">
@@ -64,7 +46,6 @@
           <button class="search-btn" type="submit">Search</button>
         </form>
       </nav>
-      <!-- LOGIN FEATURE -->
       <form>
         <nav class="login-bar">
           <%if( uname ===false){%>
@@ -80,8 +61,28 @@
         </nav>
       </form>
 
-      <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-              <p class="logo-font">sfu-backpack</p>
+      <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
+      <p class="logo-font">sfu-backpack</p>
     </div>
-</body>
+
+    <div class="all_reviews">
+      <h1> Reviews About <%= uname %> </h1>
+      <% other_reviews.forEach(function(attr) { %>
+        <div class="About_me">
+          Date Written: <%= attr.date %> <br>
+          Review by: <%= attr.written_user %> <br> </p>
+          <%= attr.description %>
+        </div>
+      <%});%>
+
+      <h1> Reviews Written By <%= uname %> </h1>
+      <% my_reviews.forEach(function(attr) { %>
+        <div class="Written_by_me">
+          Date Written: <%= attr.date %> <br>
+          Review by: <%= attr.written_user %> <br> </p>
+          <%= attr.description %>
+        </div>
+      <%});%>
+    </div>
+  </body>
 </html>
