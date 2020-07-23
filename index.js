@@ -148,9 +148,7 @@ app.get("/select_page/:id", (req, res) => {
           res.end(error)
         }
         var results = result.rows;
-        var string = JSON.stringify(results);
-        var json = JSON.parse(string);
-        var uidOnly = json[0].uid;
+        var uidOnly = result.rows[0].uid;
         pool.query(`SELECT * FROM review WHERE about_user=$1`, uidOnly, (error, result) => {
           if (error) {
             res.end(error);
