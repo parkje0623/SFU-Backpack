@@ -149,7 +149,7 @@ app.get("/select_page/:id", (req, res) => {
         }
         var results = result.rows;
         var uidOnly = result.rows[0].uid;
-        pool.query(`SELECT * FROM review WHERE about_user=$1`, uidOnly, (error, result) => {
+        pool.query(`SELECT * FROM review WHERE about_user=$1`, [uidOnly], (error, result) => {
           if (error) {
             res.end(error);
           }
