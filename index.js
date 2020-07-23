@@ -136,9 +136,8 @@ app.post("/admin_deletePost", (req, res) => {
   }
 })
 
-app.post("/select_page/:id", (req, res) => {
+app.get("/select_page/:id", (req, res) => {
   var postid = req.params.id;
-  var uidOnly = req.body.uid;
   if (postid) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
@@ -149,6 +148,9 @@ app.post("/select_page/:id", (req, res) => {
           res.end(error)
         }
         var results = result.rows;
+        var string = JSON.stringify(results);
+        var json = JSON.parse(string);
+        var uidOnly = json[0].uid;
         pool.query(`SELECT * FROM review WHERE about_user=$1`, uidOnly, (error, result) => {
           if (error) {
             res.end(error);
