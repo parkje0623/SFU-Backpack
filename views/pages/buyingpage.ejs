@@ -49,7 +49,8 @@
           <form>
             <input
               class="search-input"
-              type="search"
+              type="text"
+              name='text'
               placeholder="Search"
               aria-label="Search.."
             />
@@ -295,7 +296,7 @@
           arraylng[i] = parseFloat(post[key].lng);
           arraytitle[i] = post[key].bookname;
           arraycourse[i] = post[key].course;
-          arrayID[i] = post[key].postID;
+          arrayID[i] = post[key].postid;
           i++;
         });
         function initMap(){

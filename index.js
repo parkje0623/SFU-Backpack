@@ -136,9 +136,8 @@ app.post("/admin_deletePost", (req, res) => {
   }
 })
 
-app.post("/select_page/:id", (req, res) => {
+app.get("/select_page/:id", (req, res) => {
   var postid = req.params.id;
-  var uidOnly = req.body.uid;
   if (postid) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
@@ -149,7 +148,8 @@ app.post("/select_page/:id", (req, res) => {
           res.end(error)
         }
         var results = result.rows;
-        pool.query(`SELECT * FROM review WHERE about_user=$1`, uidOnly, (error, result) => {
+        var uidOnly = result.rows[0].uid;
+        pool.query(`SELECT * FROM review WHERE about_user=$1`, [uidOnly], (error, result) => {
           if (error) {
             res.end(error);
           }
@@ -160,17 +160,19 @@ app.post("/select_page/:id", (req, res) => {
             res.render("pages/select", {
               results, reviews,
               uname: req.session.displayName,
+              userID: req.session.ID,
               admin: true,
             })
           } else {
             res.render("pages/select", {
               results, reviews,
               uname: req.session.displayName,
+              userID: req.session.ID,
               admin: false,
             })
           }
         } else {
-          res.render("pages/select", { results, reviews, uname: false, admin: false })
+          res.render("pages/select", { results, reviews, uname: false, admin: false, userID: req.session.ID })
         }
       });
       })
