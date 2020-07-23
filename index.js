@@ -136,17 +136,13 @@ app.post("/admin_deletePost", (req, res) => {
   }
 })
 
-//Leads to one specific page that user have selected
-app.post("/select_page", (req, res) => {
-  var uid = req.body.uid
-  var bookname = req.body.bookname
-  var values = [uid, bookname]
-  var uidOnly = [uid]
-  if (uid && bookname) {
+app.get("/select_page/:id", (req, res) => {
+  var postid = res.params.id;
+  if (postid) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
-      `SELECT * FROM img WHERE uid=$1 AND bookname=$2`,
-      values,
+      `SELECT * FROM img WHERE postid=$1`,
+      [postid],
       (error, result) => {
         if (error) res.end(error)
         var results = result.rows;
