@@ -311,6 +311,7 @@
               arraylng[i] = curlng * (Math.random() * (max - min) + min);
             }
           }
+        }
         function initMap(){
           // map otions
           var options = {
@@ -325,7 +326,7 @@
           var markers = [ ];
           for (j = 0; j < arraylat.length; j++) {
             markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j], arrayID[j]);
-        };
+          };
           
           var markerCluster = new MarkerClusterer(map, markers,
             {imagePath: '/images/'});
