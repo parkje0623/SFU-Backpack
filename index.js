@@ -160,17 +160,19 @@ app.get("/select_page/:id", (req, res) => {
             res.render("pages/select", {
               results, reviews,
               uname: req.session.displayName,
+              userID: req.session.ID,
               admin: true,
             })
           } else {
             res.render("pages/select", {
               results, reviews,
               uname: req.session.displayName,
+              userID: req.session.ID,
               admin: false,
             })
           }
         } else {
-          res.render("pages/select", { results, reviews, uname: false, admin: false })
+          res.render("pages/select", { results, reviews, uname: false, admin: false, userID: req.session.ID })
         }
       });
       })
