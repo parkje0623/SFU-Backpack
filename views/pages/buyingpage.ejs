@@ -309,9 +309,13 @@
           var map = new google.maps.Map(document.getElementById('map'), options);
        
           var j;
+          var markers = [ ];
           for (j = 0; j < arraylat.length; j++) {
-            addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j], arrayID[j]);
+            markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j], arrayID[j]);
           }
+          var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: '/images'});
+
           function addmarker(lat, lng, title, course, postID){
             var link = '<a href="/select_page/' + postID + '">';
             var marker = new google.maps.Marker({
@@ -322,7 +326,7 @@
             // Check content
             if(title){
               var infoWindow = new google.maps.InfoWindow({
-                content: title + link + "link"
+                content: link + title
               });
 
               marker.addListener('click', function(){
@@ -331,8 +335,10 @@
             }
           }
         }
-
+        
     </script>
+      <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+
       <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
     </script>
