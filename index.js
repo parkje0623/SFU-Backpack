@@ -136,149 +136,47 @@ app.post("/admin_deletePost", (req, res) => {
   }
 })
 
-//Leads to one specific page that user have selected
-app.post("/select_page", (req, res) => {
-  var uid = req.body.uid
-  var bookname = req.body.bookname
-  var values = [uid, bookname]
-  var uidOnly = [uid]
-  if (uid && bookname) {
+app.get("/select_page/:id", (req, res) => {
+  var postid = req.params.id;
+  if (postid) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
-      `SELECT * FROM img WHERE uid=$1 AND bookname=$2`,
-      values,
+      `SELECT * FROM img WHERE postid=$1`,
+      [postid],
       (error, result) => {
-        if (error) res.end(error)
-        var results = result.rows;
-        pool.query(`SELECT * FROM review WHERE about_user=$1`, uidOnly, (error, result)=>{
-          if (error)
-            res.end(error)
-          //After deleting, redirects user to the most recent course section from buying page.
-          var reviews = result.rows;
-
-          if (isLogedin(req, res)) {
-            // This is login and logout function
-            if (req.session.ID.trim() == "admin") {
-              res.render("pages/select", {
-                results, reviews,
-                uname: req.session.displayName,
-                userID: req.session.ID,
-                admin: true,
-              })
-            } else {
-              res.render("pages/select", {
-                results, reviews,
-                uname: req.session.displayName,
-                userID: req.session.ID,
-                admin: false,
-              })
-            }
-          } else {
-            res.render("pages/select", { results, reviews, uname: false, admin: false, userID: req.session.ID })
-          }
-        });
-      })
-  }
-})
-
-//Posts the review written by the buyer
-app.post("/post_review", (req, res) => {
-  var uid = req.session.ID;
-  var sellerid = req.body.sellerID;
-  var review = req.body.review;
-  var bookname = req.body.bookname;
-  // current date + time
-  var date_ob = new Date();
-  var date = ("0" + date_ob.getDate()).slice(-2);
-  var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-  var year = date_ob.getFullYear();
-  var hours = date_ob.getHours();
-  var minutes = date_ob.getMinutes();
-  var seconds = date_ob.getSeconds();
-  var timestamp = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
-
-  var values = [timestamp, uid, sellerid, review];
-  var uidOnly = [sellerid];
-  var img_values = [sellerid, bookname];
-  if (uid && sellerid && review) {
-    //Inserting the review written to the database
-    pool.query(`INSERT INTO review (date, written_user, about_user, description) VALUES ($1, $2, $3, $4)`, values, (error, result)=>{
-      if (error)
-        res.end(error)
-      //Gathering previously selected item's data
-      pool.query(`SELECT * FROM img WHERE uid=$1 AND bookname=$2`, img_values, (error, result) => {
-        if (error) res.end(error)
-        var results = result.rows;
-        //Gathering previously selected item's review data
-        pool.query(`SELECT * FROM review WHERE about_user=$1`, uidOnly, (error, result)=>{
-          if (error)
-            res.end(error)
-          var reviews = result.rows;
-          if (isLogedin(req, res)) {
-            // This is login and logout function
-            if (req.session.ID.trim() == "admin") {
-              res.render("pages/select", {
-                results, reviews,
-                uname: req.session.displayName,
-                userID: req.session.ID,
-                admin: true,
-
-              })
-            } else {
-              res.render("pages/select", {
-                results, reviews,
-                  uname: req.session.displayName,
-                  userID: req.session.ID,
-                  admin: false,
-                })
-              }
-            } else {
-                //Redirects to the select page
-                res.render("pages/select", { results, reviews, uname: false, admin: false, userID: req.session.ID})
-              }
-            });
-        })
-    });
-  }
-})
-
-//This page allows user to view what reviews he/she got from other users, and what reviews user haven written to others
-app.get('/reviewpage', (req, res) => {
-  var uid = req.session.ID;
-  var value = [uid];
-
-  // This is login and logout checking functino
-  if (isLogedin(req, res)) {
-    //Selects all the reviews that were written by the current user
-    pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
-      if (error)
-        res.end(error)
-      var my_reviews = result.rows;
-      //Selects all the reviews that were written to the current user
-      pool.query(`SELECT * FROM review WHERE about_user=$1`, value, (error, result) => {
-        if (error)
+        if (error) {
           res.end(error)
-        var other_reviews = result.rows;
-        if (req.session.ID.trim() == "admin") {
-          res.render("pages/reviews", {
-            my_reviews, other_reviews,
-            uname: req.session.displayName,
-            admin: true,
-
-          })
-        } else {
-          res.render("pages/reviews", {
-            my_reviews, other_reviews,
+        }
+        var results = result.rows;
+        var uidOnly = result.rows[0].uid;
+        pool.query(`SELECT * FROM review WHERE about_user=$1`, [uidOnly], (error, result) => {
+          if (error) {
+            res.end(error);
+          }
+          var reviews = result.rows;
+        if (isLogedin(req, res)) {
+          // This is login and logout function
+          if (req.session.ID.trim() == "admin") {
+            res.render("pages/select", {
+              results, reviews,
               uname: req.session.displayName,
+              userID: req.session.ID,
+              admin: true,
+            })
+          } else {
+            res.render("pages/select", {
+              results, reviews,
+              uname: req.session.displayName,
+              userID: req.session.ID,
               admin: false,
             })
           }
-        });
+        } else {
+          res.render("pages/select", { results, reviews, uname: false, admin: false, userID: req.session.ID })
+        }
       });
-    } else {
-        //Redirects to the select page
-        res.redirect("login")
-      }
+      })
+  }
 })
 
 app.get("/login", (req, res) => {
@@ -429,9 +327,11 @@ app.post("/edituser", (req, res) => {
     if (confirm_pwd === upassword) {
       //Checks if user provided password matches the confirm password section
       //If do match, modifies the requested fields of the table with given values
-      pool.query(`UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`, values, (error, result) => {
-          if (error)
-            res.end(error)
+      pool.query(
+        `UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`,
+        values,
+        (error, result) => {
+          if (error) res.end(error)
           //Directs user back to the profile page.
           res.redirect("/mypage")
         }
@@ -769,13 +669,13 @@ app.post("/report", (req, res) => {
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
-      }
+      } 
       else if (!result || !result.rows[0]) {
         res.render("pages/reportUser", {
           msg: "INFORMAION about the User ID is not correct!",
         })
-      }
-    })
+      }    
+    }) 
     var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
@@ -812,7 +712,7 @@ app.post("/report", (req, res) => {
           res.render("pages/reportUser", { msg: "Report has been sent" })
         })
       }
-    })
+    })                 
 });
 
 
@@ -895,7 +795,7 @@ app.get("/buy", (req, res) => {
           uname: req.session.displayName,
           admin: true,
         })
-
+        
       } else {
         res.render("pages/buyingpage", {
           results,
@@ -992,8 +892,10 @@ app.get("/chatlist", (req, res)=>{
             if (!result || !result.rows[0]) {
                 res.render("pages/chatlist",{db:false,  uname:req.session.displayName, admin});
             }
-            var results = result.rows;
-            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
+            else{
+                var results = result.rows;
+                res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
+            }
         })
     }
     else{
@@ -1011,16 +913,12 @@ io.sockets.on("connection", function (socket) {
     socket.on("sender", function(sender){
         socket.sender=sender;
     })
-    socket.on("room1", function(room){
+    socket.on("room", function(room){
         socket.join(room);
-        socket.room1=room;
-    })
-    socket.on("room2", function(room){
-        socket.join(room);
-        socket.room2=room;
+        socket.room=room;
     })
     socket.on("chat_message", function(message){
-        io.in(socket.room1).in(socket.room2).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
+        io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
         pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
             if(error){
                 throw(error);
