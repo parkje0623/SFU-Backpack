@@ -1011,16 +1011,12 @@ io.sockets.on("connection", function (socket) {
     socket.on("sender", function(sender){
         socket.sender=sender;
     })
-    socket.on("room1", function(room){
+    socket.on("room", function(room){
         socket.join(room);
-        socket.room1=room;
-    })
-    socket.on("room2", function(room){
-        socket.join(room);
-        socket.room2=room;
+        socket.room=room;
     })
     socket.on("chat_message", function(message){
-        io.in(socket.room1).in(socket.room2).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
+        io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
         pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
             if(error){
                 throw(error);
