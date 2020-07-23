@@ -30,8 +30,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  connectionString: process.env.DATABASE_URL,
+  connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  //connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -40,8 +40,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
-       //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      //conString: process.env.DATABASE_URL,
+       conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -136,10 +136,11 @@ app.post("/admin_deletePost", (req, res) => {
   }
 })
 
+//Leads to the page with selected item's information, reviews, map, etc.
 app.get("/select_page/:id", (req, res) => {
-  var postid = req.params.id;
+  var postid = parseInt(req.params.id);
   if (postid) {
-    //Delete the post that has this user id and bookname from the img database.
+    //Select all data from the table img where the postid is equal to requested id
     pool.query(
       `SELECT * FROM img WHERE postid=$1`,
       [postid],
@@ -149,6 +150,7 @@ app.get("/select_page/:id", (req, res) => {
         }
         var results = result.rows;
         var uidOnly = result.rows[0].uid;
+        //returns all the reviews about the seller of the page
         pool.query(`SELECT * FROM review WHERE about_user=$1`, [uidOnly], (error, result) => {
           if (error) {
             res.end(error);
