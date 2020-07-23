@@ -872,7 +872,7 @@ app.post("/chat", (req, res)=> {
     }
 })
 
-app.post("/chatlist", (req, res)=>{
+app.get("/chatlist", (req, res)=>{
     var admin;
     if(isLogedin(req, res)) {
         pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
