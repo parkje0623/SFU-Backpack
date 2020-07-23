@@ -30,7 +30,7 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
   connectionString: process.env.DATABASE_URL,
 })
 
@@ -41,7 +41,7 @@ app.use(
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
-      // conString:'postgres://postgres:@localhost/postgres'
+       //conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -177,6 +177,76 @@ app.get("/select_page/:id", (req, res) => {
       });
       })
   }
+})
+
+
+//Posts the review written by the buyer
+app.post("/post_review", (req, res) => {
+  var uid = req.session.ID;
+  var sellerid = req.body.sellerID;
+  var review = req.body.review;
+  var postID = req.body.postID;
+  // current date + time
+  var date_ob = new Date();
+  var date = ("0" + date_ob.getDate()).slice(-2);
+  var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+  var year = date_ob.getFullYear();
+  var hours = date_ob.getHours();
+  var minutes = date_ob.getMinutes();
+  var seconds = date_ob.getSeconds();
+  var timestamp = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+
+  var values = [timestamp, uid, sellerid, review];
+  var uidOnly = [sellerid];
+  var post_number = [postID];
+  if (uid && sellerid && review) {
+    //Inserting the review written to the database
+    pool.query(`INSERT INTO review (date, written_user, about_user, description) VALUES ($1, $2, $3, $4)`, values, (error, result)=>{
+      if (error)
+        res.end(error)
+      var backTo = "/select_page/" + postID;
+      res.redirect(backTo);
+    });
+  }
+})
+
+//This page allows user to view what reviews he/she got from other users, and what reviews user haven written to others
+app.get('/reviewpage', (req, res) => {
+  var uid = req.session.ID;
+  var value = [uid];
+
+  // This is login and logout checking functino
+  if (isLogedin(req, res)) {
+    //Selects all the reviews that were written by the current user
+    pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
+      if (error)
+        res.end(error)
+      var my_reviews = result.rows;
+      //Selects all the reviews that were written to the current user
+      pool.query(`SELECT * FROM review WHERE about_user=$1`, value, (error, result) => {
+        if (error)
+          res.end(error)
+        var other_reviews = result.rows;
+        if (req.session.ID.trim() == "admin") {
+          res.render("pages/reviews", {
+            my_reviews, other_reviews,
+            uname: req.session.displayName,
+            admin: true,
+
+          })
+        } else {
+          res.render("pages/reviews", {
+            my_reviews, other_reviews,
+              uname: req.session.displayName,
+              admin: false,
+            })
+          }
+        });
+      });
+    } else {
+        //Redirects to the select page
+        res.redirect("login")
+      }
 })
 
 app.get("/login", (req, res) => {
@@ -669,13 +739,13 @@ app.post("/report", (req, res) => {
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
-      } 
+      }
       else if (!result || !result.rows[0]) {
         res.render("pages/reportUser", {
           msg: "INFORMAION about the User ID is not correct!",
         })
-      }    
-    }) 
+      }
+    })
     var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
@@ -712,7 +782,7 @@ app.post("/report", (req, res) => {
           res.render("pages/reportUser", { msg: "Report has been sent" })
         })
       }
-    })                 
+    })
 });
 
 
@@ -795,7 +865,7 @@ app.get("/buy", (req, res) => {
           uname: req.session.displayName,
           admin: true,
         })
-        
+
       } else {
         res.render("pages/buyingpage", {
           results,
@@ -892,8 +962,10 @@ app.get("/chatlist", (req, res)=>{
             if (!result || !result.rows[0]) {
                 res.render("pages/chatlist",{db:false,  uname:req.session.displayName, admin});
             }
-            var results = result.rows;
-            res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
+            else{
+                var results = result.rows;
+                res.render("pages/chatlist",{uid:req.session.ID,db:true ,results, uname:req.session.displayName, admin});
+            }
         })
     }
     else{
@@ -929,7 +1001,7 @@ io.sockets.on("connection", function (socket) {
 
 // SEARCH //////////
 function search(search_string, func) {
-  pool.query( "SELECT * FROM img WHERE  fts @@ to_tsquery('english', $1)", [search_string],
+  pool.query( "SELECT * FROM img WHERE fts @@ to_tsquery('english', $1)", [search_string],
   function(err, result) {
     if (err) {
       func([])

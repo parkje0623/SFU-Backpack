@@ -63,7 +63,7 @@
           <form class="supplies">
             <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
             <input type="text" name="bookname" value="<%= r.bookname%>" style="display:none"> </input>
-            <button id="submit" type="submit" formaction="/select_page" formmethod="post" class="find_post">SELECT</button>
+            <button id="submit" type="submit" formaction="/select_page/<%= r.postid %>" formmethod="GET" class="find_post">SELECT</button>
           </form>
         <% }); %>
       </div>
