@@ -1,4 +1,4 @@
-  
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head></head>
@@ -300,19 +300,52 @@
         </u2>
       <div id="map"> </div>
     </ul>
-    
-    <h2> CONTACT USER goes here </h2><br>
+
+    <h2> CONTACT SELLER </h2><br>
     Do we want to send email to user? <br>
     Chat system w/ user? <br><br><br>
-    <h2> REVIEW goes here</h2> <br>
-    Do we want user's review? or item review? <br>
-    Item's quantity is only one, so I don't think there's point of having item review
+
+    <h2> REVIEW </h2> <br>
+    <% reviews.forEach(function(attr) { %>
+      <div id="reviews">
+        <p class="boldReview">Date Written: <%= attr.date %> <br>
+        Review by: <%= attr.written_user %> <br> </p>
+        <%= attr.description %>
+      </div>
+    <%});%>
+
+    <form id="write_review">
+      Write Review Here: <br>
+      <textarea id="reviewing" type="text" name="review" placeholder="Write Your Review Here" maxlength="1000"> </textarea>
+      <br>
+      <input type="text" id="buyer" value="<%= userID %>" style="display: none">
+      <input type="text" id="seller" name="sellerID" value="<%= r.uid %>" style="display: none">
+      <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none">
+      <button id="submit_review" type="submit" formaction="/post_review" formmethod="post">Submit</button>
+    </form>
+
   <body>
     <form method = "post" action="/chat">
       <input type = "hidden" name=receiver value=<%= r.uid %>><br>
       <input type = "submit" value="chatting"><br>
     </form>
     <% }); %>
+
+    <script>
+      //Checks if currently logged-in account is equal to the seller of the Item
+      //This function allows seller to not be able to write review for themselves
+      document.getElementById('submit_review').addEventListener("click",
+        function (event) {
+          var buyer = document.getElementById('buyer').value;
+          var seller = document.getElementById('seller').value;
+          if (buyer === seller) {
+            alert("Error: Seller cannot write review to yourself!")
+            event.preventDefault();
+          }
+        }
+      );
+    </script>
+
     <script type="text/javascript">
     var post = <%- JSON.stringify(results) %>;
     var glat = post[0].lat;    // latitude
@@ -339,8 +372,11 @@
           infoWindow.open(map, marker);
         });
         }
+
       </script>
+
       <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
       </script>
+
 </html>
