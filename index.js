@@ -718,10 +718,17 @@ app.post("/upload", function (req, res) { // async function here
               //   "')"
 
                 ////////////////
+            
               pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng], (error, result) => {
                 if (error) {
                   res.end(error)
                 } else {
+                  var updatefts = `UPDATE university SET fts=to_tsvector('english', coalesce(course,'') || ' ' || coalesce(bookname,''));`
+                  pool.query(updatefts, (error, result){
+                    if (error) {
+                      res.end(error)
+                    }
+                  })
                   res.render("pages/imageUpload", {
                     msg: "File Uploaded!", // Sending the path to the database and the image to AWS Storage
                   })
