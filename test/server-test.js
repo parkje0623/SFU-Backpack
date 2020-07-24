@@ -1,3 +1,7 @@
+
+// tests here
+console.log("hello world");
+
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../index');
@@ -49,15 +53,34 @@ describe('Report', function(done) {
       done();
   })
 
-  it('Proving wrong ID should fail the request for /report', function(done) {
+});
+
+
+
+describe('User', function () {
+    //tests associated with users
+    it('should add a single user on a successful adding request for chatting message', function (done) {
+        chai.request(server).post('/chat').send({ 'receiver': '111'})
+            .end(function(error,res){
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body[0].r.should.equal('111');
+            done();
+        });
+    });
+});
+
+
+
+it('Proving wrong ID should fail the request for /report', function(done) {
     chai.request(server).post('/report').send({'uid':'1234', 'description':'Good Book'})
       .end(function(error, res) {
-        res.should.have.status(200);
-        res.body[0].id.should.equal('123');
-        res.body[0].description.should.equal('Good Book');
+          res.should.have.status(200);
+          res.body[0].id.should.equal('123');
+          res.body[0].description.should.equal('Good Book');
       });
-  })
 })
+
 
 // //ob={'r':socket.receiver,'s':socket.sender,'m':message,'u':socket.username};
 // describe('User', function () {

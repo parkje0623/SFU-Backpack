@@ -948,19 +948,21 @@ app.get("/post/:id", (req, res) => {
   })
 })
 
+//socket server code starts//
 var socket = require("socket.io")
 var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
+//move to chatting page
 app.post("/chat", (req, res)=> {
     if(isLogedin(req, res)) {
-        var receiver=req.body.receiver;
+        var receiver=req.body.receiver;//opponent client information
         if(!receiver){
             res.redirect("/mainpage");
         }
         else{
-            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
                 if(error){
                     res.end(error);
                 }
@@ -979,10 +981,11 @@ app.post("/chat", (req, res)=> {
     }
 })
 
+//move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
     var admin;
     if(isLogedin(req, res)) {
-        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
+        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{//find chatting logs which the user involved
             if(error){
                 res.end(error);
             }
@@ -1010,28 +1013,28 @@ app.get("/chatlist", (req, res)=>{
 
 io.sockets.on("connection", function (socket) {
     socket.on("username", function (username) {
-        socket.username = username;
+        socket.username = username; //user's name
     })
     socket.on("receiver", function(receiver){
-        socket.receiver=receiver;
+        socket.receiver=receiver; //opponent
     })
     socket.on("sender", function(sender){
-        socket.sender=sender;
+        socket.sender=sender; //user
     })
     socket.on("room", function(room){
-        socket.join(room);
+        socket.join(room); //private room
         socket.room=room;
     })
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
             if(error){
                 throw(error);
             }
         })
     })
 })
-
+//socket server code end//
 ///////////////////////////////
 
 // SEARCH //////////
@@ -1062,7 +1065,7 @@ app.get('/search', function(req, res) {
             res.render("pages/searchReload",{
               results,
               uname: req.session.displayName,
-              admin: true,
+              admin: false,
             })
           }
         }
@@ -1076,5 +1079,7 @@ app.get('/search', function(req, res) {
 })
 
 
+
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;
+
