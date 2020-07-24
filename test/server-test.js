@@ -61,6 +61,14 @@ describe('User-report', function() {
         res.body[0].description.should.equal('Good Book');
       });
   })
+
+  it('should take you to the page report user on a successful GET request for /reportUser',function(done){
+		chai.request(server).get('/reportUser').end(function(error,res){
+			res.should.have.status(200);
+			//done();
+		})
+		done();
+	})
 })
 
 
@@ -180,7 +188,25 @@ describe('Admin Feature', function() {
   })
 });
 
-
+describe('Select page', function() {
+  it('Proving params id for /select_page/:id', function(done){
+      chai.request(server).get('/select_page/1')
+        .end(function(error,res) {
+          res.should.have.status(200);
+          res.body[0].should.have.property('course');
+          res.body[0].should.have.property('postid');
+          res.body[0].course.should.equal('arch')
+          res.body[0].bookname.should.equal('introduction to arch')
+          res.body[0].postid.should.equal(1)
+          res.body[0].uid.should.equal('123')
+          res.body[0].cost.should.equal('100')
+          res.body[0].location.should.equal('Vancouver')
+          res.body[0].lng.should.equal(-123.1207)
+          res.body[0].lat.should.equal(49.2827)
+          done();
+        });
+    })
+});
 
 
 // //ob={'r':socket.receiver,'s':socket.sender,'m':message,'u':socket.username};
