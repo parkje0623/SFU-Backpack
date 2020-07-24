@@ -208,7 +208,7 @@ app.get("/select_page/:id", (req, res) => {
             })
           }
         } else {
-          res.redirect("login");
+          res.redirect("/login");
         }
       });
       })
@@ -243,7 +243,7 @@ app.post("/post_review", (req, res) => {
     res.json(us);
   });*/
 
-  if (uid && sellerid && review) {
+  if (uid && sellerID && review) {
     //Inserting the review written to the database
     pool.query(`INSERT INTO review (date, written_user, about_user, description) VALUES ($1, $2, $3, $4)`, values, (error, result)=>{
       if (error)
@@ -296,7 +296,7 @@ app.get('/reviewpage', (req, res) => {
       });
     } else {
         //Redirects to the select page
-        res.redirect("login")
+        res.redirect("/login")
       }
 })
 
@@ -1112,6 +1112,6 @@ app.get('/search', function(req, res) {
 
 
 
-app.listen(PORT, () => console.log(`Listening on ${PORT}`))
+server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;
 
