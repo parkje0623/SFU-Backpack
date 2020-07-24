@@ -42,13 +42,8 @@ describe('Reviews', function() {
   })
 });
 
-<<<<<<< HEAD
 describe('User-report', function() {
   it('Proving correct ID and Description should pass the request for /report', function(done) {
-=======
-describe('Report', function(done) {
-  it('Proving correct ID should pass the request for /report', function(done) {
->>>>>>> 507d7b4773c90f9ce3bdc8635df340e964ebc866
     chai.request(server).post('/report').send({'uid':'123', 'description':'Good Book'})
       .end(function(error, res) {
         res.should.have.status(200);
@@ -58,7 +53,6 @@ describe('Report', function(done) {
       done();
   })
 
-<<<<<<< HEAD
 
 	it('should take you to the page report user on a successful GET request for /reportUser',function(done){
 		chai.request(server).get('/reportUser').end(function(error,res){
@@ -70,12 +64,7 @@ describe('Report', function(done) {
 });
 
 
-=======
-});
 
-
-
->>>>>>> 507d7b4773c90f9ce3bdc8635df340e964ebc866
 describe('User', function () {
     //tests associated with users
     it('should add a single user on a successful adding request for chatting message', function (done) {
@@ -91,16 +80,7 @@ describe('User', function () {
 
 
 
-it('Proving wrong ID should fail the request for /report', function(done) {
-    chai.request(server).post('/report').send({'uid':'1234', 'description':'Good Book'})
-      .end(function(error, res) {
-          res.should.have.status(200);
-          res.body[0].id.should.equal('123');
-          res.body[0].description.should.equal('Good Book');
-      });
-})
 
-<<<<<<< HEAD
 describe('Forgot-ID',function(){
 	it('Proving correct Email should pass the request for /sendEmail', function(done) {
     chai.request(server).post('/sendEmail').send({'uemail':'ss@ab.com'})
@@ -144,8 +124,7 @@ describe('Forgot-Password',function(){
 })
 
 
-=======
->>>>>>> 507d7b4773c90f9ce3bdc8635df340e964ebc866
+
 
 // //ob={'r':socket.receiver,'s':socket.sender,'m':message,'u':socket.username};
 // describe('User', function () {
