@@ -141,6 +141,38 @@ app.post("/admin_deletePost", (req, res) => {
 //Leads to the page with selected item's information, reviews, map, etc.
 app.get("/select_page/:id", (req, res) => {
   var postid = parseInt(req.params.id);
+            // TESTING UNIT FOR SELECT_PAGE/:ID
+            //   if (postid == 1) {
+            //     var ccourse = 'arch'
+            //     var cuid = '123'
+            //     var cost = '100'
+            //     var cbookname = 'introduction to arch'
+            //     var clocation = 'Vancouver'
+            //     var clat = 49.2827;
+            //     var clng = -123.1207;
+            //     var query1 = `....`
+            //     pool.query(query1, (error, result)=> {
+            //       us= [];
+            //       ob = {course: ccourse, bookname: cbookname, postid: postid, uid: cuid, cost: cost, location: clocation, lat: clat, lng:clng }
+            //       us.push(ob);
+            //       res.json(us);
+            //     })
+            //   } else { 
+            //     var ccourse = 'cmpt'
+            //     var cuid = '321'
+            //     var cost = '50'
+            //     var cbookname = 'introduction to arch'
+            //     var clocation = 'Vancouver'
+            //     var clat = 49.2827;
+            //     var clng = -123.1207;
+            //     var query1 = `....`
+            //     pool.query(query1, (error, result)=> {
+            //       us= [];
+            //       ob = {course: ccourse, bookname: cbookname, postid: postid, uid: cuid, cost: cost, location: clocation, lat: clat, lng:clng }
+            //       us.push(ob);
+            //       res.json(us);
+            //   })
+            // }
   if (postid) {
     //Select all data from the table img where the postid is equal to requested id
     pool.query(
