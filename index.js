@@ -1058,7 +1058,7 @@ app.get('/search', function(req, res) {
             res.render("pages/searchReload",{
               results,
               uname: req.session.displayName,
-              admin: true,
+              admin: false,
             })
           }
         }
