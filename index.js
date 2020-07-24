@@ -42,7 +42,7 @@ app.use(
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
-      //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      // conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -759,7 +759,7 @@ app.post("/report", (req, res) => {
   var description = req.body.description
   var uid = req.session.ID
 
-  /* Testing for reporting 
+  /* Testing for reporting
   var query1 = '...';
   pool.query(query1, (error, results)=>{
     us = [];
@@ -945,21 +945,20 @@ app.get("/post/:id", (req, res) => {
     }
   })
 })
-//socket server code starts//
+
 var socket = require("socket.io")
 var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
-//move to chatting page
 app.post("/chat", (req, res)=> {
     if(isLogedin(req, res)) {
-        var receiver=req.body.receiver; //opponent client information
+        var receiver=req.body.receiver;
         if(!receiver){
             res.redirect("/mainpage");
         }
         else{
-            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{
                 if(error){
                     res.end(error);
                 }
@@ -978,11 +977,10 @@ app.post("/chat", (req, res)=> {
     }
 })
 
-//move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
     var admin;
     if(isLogedin(req, res)) {
-        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{ //find chatting logs which the user involved
+        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
             if(error){
                 res.end(error);
             }
@@ -1010,28 +1008,27 @@ app.get("/chatlist", (req, res)=>{
 
 io.sockets.on("connection", function (socket) {
     socket.on("username", function (username) {
-        socket.username = username;//user's name
+        socket.username = username;
     })
     socket.on("receiver", function(receiver){
-        socket.receiver=receiver;//opponent
+        socket.receiver=receiver;
     })
     socket.on("sender", function(sender){
-        socket.sender=sender;//user
+        socket.sender=sender;
     })
     socket.on("room", function(room){
-        socket.join(room);//private room
+        socket.join(room);
         socket.room=room;
     })
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting logs
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
             if(error){
                 throw(error);
             }
         })
     })
 })
-//socket server code end//
 
 ///////////////////////////////
 
@@ -1075,8 +1072,6 @@ app.get('/search', function(req, res) {
      res.redirect("pages/buyingpageReload")
   }
 })
-
-
 
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))
