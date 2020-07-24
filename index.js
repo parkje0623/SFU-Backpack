@@ -435,7 +435,7 @@ app.post("/showpassword", (req, res) => {
   var uid = req.body.uid
   var uname = req.body.uname
   var uemail = req.body.uemail
-  var values = [uid, uname, uemail]
+  var values = [uid, uname, uemail] 
   if (uid && uname && uemail) {
     pool.query(
       `SELECT * from backpack where uid=$1 AND uname=$2 AND uemail=$3`,
@@ -444,15 +444,11 @@ app.post("/showpassword", (req, res) => {
         if (error) res.end(error)
         else if (!result || !result.rows[0]) {
           res.render("pages/find_pw", {
-            // all the input enter have to be true to show the PASSWORD
-            msg: "INFORMAION is not correct!",
+            // all the input enter have to be true to send the email
+            msg: "INFORMATION is not correct!",
           })
         } else {
-          /*else{
-                res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
-                      msg: "PASSWORD: " + result.rows[0].upassword
-                });
-            }*/
+          // the email content showing the password
           const output = `
               <p>Dear User</p>
               <p>You have a lost Password request from backpack</p>
@@ -488,7 +484,7 @@ app.post("/showpassword", (req, res) => {
         }
       }
     )
-  } else {
+  } else { // if one of the inputs are left empty 
     res.render("pages/find_pw", {
       msg: "Entre your ID, Name and Email Address Please!",
     })
@@ -756,7 +752,8 @@ app.get("/reportUser", (req, res) => {
 ///////////////////////////////////////////////////////////////////
 
 app.post("/report", (req, res) => {
-  //
+  //getting the reporting user id and reported user id
+  // plus the report --> description of the event
   var id = req.body.uid
   var description = req.body.description
   var uid = req.session.ID
@@ -770,23 +767,24 @@ app.post("/report", (req, res) => {
     res.json(us);
   }); */
 
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'" // the reported user id should exist in database
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       }
       else if (!result || !result.rows[0]) {
         res.render("pages/reportUser", {
-          msg: "INFORMAION about the User ID is not correct!",
+          msg: "INFORMATION about the User ID is not correct!", //reported user ID is not correct
         })
       }
     })
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'" //find the reporting user for email
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       }
       else{
+        // email content
         const output = `
           <p> REPORT of USER: </p>
           <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
@@ -822,24 +820,24 @@ app.post("/report", (req, res) => {
 
 
 app.get("/find_id", (req, res) => {
-  res.render("pages/find_id")
+  res.render("pages/find_id") //find id page
 })
 
 app.post("/sendEmail", (req, res) => {
-  //get id and password and email
+  //get the email of the user from form
   var email = req.body.uemail
   if (email) {
-    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'" // find the email in db
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       } else if (!result || !result.rows[0]) {
         res.render("pages/find_id", {
           // all the input enter have to be true to show the PASSWORD
-          msg: "INFORMAION is not correct!",
+          msg: "INFORMATION is not correct!",
         })
       } else {
-        //var results = {'rows':result.rows}
+        // the email content
         const output = `
             <p>Dear User</p>
             <p>You have a lost ID and Password request from backpack</p>
@@ -877,7 +875,7 @@ app.post("/sendEmail", (req, res) => {
         })
       }
     })
-  } else {
+  } else { // if the submitted with no input
     res.render("pages/find_id", { msg: "Entre your Email Address Please!" })
   }
 })
