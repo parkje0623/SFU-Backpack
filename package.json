@@ -17,6 +17,10 @@
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.0",
+<<<<<<< HEAD
+=======
+    "chai": "^4.2.0",
+>>>>>>> e5fbc747eba51f1e5884303d09b2ac37df25dccd
     "chai-http": "^4.3.0",
     "connect-pg-simple": "^6.1.0",
     "cors": "^2.8.5",

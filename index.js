@@ -14,6 +14,7 @@ const EMAIL_ACCESS = process.env.EMAIL_PASS
 const PORT = process.env.PORT || 5000
 const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
+var cors = require('cors')
 var pool
 var cors = require("cors")
 
@@ -41,7 +42,7 @@ app.use(
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
-       //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      //conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -53,6 +54,7 @@ app.use(
 app.use("/", cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json())
+app.use("/", cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, "public")))
 app.set("views", path.join(__dirname, "views"))
@@ -137,8 +139,9 @@ app.post("/admin_deletePost", (req, res) => {
   }
 })
 
+//Leads to the page with selected item's information, reviews, map, etc.
 app.get("/select_page/:id", (req, res) => {
-  var postid = req.params.id;
+  var postid = parseInt(req.params.id);
   if (postid) {
     pool.query(
       `SELECT * FROM img WHERE postid=$1`,
@@ -149,6 +152,7 @@ app.get("/select_page/:id", (req, res) => {
         }
         var results = result.rows;
         var uidOnly = result.rows[0].uid;
+        //returns all the reviews about the seller of the page
         pool.query(`SELECT * FROM review WHERE about_user=$1`, [uidOnly], (error, result) => {
           if (error) {
             res.end(error);
@@ -172,7 +176,7 @@ app.get("/select_page/:id", (req, res) => {
             })
           }
         } else {
-          res.render("pages/select", { results, reviews, uname: false, admin: false, userID: req.session.ID })
+          res.redirect("login");
         }
       });
       })
@@ -183,7 +187,7 @@ app.get("/select_page/:id", (req, res) => {
 //Posts the review written by the buyer
 app.post("/post_review", (req, res) => {
   var uid = req.session.ID;
-  var sellerid = req.body.sellerID;
+  var sellerID = req.body.sellerID;
   var review = req.body.review;
   var postID = req.body.postID;
   // current date + time
@@ -196,9 +200,16 @@ app.post("/post_review", (req, res) => {
   var seconds = date_ob.getSeconds();
   var timestamp = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
 
-  var values = [timestamp, uid, sellerid, review];
-  var uidOnly = [sellerid];
-  var post_number = [postID];
+  var values = [timestamp, uid, sellerID, review];
+
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'Written_by':'123', 'About_user':sellerID, 'Review':review, 'Date':timestamp};
+    us.push(ob);
+    res.json(us);
+  });
+
   if (uid && sellerid && review) {
     //Inserting the review written to the database
     pool.query(`INSERT INTO review (date, written_user, about_user, description) VALUES ($1, $2, $3, $4)`, values, (error, result)=>{
@@ -215,38 +226,49 @@ app.get('/reviewpage', (req, res) => {
   var uid = req.session.ID;
   var value = [uid];
 
-  // This is login and logout checking functino
-  if (isLogedin(req, res)) {
-    //Selects all the reviews that were written by the current user
-    pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
-      if (error)
-        res.end(error)
-      var my_reviews = result.rows;
-      //Selects all the reviews that were written to the current user
-      pool.query(`SELECT * FROM review WHERE about_user=$1`, value, (error, result) => {
-        if (error)
-          res.end(error)
-        var other_reviews = result.rows;
-        if (req.session.ID.trim() == "admin") {
-          res.render("pages/reviews", {
-            my_reviews, other_reviews,
-            uname: req.session.displayName,
-            admin: true,
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    res.json(us);
+  });
 
-          })
-        } else {
-          res.render("pages/reviews", {
-            my_reviews, other_reviews,
-              uname: req.session.displayName,
-              admin: false,
-            })
-          }
-        });
-      });
-    } else {
-        //Redirects to the select page
-        res.redirect("login")
-      }
+  // // This is login and logout checking functino
+  // if (isLogedin(req, res)) {
+  //   //Selects all the reviews that were written by the current user
+  //   pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
+  //     if (error)
+  //       res.end(error)
+  //     var my_reviews = result.rows;
+  //     //Selects all the reviews that were written to the current user
+  //     pool.query(`SELECT * FROM review WHERE about_user=$1`, value, (error, result) => {
+  //       us = [];
+  //       ob = {'written':'123'};
+  //       us.push(ob);
+  //       res.json(us);
+  //
+  //       if (error)
+  //         res.end(error)
+  //       var other_reviews = result.rows;
+  //       if (req.session.ID.trim() == "admin") {
+  //         res.render("pages/reviews", {
+  //           my_reviews, other_reviews,
+  //           uname: req.session.displayName,
+  //           admin: true,
+  //
+  //         })
+  //       } else {
+  //         res.render("pages/reviews", {
+  //           my_reviews, other_reviews,
+  //             uname: req.session.displayName,
+  //             admin: false,
+  //           })
+  //         }
+  //       });
+  //     });
+  //   } else {
+  //       //Redirects to the select page
+  //       res.redirect("login")
+  //     }
 })
 
 app.get("/login", (req, res) => {
@@ -735,54 +757,62 @@ app.post("/report", (req, res) => {
   var description = req.body.description
   var uid = req.session.ID
 
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
-    pool.query(getEmailQuery, (error, result) => {
-      if (error) {
-        res.end(error)
-      }
-      else if (!result || !result.rows[0]) {
-        res.render("pages/reportUser", {
-          msg: "INFORMAION about the User ID is not correct!",
-        })
-      }
-    })
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
-    pool.query(getEmailQuery, (error, result) => {
-      if (error) {
-        res.end(error)
-      }
-      else{
-        const output = `
-          <p> REPORT of USER: </p>
-          <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
-          <p> Report: ${description}</p>
-        `
-        // nodemail gmail transporter
-        var transporter = nodemailer.createTransport({
-          service: "gmail",
-            auth: {
-              user: "cmpt276backpack@gmail.com",
-              pass: EMAIL_ACCESS,
-            },
-        })
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'id':id, 'description':description};
+    us.push(ob);
+    res.json(us);
+  });
 
-        // setup email data with unicode symbols
-        let mailOptions = {
-          from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
-          to: 'cmpt276backpack@gmail.com', // list of receivers
-          subject: "Reporting A User", // Subject line
-          html: output, // html body
-        }
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            return console.log(error)
-          }
-          res.render("pages/reportUser", { msg: "Report has been sent" })
-        })
-      }
-    })
+    // var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
+    // pool.query(getEmailQuery, (error, result) => {
+    //   if (error) {
+    //     res.end(error)
+    //   }
+    //   else if (!result || !result.rows[0]) {
+    //     res.render("pages/reportUser", {
+    //       msg: "INFORMAION about the User ID is not correct!",
+    //     })
+    //   }
+    // })
+    // var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    // pool.query(getEmailQuery, (error, result) => {
+    //   if (error) {
+    //     res.end(error)
+    //   }
+    //   else{
+    //     const output = `
+    //       <p> REPORT of USER: </p>
+    //       <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
+    //       <p> Report: ${description}</p>
+    //     `
+    //     // nodemail gmail transporter
+    //     var transporter = nodemailer.createTransport({
+    //       service: "gmail",
+    //         auth: {
+    //           user: "cmpt276backpack@gmail.com",
+    //           pass: EMAIL_ACCESS,
+    //         },
+    //     })
+    //
+    //     // setup email data with unicode symbols
+    //     let mailOptions = {
+    //       from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+    //       to: 'cmpt276backpack@gmail.com', // list of receivers
+    //       subject: "Reporting A User", // Subject line
+    //       html: output, // html body
+    //     }
+    //
+    //     // send mail with defined transport object
+    //     transporter.sendMail(mailOptions, (error, info) => {
+    //       if (error) {
+    //         return console.log(error)
+    //       }
+    //       res.render("pages/reportUser", { msg: "Report has been sent" })
+    //     })
+    //   }
+    // })
 });
 
 
@@ -912,20 +942,21 @@ app.get("/post/:id", (req, res) => {
     }
   })
 })
-
+//socket server code starts//
 var socket = require("socket.io")
 var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
+//move to chatting page
 app.post("/chat", (req, res)=> {
     if(isLogedin(req, res)) {
-        var receiver=req.body.receiver;
+        var receiver=req.body.receiver; //opponent client information
         if(!receiver){
             res.redirect("/mainpage");
         }
         else{
-            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
                 if(error){
                     res.end(error);
                 }
@@ -944,10 +975,11 @@ app.post("/chat", (req, res)=> {
     }
 })
 
+//move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
     var admin;
     if(isLogedin(req, res)) {
-        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
+        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{ //find chatting logs which the user involved
             if(error){
                 res.end(error);
             }
@@ -975,27 +1007,28 @@ app.get("/chatlist", (req, res)=>{
 
 io.sockets.on("connection", function (socket) {
     socket.on("username", function (username) {
-        socket.username = username;
+        socket.username = username;//user's name
     })
     socket.on("receiver", function(receiver){
-        socket.receiver=receiver;
+        socket.receiver=receiver;//opponent
     })
     socket.on("sender", function(sender){
-        socket.sender=sender;
+        socket.sender=sender;//user
     })
     socket.on("room", function(room){
-        socket.join(room);
+        socket.join(room);//private room
         socket.room=room;
     })
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting logs
             if(error){
                 throw(error);
             }
         })
     })
 })
+//socket server code end//
 
 ///////////////////////////////
 
@@ -1042,6 +1075,3 @@ app.get('/search', function(req, res) {
 
 
 
-
-server.listen(PORT, () => console.log(`Listening on ${PORT}`))
-module.exports = app;
