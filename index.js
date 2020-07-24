@@ -31,8 +31,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  connectionString: process.env.DATABASE_URL,
+  connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  //connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -41,8 +41,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
-      // conString:'postgres://postgres:cmpt276@localhost/postgres'
+      //conString: process.env.DATABASE_URL,
+       conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -106,6 +106,22 @@ app.get(
 //allowing the Admin to delete a user from backpack database
 app.post("/admin_deleteUser", (req, res) => {
   var id = req.body.uid
+
+  /*For Testing admin deleting user's account
+  var admin = req.body.admin;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (id === '123') {
+      var after = '';
+    } else {
+      var after = '123';
+    }
+    ob = {'Admin':admin, 'Deleting_User':id, 'After_Delete_User':after};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   // delete this user id from the backpack database
   var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id + "'"
   pool.query(getUsersQuery, (error, result) => {
@@ -123,6 +139,22 @@ app.post("/admin_deletePost", (req, res) => {
   var bookname = req.body.bookname
   var coursename = req.body.coursename
   var values = [uid, bookname]
+
+  /*For Testing admin deleting user's post
+  var admin = req.body.admin;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (uid === '123' && bookname === 'CMPT') {
+      var after = '';
+    } else {
+      var after = '123';
+    }
+    ob = {'Admin':admin, 'Deleting_Post_User':uid, 'Deleting_Post_Bookname':bookname, 'After_Delete_User':after};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
@@ -176,7 +208,7 @@ app.get("/select_page/:id", (req, res) => {
             })
           }
         } else {
-          res.redirect("login");
+          res.redirect("/login");
         }
       });
       })
@@ -209,9 +241,9 @@ app.post("/post_review", (req, res) => {
     ob = {'Written_by':'123', 'About_user':sellerID, 'Review':review, 'Date':timestamp};
     us.push(ob);
     res.json(us);
-  });*/
+  }); */
 
-  if (uid && sellerid && review) {
+  if (uid && sellerID && review) {
     //Inserting the review written to the database
     pool.query(`INSERT INTO review (date, written_user, about_user, description) VALUES ($1, $2, $3, $4)`, values, (error, result)=>{
       if (error)
@@ -232,7 +264,7 @@ app.get('/reviewpage', (req, res) => {
   pool.query(query1, (error, results)=>{
     us = [];
     res.json(us);
-  });*/
+  }); */
 
   // This is login and logout checking functino
   if (isLogedin(req, res)) {
@@ -264,7 +296,7 @@ app.get('/reviewpage', (req, res) => {
       });
     } else {
         //Redirects to the select page
-        res.redirect("login")
+        res.redirect("/login")
       }
 })
 
@@ -941,19 +973,21 @@ app.get("/post/:id", (req, res) => {
   })
 })
 
+//socket server code starts//
 var socket = require("socket.io")
 var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
+//move to chatting page
 app.post("/chat", (req, res)=> {
     if(isLogedin(req, res)) {
-        var receiver=req.body.receiver;
+        var receiver=req.body.receiver;//opponent client information
         if(!receiver){
             res.redirect("/mainpage");
         }
         else{
-            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
                 if(error){
                     res.end(error);
                 }
@@ -972,10 +1006,11 @@ app.post("/chat", (req, res)=> {
     }
 })
 
+//move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
     var admin;
     if(isLogedin(req, res)) {
-        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
+        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{//find chatting logs which the user involved
             if(error){
                 res.end(error);
             }
@@ -1003,28 +1038,28 @@ app.get("/chatlist", (req, res)=>{
 
 io.sockets.on("connection", function (socket) {
     socket.on("username", function (username) {
-        socket.username = username;
+        socket.username = username; //user's name
     })
     socket.on("receiver", function(receiver){
-        socket.receiver=receiver;
+        socket.receiver=receiver; //opponent
     })
     socket.on("sender", function(sender){
-        socket.sender=sender;
+        socket.sender=sender; //user
     })
     socket.on("room", function(room){
-        socket.join(room);
+        socket.join(room); //private room
         socket.room=room;
     })
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
             if(error){
                 throw(error);
             }
         })
     })
 })
-
+//socket server code end//
 ///////////////////////////////
 
 // SEARCH //////////
@@ -1055,7 +1090,7 @@ app.get('/search', function(req, res) {
             res.render("pages/searchReload",{
               results,
               uname: req.session.displayName,
-              admin: true,
+              admin: false,
             })
           }
         }
@@ -1069,5 +1104,6 @@ app.get('/search', function(req, res) {
 })
 
 
-app.listen(PORT, () => console.log(`Listening on ${PORT}`))
+
+server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;

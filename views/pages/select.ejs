@@ -325,9 +325,8 @@
       <input type="text" name="postID" value="<%= r.postid %>" style="display: none">
       <button id="submit_review" type="submit" formaction="/post_review" formmethod="post">Submit</button>
     </form>
-
+  <% }); %>
   <body>
-    <% }); %>
 
     <script>
       //Checks if currently logged-in account is equal to the seller of the Item
@@ -360,7 +359,7 @@
           //new map
         var map = new google.maps.Map(document.getElementById('map'), options);
         //add marker
-        var link = '<a href="/select_page/' + postID + '">';                   
+        var link = '<a href="/select_page/' + postID + '">';
         var marker = new google.maps.Marker({
           position:{lat: glat, lng: glng},    // add marker with this position
           map:map  // the map we want to add it too
