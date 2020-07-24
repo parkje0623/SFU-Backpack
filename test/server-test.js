@@ -1,3 +1,7 @@
+
+// tests here
+console.log("hello world");
+
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../index');
@@ -38,9 +42,8 @@ describe('Reviews', function() {
   })
 });
 
-
-describe('Report', function(done) {
-  it('Proving correct ID should pass the request for /report', function(done) {
+describe('User-report', function() {
+  it('Proving correct ID and Description should pass the request for /report', function(done) {
     chai.request(server).post('/report').send({'uid':'123', 'description':'Good Book'})
       .end(function(error, res) {
         res.should.have.status(200);
@@ -58,6 +61,65 @@ describe('Report', function(done) {
         res.body[0].description.should.equal('Good Book');
       });
   })
+})
+
+
+
+describe('User', function () {
+    //tests associated with users
+    it('should add a single user on a successful adding request for chatting message', function (done) {
+        chai.request(server).post('/chat').send({ 'receiver': '111'})
+            .end(function(error,res){
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body[0].r.should.equal('111');
+            done();
+        });
+    });
+});
+
+
+
+
+describe('Forgot-ID',function(){
+	it('Proving correct Email should pass the request for /sendEmail', function(done) {
+    chai.request(server).post('/sendEmail').send({'uemail':'ss@ab.com'})
+      .end(function(error, res) {
+        res.should.have.status(200);
+        res.body[0].email.should.equal('ss@ab.com');
+      });
+      done();
+  })
+
+
+	it('should take you to the page find ID on a successful GET request for /find_id',function(done){
+		chai.request(server).get('/find_id').end(function(error,res){
+			res.should.have.status(200);
+		})
+		done();
+	})
+
+})
+
+describe('Forgot-Password',function(){
+	it('Proving correct ID, Name and Email should pass the request for /showpassword', function(done) {
+    chai.request(server).post('/showpassword').send({'uemail':'ss@ab.com','uid':'123','uname':'sara'})
+      .end(function(error, res) {
+        res.should.have.status(200);
+        res.body[0].uemail.should.equal('ss@ab.com');
+        res.body[0].uid.should.equal('123');
+        res.body[0].uname.should.equal('sara');
+      });
+      done();
+  })
+
+
+	it('should take you to the page find Password on a successful GET request for /find_pw',function(done){
+		chai.request(server).get('/find_pw').end(function(error,res){
+			res.should.have.status(200);
+		})
+		done();
+	})
 })
 
 describe('Admin Feature', function() {
@@ -117,6 +179,9 @@ describe('Admin Feature', function() {
     })
   })
 });
+
+
+
 
 // //ob={'r':socket.receiver,'s':socket.sender,'m':message,'u':socket.username};
 // describe('User', function () {

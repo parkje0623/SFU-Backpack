@@ -31,8 +31,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  //connectionString: process.env.DATABASE_URL,
+  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -41,8 +41,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      //conString: process.env.DATABASE_URL,
-       conString:'postgres://postgres:cmpt276@localhost/postgres'
+      conString: process.env.DATABASE_URL,
+       //conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -750,10 +750,17 @@ app.post("/upload", function (req, res) { // async function here
               //   "')"
 
                 ////////////////
+
               pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng], (error, result) => {
                 if (error) {
                   res.end(error)
                 } else {
+                  var updatefts = `UPDATE img SET fts=to_tsvector('english', coalesce(course,'') || ' ' || coalesce(bookname,''));`
+                  pool.query(updatefts, (error, result) => {
+                    if (error) {
+                      res.end(error)
+                    }
+                  })
                   res.render("pages/imageUpload", {
                     msg: "File Uploaded!", // Sending the path to the database and the image to AWS Storage
                   })
