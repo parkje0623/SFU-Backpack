@@ -291,6 +291,8 @@
         var arraytitle = [ ];
         var arraycourse = [ ];
         var arrayID = [ ];
+        var min = .999999;
+        var max = 1.000001;
         Object.keys(post).forEach(function (key){
           arraylat[i] = parseFloat(post[key].lat);
           arraylng[i] = parseFloat(post[key].lng);
@@ -299,6 +301,17 @@
           arrayID[i] = post[key].postid;
           i++;
         });
+       
+        for (i=0; i < arraylng.length - 1; i++) {
+          var curlat = arraylat[i];
+          var curlng = arraylng[i];
+          for (var k = i + 1; k < arraylat.length; k++) {
+            if (curlat == arraylat[k] && curlng == arraylng[k]) {
+              arraylat[i] = curlat * (Math.random() * (max - min) + min);
+              arraylng[i] = curlng * (Math.random() * (max - min) + min);
+            }
+          }
+        }
         function initMap(){
           // map otions
           var options = {
@@ -307,13 +320,20 @@
           }
             //new map
           var map = new google.maps.Map(document.getElementById('map'), options);
-       
+
+
           var j;
+          var markers = [ ];
           for (j = 0; j < arraylat.length; j++) {
-            addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j], arrayID[j]);
-          }
+            markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arraycourse[j], arrayID[j]);
+          };
+          
+          var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: '/images/'});
+
+
           function addmarker(lat, lng, title, course, postID){
-            var link = '<a href="/select_page/' + postID + '">';
+            var link = '<a href="/select_page/' + postID + '">';                   
             var marker = new google.maps.Marker({
               position:{lat: lat, lng: lng},
               map:map,
@@ -322,17 +342,20 @@
             // Check content
             if(title){
               var infoWindow = new google.maps.InfoWindow({
-                content: title + link + "link"
+                content: link + title
               });
-
               marker.addListener('click', function(){
                 infoWindow.open(map, marker);
               });
+              return marker;
+
             }
+            return marker;
           }
         }
-
     </script>
+      <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+
       <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
     </script>
