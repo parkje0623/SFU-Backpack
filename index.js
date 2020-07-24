@@ -176,7 +176,7 @@ app.get("/select_page/:id", (req, res) => {
             })
           }
         } else {
-          res.redirect("login");
+          res.redirect("/login");
         }
       });
       })
@@ -264,7 +264,7 @@ app.get('/reviewpage', (req, res) => {
       });
     } else {
         //Redirects to the select page
-        res.redirect("login")
+        res.redirect("/login")
       }
 })
 
