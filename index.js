@@ -16,7 +16,6 @@ const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
 var cors = require('cors')
 var pool
-var cors = require("cors")
 
 var NodeGeocoder = require('node-geocoder');   // map
 
@@ -26,13 +25,14 @@ var options = {
   apiKey: process.env.GEOCODER_API_KEY,
   formatter: null
 };
+
 var geocoder = NodeGeocoder(options); /// google map geocoding
 
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  connectionString: process.env.DATABASE_URL,
+  connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  //connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -41,8 +41,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
-      //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      //conString: process.env.DATABASE_URL,
+       conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -51,7 +51,6 @@ app.use(
   })
 )
 
-app.use("/", cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json())
 app.use("/", cors())
@@ -143,6 +142,7 @@ app.post("/admin_deletePost", (req, res) => {
 app.get("/select_page/:id", (req, res) => {
   var postid = parseInt(req.params.id);
   if (postid) {
+    //Select all data from the table img where the postid is equal to requested id
     pool.query(
       `SELECT * FROM img WHERE postid=$1`,
       [postid],
@@ -942,21 +942,20 @@ app.get("/post/:id", (req, res) => {
     }
   })
 })
-//socket server code starts//
+
 var socket = require("socket.io")
 var http = require("http")
 var server = http.createServer(app)
 var io = socket(server, { path: "/socket.io" })
 
-//move to chatting page
 app.post("/chat", (req, res)=> {
     if(isLogedin(req, res)) {
-        var receiver=req.body.receiver; //opponent client information
+        var receiver=req.body.receiver;
         if(!receiver){
             res.redirect("/mainpage");
         }
         else{
-            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{
                 if(error){
                     res.end(error);
                 }
@@ -975,11 +974,10 @@ app.post("/chat", (req, res)=> {
     }
 })
 
-//move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
     var admin;
     if(isLogedin(req, res)) {
-        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{ //find chatting logs which the user involved
+        pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{
             if(error){
                 res.end(error);
             }
@@ -1007,28 +1005,27 @@ app.get("/chatlist", (req, res)=>{
 
 io.sockets.on("connection", function (socket) {
     socket.on("username", function (username) {
-        socket.username = username;//user's name
+        socket.username = username;
     })
     socket.on("receiver", function(receiver){
-        socket.receiver=receiver;//opponent
+        socket.receiver=receiver;
     })
     socket.on("sender", function(sender){
-        socket.sender=sender;//user
+        socket.sender=sender;
     })
     socket.on("room", function(room){
-        socket.join(room);//private room
+        socket.join(room);
         socket.room=room;
     })
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting logs
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{
             if(error){
                 throw(error);
             }
         })
     })
 })
-//socket server code end//
 
 ///////////////////////////////
 
@@ -1074,4 +1071,5 @@ app.get('/search', function(req, res) {
 })
 
 
-
+app.listen(PORT, () => console.log(`Listening on ${PORT}`))
+module.exports = app;
