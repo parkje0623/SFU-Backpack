@@ -202,13 +202,14 @@ app.post("/post_review", (req, res) => {
 
   var values = [timestamp, uid, sellerID, review];
 
+  /* For Testing the posting reveiw
   var query1 = '...';
   pool.query(query1, (error, results)=>{
     us = [];
     ob = {'Written_by':'123', 'About_user':sellerID, 'Review':review, 'Date':timestamp};
     us.push(ob);
     res.json(us);
-  });
+  });*/
 
   if (uid && sellerid && review) {
     //Inserting the review written to the database
@@ -226,49 +227,50 @@ app.get('/reviewpage', (req, res) => {
   var uid = req.session.ID;
   var value = [uid];
 
+  /* This is for testing
   var query1 = '...';
   pool.query(query1, (error, results)=>{
     us = [];
     res.json(us);
-  });
+  });*/
 
-  // // This is login and logout checking functino
-  // if (isLogedin(req, res)) {
-  //   //Selects all the reviews that were written by the current user
-  //   pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
-  //     if (error)
-  //       res.end(error)
-  //     var my_reviews = result.rows;
-  //     //Selects all the reviews that were written to the current user
-  //     pool.query(`SELECT * FROM review WHERE about_user=$1`, value, (error, result) => {
-  //       us = [];
-  //       ob = {'written':'123'};
-  //       us.push(ob);
-  //       res.json(us);
-  //
-  //       if (error)
-  //         res.end(error)
-  //       var other_reviews = result.rows;
-  //       if (req.session.ID.trim() == "admin") {
-  //         res.render("pages/reviews", {
-  //           my_reviews, other_reviews,
-  //           uname: req.session.displayName,
-  //           admin: true,
-  //
-  //         })
-  //       } else {
-  //         res.render("pages/reviews", {
-  //           my_reviews, other_reviews,
-  //             uname: req.session.displayName,
-  //             admin: false,
-  //           })
-  //         }
-  //       });
-  //     });
-  //   } else {
-  //       //Redirects to the select page
-  //       res.redirect("login")
-  //     }
+  // This is login and logout checking functino
+  if (isLogedin(req, res)) {
+    //Selects all the reviews that were written by the current user
+    pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
+      if (error)
+        res.end(error)
+      var my_reviews = result.rows;
+      //Selects all the reviews that were written to the current user
+      pool.query(`SELECT * FROM review WHERE about_user=$1`, value, (error, result) => {
+        us = [];
+        ob = {'written':'123'};
+        us.push(ob);
+        res.json(us);
+
+        if (error)
+          res.end(error)
+        var other_reviews = result.rows;
+        if (req.session.ID.trim() == "admin") {
+          res.render("pages/reviews", {
+            my_reviews, other_reviews,
+            uname: req.session.displayName,
+            admin: true,
+
+          })
+        } else {
+          res.render("pages/reviews", {
+            my_reviews, other_reviews,
+              uname: req.session.displayName,
+              admin: false,
+            })
+          }
+        });
+      });
+    } else {
+        //Redirects to the select page
+        res.redirect("login")
+      }
 })
 
 app.get("/login", (req, res) => {
@@ -757,62 +759,63 @@ app.post("/report", (req, res) => {
   var description = req.body.description
   var uid = req.session.ID
 
+  /* Testing for reporting 
   var query1 = '...';
   pool.query(query1, (error, results)=>{
     us = [];
     ob = {'id':id, 'description':description};
     us.push(ob);
     res.json(us);
-  });
+  }); */
 
-    // var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
-    // pool.query(getEmailQuery, (error, result) => {
-    //   if (error) {
-    //     res.end(error)
-    //   }
-    //   else if (!result || !result.rows[0]) {
-    //     res.render("pages/reportUser", {
-    //       msg: "INFORMAION about the User ID is not correct!",
-    //     })
-    //   }
-    // })
-    // var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
-    // pool.query(getEmailQuery, (error, result) => {
-    //   if (error) {
-    //     res.end(error)
-    //   }
-    //   else{
-    //     const output = `
-    //       <p> REPORT of USER: </p>
-    //       <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
-    //       <p> Report: ${description}</p>
-    //     `
-    //     // nodemail gmail transporter
-    //     var transporter = nodemailer.createTransport({
-    //       service: "gmail",
-    //         auth: {
-    //           user: "cmpt276backpack@gmail.com",
-    //           pass: EMAIL_ACCESS,
-    //         },
-    //     })
-    //
-    //     // setup email data with unicode symbols
-    //     let mailOptions = {
-    //       from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
-    //       to: 'cmpt276backpack@gmail.com', // list of receivers
-    //       subject: "Reporting A User", // Subject line
-    //       html: output, // html body
-    //     }
-    //
-    //     // send mail with defined transport object
-    //     transporter.sendMail(mailOptions, (error, info) => {
-    //       if (error) {
-    //         return console.log(error)
-    //       }
-    //       res.render("pages/reportUser", { msg: "Report has been sent" })
-    //     })
-    //   }
-    // })
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
+    pool.query(getEmailQuery, (error, result) => {
+      if (error) {
+        res.end(error)
+      }
+      else if (!result || !result.rows[0]) {
+        res.render("pages/reportUser", {
+          msg: "INFORMAION about the User ID is not correct!",
+        })
+      }
+    })
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    pool.query(getEmailQuery, (error, result) => {
+      if (error) {
+        res.end(error)
+      }
+      else{
+        const output = `
+          <p> REPORT of USER: </p>
+          <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
+          <p> Report: ${description}</p>
+        `
+        // nodemail gmail transporter
+        var transporter = nodemailer.createTransport({
+          service: "gmail",
+            auth: {
+              user: "cmpt276backpack@gmail.com",
+              pass: EMAIL_ACCESS,
+            },
+        })
+
+        // setup email data with unicode symbols
+        let mailOptions = {
+          from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+          to: 'cmpt276backpack@gmail.com', // list of receivers
+          subject: "Reporting A User", // Subject line
+          html: output, // html body
+        }
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            return console.log(error)
+          }
+          res.render("pages/reportUser", { msg: "Report has been sent" })
+        })
+      }
+    })
 });
 
 

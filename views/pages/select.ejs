@@ -302,8 +302,10 @@
     </ul>
 
     <h2> CONTACT SELLER </h2><br>
-    Do we want to send email to user? <br>
-    Chat system w/ user? <br><br><br>
+    <form method = "post" action="/chat">
+      <input type = "hidden" name=receiver value=<%= r.uid %>><br>
+      <input type = "submit" value="Chat"><br>
+    </form>
 
     <h2> REVIEW </h2> <br>
     <% reviews.forEach(function(attr) { %>
@@ -325,10 +327,6 @@
     </form>
 
   <body>
-    <form method = "post" action="/chat">
-      <input type = "hidden" name=receiver value=<%= r.uid %>><br>
-      <input type = "submit" value="chatting"><br>
-    </form>
     <% }); %>
 
     <script>
