@@ -211,7 +211,7 @@ app.post("/post_review", (req, res) => {
     res.json(us);
   });*/
 
-  if (uid && sellerid && review) {
+  if (uid && sellerID && review) {
     //Inserting the review written to the database
     pool.query(`INSERT INTO review (date, written_user, about_user, description) VALUES ($1, $2, $3, $4)`, values, (error, result)=>{
       if (error)
