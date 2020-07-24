@@ -243,11 +243,6 @@ app.get('/reviewpage', (req, res) => {
       var my_reviews = result.rows;
       //Selects all the reviews that were written to the current user
       pool.query(`SELECT * FROM review WHERE about_user=$1`, value, (error, result) => {
-        us = [];
-        ob = {'written':'123'};
-        us.push(ob);
-        res.json(us);
-
         if (error)
           res.end(error)
         var other_reviews = result.rows;
