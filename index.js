@@ -42,7 +42,7 @@ app.use(
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
-      // conString:'postgres://postgres:cmpt276@localhost/postgres'
+       //conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -106,6 +106,22 @@ app.get(
 //allowing the Admin to delete a user from backpack database
 app.post("/admin_deleteUser", (req, res) => {
   var id = req.body.uid
+
+  /*For Testing admin deleting user's account
+  var admin = req.body.admin;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (id === '123') {
+      var after = '';
+    } else {
+      var after = '123';
+    }
+    ob = {'Admin':admin, 'Deleting_User':id, 'After_Delete_User':after};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   // delete this user id from the backpack database
   var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id + "'"
   pool.query(getUsersQuery, (error, result) => {
@@ -123,6 +139,22 @@ app.post("/admin_deletePost", (req, res) => {
   var bookname = req.body.bookname
   var coursename = req.body.coursename
   var values = [uid, bookname]
+
+  /*For Testing admin deleting user's post
+  var admin = req.body.admin;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (uid === '123' && bookname === 'CMPT') {
+      var after = '';
+    } else {
+      var after = '123';
+    }
+    ob = {'Admin':admin, 'Deleting_Post_User':uid, 'Deleting_Post_Bookname':bookname, 'After_Delete_User':after};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
@@ -141,6 +173,38 @@ app.post("/admin_deletePost", (req, res) => {
 //Leads to the page with selected item's information, reviews, map, etc.
 app.get("/select_page/:id", (req, res) => {
   var postid = parseInt(req.params.id);
+            // TESTING UNIT FOR SELECT_PAGE/:ID
+            //   if (postid == 1) {
+            //     var ccourse = 'arch'
+            //     var cuid = '123'
+            //     var cost = '100'
+            //     var cbookname = 'introduction to arch'
+            //     var clocation = 'Vancouver'
+            //     var clat = 49.2827;
+            //     var clng = -123.1207;
+            //     var query1 = `....`
+            //     pool.query(query1, (error, result)=> {
+            //       us= [];
+            //       ob = {course: ccourse, bookname: cbookname, postid: postid, uid: cuid, cost: cost, location: clocation, lat: clat, lng:clng }
+            //       us.push(ob);
+            //       res.json(us);
+            //     })
+            //   } else { 
+            //     var ccourse = 'cmpt'
+            //     var cuid = '321'
+            //     var cost = '50'
+            //     var cbookname = 'introduction to arch'
+            //     var clocation = 'Vancouver'
+            //     var clat = 49.2827;
+            //     var clng = -123.1207;
+            //     var query1 = `....`
+            //     pool.query(query1, (error, result)=> {
+            //       us= [];
+            //       ob = {course: ccourse, bookname: cbookname, postid: postid, uid: cuid, cost: cost, location: clocation, lat: clat, lng:clng }
+            //       us.push(ob);
+            //       res.json(us);
+            //   })
+            // }
   if (postid) {
     //Select all data from the table img where the postid is equal to requested id
     pool.query(
@@ -209,7 +273,7 @@ app.post("/post_review", (req, res) => {
     ob = {'Written_by':'123', 'About_user':sellerID, 'Review':review, 'Date':timestamp};
     us.push(ob);
     res.json(us);
-  });*/
+  }); */
 
   if (uid && sellerID && review) {
     //Inserting the review written to the database
@@ -232,7 +296,7 @@ app.get('/reviewpage', (req, res) => {
   pool.query(query1, (error, results)=>{
     us = [];
     res.json(us);
-  });*/
+  }); */
 
   // This is login and logout checking functino
   if (isLogedin(req, res)) {
@@ -714,7 +778,7 @@ app.post("/upload", function (req, res) { // async function here
               //   "')"
 
                 ////////////////
-            
+
               pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng], (error, result) => {
                 if (error) {
                   res.end(error)
@@ -1080,4 +1144,3 @@ app.get('/search', function(req, res) {
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;
-
