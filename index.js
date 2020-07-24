@@ -724,7 +724,7 @@ app.post("/upload", function (req, res) { // async function here
                   res.end(error)
                 } else {
                   var updatefts = `UPDATE img SET fts=to_tsvector('english', coalesce(course,'') || ' ' || coalesce(bookname,''));`
-                  pool.query(updatefts, (error, result){
+                  pool.query(updatefts, (error, result) => {
                     if (error) {
                       res.end(error)
                     }
