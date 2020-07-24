@@ -57,16 +57,15 @@ describe('Report', function(done) {
 
 
 
-describe('User', function () {
+describe('Chatting', function () {
     //tests associated with users
-    it('should add a single user on a successful adding request for chatting message', function (done) {
+    it('should enter chatting room for given receiver', function (done) {
         chai.request(server).post('/chat').send({ 'receiver': '111'})
-            .end(function(error,res){
+            .end(function (error, res) {
             res.should.have.status(200);
-            res.should.be.json;
             res.body[0].r.should.equal('111');
-            done();
-        });
+            });
+        done();
     });
 });
 

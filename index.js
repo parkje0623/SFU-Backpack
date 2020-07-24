@@ -30,9 +30,9 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 
 //user database access
 pool = new Pool({
-  //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
+  connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  connectionString: process.env.DATABASE_URL,
+  //connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -40,8 +40,8 @@ var app = express()
 app.use(
   session({
     store: new Psession({
-      //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
+      conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+      //conString: process.env.DATABASE_URL,
       // conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
@@ -956,6 +956,15 @@ var io = socket(server, { path: "/socket.io" })
 
 //move to chatting page
 app.post("/chat", (req, res)=> {
+    /*Testing for chatting
+    var receiver=req.body.receiver;
+    var query1 = `...`;
+    pool.query(query1, (error, results)=>{
+        us = [];
+        ob = {'r':receiver};
+        us.push(ob);
+        res.json(us);
+    });*/
     if(isLogedin(req, res)) {
         var receiver=req.body.receiver;//opponent client information
         if(!receiver){
@@ -966,6 +975,7 @@ app.post("/chat", (req, res)=> {
                 if(error){
                     res.end(error);
                 }
+
                 if (!result || !result.rows[0]) {
                     res.render("pages/chat",{uname: req.session.displayName, db:false, receiver:receiver, sender:req.session.ID});
                 }
@@ -983,6 +993,14 @@ app.post("/chat", (req, res)=> {
 
 //move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
+    /*Testing for chatting
+    var query1 = `...`;
+    pool.query(query1, (error, results)=>{
+        us = [];
+        ob = {'r':receiver};
+        us.push(ob);
+        res.json(us);
+    });*/
     var admin;
     if(isLogedin(req, res)) {
         pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{//find chatting logs which the user involved
