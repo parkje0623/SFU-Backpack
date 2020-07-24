@@ -42,7 +42,7 @@ app.use(
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
-      // conString:'postgres://postgres:cmpt276@localhost/postgres'
+       //conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -106,6 +106,22 @@ app.get(
 //allowing the Admin to delete a user from backpack database
 app.post("/admin_deleteUser", (req, res) => {
   var id = req.body.uid
+
+  /*For Testing admin deleting user's account
+  var admin = req.body.admin;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (id === '123') {
+      var after = '';
+    } else {
+      var after = '123';
+    }
+    ob = {'Admin':admin, 'Deleting_User':id, 'After_Delete_User':after};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   // delete this user id from the backpack database
   var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id + "'"
   pool.query(getUsersQuery, (error, result) => {
@@ -123,6 +139,22 @@ app.post("/admin_deletePost", (req, res) => {
   var bookname = req.body.bookname
   var coursename = req.body.coursename
   var values = [uid, bookname]
+
+  /*For Testing admin deleting user's post
+  var admin = req.body.admin;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (uid === '123' && bookname === 'CMPT') {
+      var after = '';
+    } else {
+      var after = '123';
+    }
+    ob = {'Admin':admin, 'Deleting_Post_User':uid, 'Deleting_Post_Bookname':bookname, 'After_Delete_User':after};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
@@ -141,6 +173,38 @@ app.post("/admin_deletePost", (req, res) => {
 //Leads to the page with selected item's information, reviews, map, etc.
 app.get("/select_page/:id", (req, res) => {
   var postid = parseInt(req.params.id);
+            // TESTING UNIT FOR SELECT_PAGE/:ID
+            //   if (postid == 1) {
+            //     var ccourse = 'arch'
+            //     var cuid = '123'
+            //     var cost = '100'
+            //     var cbookname = 'introduction to arch'
+            //     var clocation = 'Vancouver'
+            //     var clat = 49.2827;
+            //     var clng = -123.1207;
+            //     var query1 = `....`
+            //     pool.query(query1, (error, result)=> {
+            //       us= [];
+            //       ob = {course: ccourse, bookname: cbookname, postid: postid, uid: cuid, cost: cost, location: clocation, lat: clat, lng:clng }
+            //       us.push(ob);
+            //       res.json(us);
+            //     })
+            //   } else { 
+            //     var ccourse = 'cmpt'
+            //     var cuid = '321'
+            //     var cost = '50'
+            //     var cbookname = 'introduction to arch'
+            //     var clocation = 'Vancouver'
+            //     var clat = 49.2827;
+            //     var clng = -123.1207;
+            //     var query1 = `....`
+            //     pool.query(query1, (error, result)=> {
+            //       us= [];
+            //       ob = {course: ccourse, bookname: cbookname, postid: postid, uid: cuid, cost: cost, location: clocation, lat: clat, lng:clng }
+            //       us.push(ob);
+            //       res.json(us);
+            //   })
+            // }
   if (postid) {
     //Select all data from the table img where the postid is equal to requested id
     pool.query(
@@ -209,7 +273,7 @@ app.post("/post_review", (req, res) => {
     ob = {'Written_by':'123', 'About_user':sellerID, 'Review':review, 'Date':timestamp};
     us.push(ob);
     res.json(us);
-  });*/
+  }); */
 
   if (uid && sellerID && review) {
     //Inserting the review written to the database
@@ -232,7 +296,7 @@ app.get('/reviewpage', (req, res) => {
   pool.query(query1, (error, results)=>{
     us = [];
     res.json(us);
-  });*/
+  }); */
 
   // This is login and logout checking functino
   if (isLogedin(req, res)) {
@@ -435,7 +499,7 @@ app.post("/showpassword", (req, res) => {
   var uid = req.body.uid
   var uname = req.body.uname
   var uemail = req.body.uemail
-  var values = [uid, uname, uemail]
+  var values = [uid, uname, uemail] 
   if (uid && uname && uemail) {
     pool.query(
       `SELECT * from backpack where uid=$1 AND uname=$2 AND uemail=$3`,
@@ -444,15 +508,11 @@ app.post("/showpassword", (req, res) => {
         if (error) res.end(error)
         else if (!result || !result.rows[0]) {
           res.render("pages/find_pw", {
-            // all the input enter have to be true to show the PASSWORD
-            msg: "INFORMAION is not correct!",
+            // all the input enter have to be true to send the email
+            msg: "INFORMATION is not correct!",
           })
         } else {
-          /*else{
-                res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
-                      msg: "PASSWORD: " + result.rows[0].upassword
-                });
-            }*/
+          // the email content showing the password
           const output = `
               <p>Dear User</p>
               <p>You have a lost Password request from backpack</p>
@@ -488,7 +548,7 @@ app.post("/showpassword", (req, res) => {
         }
       }
     )
-  } else {
+  } else { // if one of the inputs are left empty 
     res.render("pages/find_pw", {
       msg: "Entre your ID, Name and Email Address Please!",
     })
@@ -718,7 +778,7 @@ app.post("/upload", function (req, res) { // async function here
               //   "')"
 
                 ////////////////
-            
+
               pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng], (error, result) => {
                 if (error) {
                   res.end(error)
@@ -756,7 +816,8 @@ app.get("/reportUser", (req, res) => {
 ///////////////////////////////////////////////////////////////////
 
 app.post("/report", (req, res) => {
-  //
+  //getting the reporting user id and reported user id
+  // plus the report --> description of the event
   var id = req.body.uid
   var description = req.body.description
   var uid = req.session.ID
@@ -770,23 +831,24 @@ app.post("/report", (req, res) => {
     res.json(us);
   }); */
 
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'" // the reported user id should exist in database
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       }
       else if (!result || !result.rows[0]) {
         res.render("pages/reportUser", {
-          msg: "INFORMAION about the User ID is not correct!",
+          msg: "INFORMATION about the User ID is not correct!", //reported user ID is not correct
         })
       }
     })
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'" //find the reporting user for email
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       }
       else{
+        // email content
         const output = `
           <p> REPORT of USER: </p>
           <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
@@ -822,24 +884,24 @@ app.post("/report", (req, res) => {
 
 
 app.get("/find_id", (req, res) => {
-  res.render("pages/find_id")
+  res.render("pages/find_id") //find id page
 })
 
 app.post("/sendEmail", (req, res) => {
-  //get id and password and email
+  //get the email of the user from form
   var email = req.body.uemail
   if (email) {
-    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'" // find the email in db
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       } else if (!result || !result.rows[0]) {
         res.render("pages/find_id", {
           // all the input enter have to be true to show the PASSWORD
-          msg: "INFORMAION is not correct!",
+          msg: "INFORMATION is not correct!",
         })
       } else {
-        //var results = {'rows':result.rows}
+        // the email content
         const output = `
             <p>Dear User</p>
             <p>You have a lost ID and Password request from backpack</p>
@@ -877,7 +939,7 @@ app.post("/sendEmail", (req, res) => {
         })
       }
     })
-  } else {
+  } else { // if the submitted with no input
     res.render("pages/find_id", { msg: "Entre your Email Address Please!" })
   }
 })
@@ -1100,4 +1162,3 @@ app.get('/search', function(req, res) {
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;
-
