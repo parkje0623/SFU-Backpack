@@ -42,7 +42,7 @@
               class="search-input"
               type="text"
               name='text'
-              placeholder="Search"
+              placeholder="Insert course or bookname"
               aria-label="Search.."
             />
             <button class="search-btn" formaction="/search" type="submit">Search</button>
@@ -295,12 +295,9 @@
               <ul><span>Condition: </span> <%= r.condition %></ul>
               <ul><span>Description: </span><%= r.description %></ul>
               <ul><span>Location: </span><%= r.location %></ul>
-              <ul><span>Lat: </span><%= r.lat %></ul>
-              <ul><span>Lng: </span><%= r.lng %></ul>
 
             </ul>
             <form>
-
               <button type="submit" class="select-btn-buyingpage" formaction="/select_page/<%= r.postid %>" formmethod="GET">Select</button>
               <%if( admin == true){%>
                 <input type="text" name="coursename" value="<%= r.course %>" style="display: none"></input>

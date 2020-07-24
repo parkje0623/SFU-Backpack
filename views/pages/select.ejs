@@ -51,7 +51,7 @@
             class="search-input"
             type="text"
             name='text'
-            placeholder="Search"
+            placeholder="Insert course or bookname"
             aria-label="Search.."
           />
           <button class="search-btn" formaction="/search" type="submit">Search</button>
@@ -302,8 +302,10 @@
     </ul>
 
     <h2> CONTACT SELLER </h2><br>
-    Do we want to send email to user? <br>
-    Chat system w/ user? <br><br><br>
+    <form method = "post" action="/chat">
+      <input type = "hidden" name=receiver value=<%= r.uid %>><br>
+      <input type = "submit" value="Chat"><br>
+    </form>
 
     <h2> REVIEW </h2> <br>
     <% reviews.forEach(function(attr) { %>
@@ -325,10 +327,6 @@
     </form>
 
   <body>
-    <form method = "post" action="/chat">
-      <input type = "hidden" name=receiver value=<%= r.uid %>><br>
-      <input type = "submit" value="chatting"><br>
-    </form>
     <% }); %>
 
     <script>
@@ -351,6 +349,7 @@
     var glat = post[0].lat;    // latitude
     var glng = post[0].lng;    // longitude
     var title = post[0].bookname;
+    var postID = post[0].postid;
     console.log(title);
         function initMap(){
           // map otions
@@ -361,12 +360,13 @@
           //new map
         var map = new google.maps.Map(document.getElementById('map'), options);
         //add marker
+        var link = '<a href="/select_page/' + postID + '">';                   
         var marker = new google.maps.Marker({
           position:{lat: glat, lng: glng},    // add marker with this position
           map:map  // the map we want to add it too
         });
         var infoWindow = new google.maps.InfoWindow ({
-          content: title + '<a href="https://www.sfu.ca/">' + 'https://www.sfu.ca/</a> '
+          content: link + title
         });
         marker.addListener ('click', function(){
           infoWindow.open(map, marker);

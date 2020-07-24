@@ -53,17 +53,6 @@
 
   <body>
     <div class="top-container">
-      <nav class="search-bar">
-        <form>
-          <input
-            class="search-input"
-            type="search"
-            placeholder="Search"
-            aria-label="Search.."
-          />
-          <button class="search-btn" type="submit">Search</button>
-        </form>
-      </nav>
       <!-- LOGIN FEATURE -->
       <form>
         <nav class="login-bar">
@@ -82,6 +71,7 @@
       <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
               <p class="logo-font">sfu-backpack</p>
     </div>
+    <!--chatting list which user involved-->>
     <div>
       <%if(db===true){%>
         <%var users=[];%>
