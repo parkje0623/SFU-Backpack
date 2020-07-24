@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000
 const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
 var pool
+var cors = require("cors")
 
 var NodeGeocoder = require('node-geocoder');   // map
 
@@ -24,7 +25,6 @@ var options = {
   apiKey: process.env.GEOCODER_API_KEY,
   formatter: null
 };
-
 var geocoder = NodeGeocoder(options); /// google map geocoding
 
 //user database access
@@ -50,6 +50,7 @@ app.use(
   })
 )
 
+app.use("/", cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -139,7 +140,6 @@ app.post("/admin_deletePost", (req, res) => {
 app.get("/select_page/:id", (req, res) => {
   var postid = req.params.id;
   if (postid) {
-    //Delete the post that has this user id and bookname from the img database.
     pool.query(
       `SELECT * FROM img WHERE postid=$1`,
       [postid],
@@ -1044,3 +1044,4 @@ app.get('/search', function(req, res) {
 
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
+module.exports = app;

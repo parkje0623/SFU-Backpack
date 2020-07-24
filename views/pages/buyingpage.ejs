@@ -305,6 +305,7 @@
         for (i=0; i < arraylng.length - 1; i++) {
           var curlat = arraylat[i];
           var curlng = arraylng[i];
+          // if there are post at the same lat and lng, move one of them a little bit
           for (var k = i + 1; k < arraylat.length; k++) {
             if (curlat == arraylat[k] && curlng == arraylng[k]) {
               arraylat[i] = curlat * (Math.random() * (max - min) + min);
@@ -331,13 +332,12 @@
           var markerCluster = new MarkerClusterer(map, markers,
             {imagePath: '/images/'});
 
-
+          // add marker function
           function addmarker(lat, lng, title, course, postID){
             var link = '<a href="/select_page/' + postID + '">';                   
             var marker = new google.maps.Marker({
               position:{lat: lat, lng: lng},
               map:map,
-              //icon:props.iconImage
             });
             // Check content
             if(title){
