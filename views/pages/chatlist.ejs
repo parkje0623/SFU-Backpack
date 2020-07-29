@@ -71,11 +71,32 @@
       <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
               <p class="logo-font">sfu-backpack</p>
     </div>
-    <!--chatting list which user involved-->>
-    <div>
+    <!--chatting list which user involved-->
+    <span>
       <%if(db===true){%>
         <%var users=[];%>
         <%var check=true;%>
+        <% results.forEach(function(r) { %>
+          <%check=true;%>
+          <%if(uid.trim()===r.receiver.trim()){%>
+            <% users.forEach(function(u) { %>
+              <%if(u===r.sender){%>
+                <%check=false;%>
+              <%}%>
+            <%})%>
+            <%if(check===true){%>
+              <form method = "post" action="/chat">
+                <input type = "hidden" name=receiver value=<%= r.sender %>><br>
+                <input type = "submit" value=<%= r.sender %>>
+                <%if(r.new==='t'){%>
+                  NEW!
+                <%}%>
+                <br>
+              </form>
+              <%users.push(r.sender);%>
+            <%}%>
+          <%}%>
+        <%})%>
         <% results.forEach(function(r) { %>
           <%check=true;%>
           <%if(uid.trim()===r.sender.trim()){%>
@@ -92,22 +113,8 @@
               <%users.push(r.receiver);%>
             <%}%>
           <%}%>
-          <%if(uid.trim()===r.receiver.trim()){%>
-            <% users.forEach(function(u) { %>
-              <%if(u===r.sender){%>
-                <%check=false;%>
-              <%}%>
-            <%})%>
-            <%if(check===true){%>
-              <form method = "post" action="/chat">
-                <input type = "hidden" name=receiver value=<%= r.sender %>><br>
-                <input type = "submit" value=<%= r.sender %>><br>
-              </form>
-              <%users.push(r.sender);%>
-            <%}%>
-          <%}%>
         <%})%>
       <%}%>
-    </div>
+    </span>
 </body>
 </html>
