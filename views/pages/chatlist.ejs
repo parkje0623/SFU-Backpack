@@ -3,7 +3,8 @@
   <head></head>
     <meta charset="utf-8" />
     <title>Buy Page</title>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- BOOTSTRAP -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -89,7 +90,7 @@
                 <input type = "hidden" name=receiver value=<%= r.sender %>><br>
                 <input type = "submit" value=<%= r.sender %>>
                 <%if(r.new==='t'){%>
-                  NEW!
+                  <i class="fa fa-bell"></i>
                 <%}%>
                 <br>
               </form>
