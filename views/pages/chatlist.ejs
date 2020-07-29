@@ -88,8 +88,7 @@
               <form method = "post" action="/chat">
                 <input type = "hidden" name=receiver value=<%= r.sender %>><br>
                 <input type = "submit" value=<%= r.sender %>>
-                <%if(r.new==='t'){%>
-                  <%console.log("hello")%>
+                <%if(r.new=='t'){%>
                   <i class="fa fa-bell"></i>
                 <%}%>
                 <br>
