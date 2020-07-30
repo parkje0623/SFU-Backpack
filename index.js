@@ -1185,7 +1185,7 @@ app.post("/seller_sold", (req, res) => {
       [postid],
       (error, result) => {
         if (error) res.end(error)
-        res.redirect("pages/profile")
+        res.redirect("/mypage")
       }
     )
   }
