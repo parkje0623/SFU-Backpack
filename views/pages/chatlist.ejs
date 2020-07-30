@@ -2,8 +2,8 @@
 <html lang="en" dir="ltr">
   <head></head>
     <meta charset="utf-8" />
-    <title>Buy Page</title>
-
+    <title>Chatting List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- BOOTSTRAP -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -71,11 +71,33 @@
       <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
               <p class="logo-font">sfu-backpack</p>
     </div>
-    <!--chatting list which user involved-->>
-    <div>
+    <!--chatting list which user involved-->
+    <span>
       <%if(db===true){%>
         <%var users=[];%>
         <%var check=true;%>
+        <% results.forEach(function(r) { %>
+          <%check=true;%>
+          <%if(uid.trim()===r.receiver.trim()){%>
+            <% users.forEach(function(u) { %>
+              <%if(u===r.sender){%>
+                <%check=false;%>
+              <%}%>
+            <%})%>
+            <%if(check===true){%>
+              <form method = "post" action="/chat">
+                <input type = "hidden" name=receiver value=<%= r.sender %>><br>
+                <input type = "submit" value=<%= r.sender %>>
+                <%console.log(r.new);%>
+                <%if(r.new===true){%>
+                  <i class="fa fa-bell"></i>
+                <%}%>
+                <br>
+              </form>
+              <%users.push(r.sender);%>
+            <%}%>
+          <%}%>
+        <%})%>
         <% results.forEach(function(r) { %>
           <%check=true;%>
           <%if(uid.trim()===r.sender.trim()){%>
@@ -92,22 +114,8 @@
               <%users.push(r.receiver);%>
             <%}%>
           <%}%>
-          <%if(uid.trim()===r.receiver.trim()){%>
-            <% users.forEach(function(u) { %>
-              <%if(u===r.sender){%>
-                <%check=false;%>
-              <%}%>
-            <%})%>
-            <%if(check===true){%>
-              <form method = "post" action="/chat">
-                <input type = "hidden" name=receiver value=<%= r.sender %>><br>
-                <input type = "submit" value=<%= r.sender %>><br>
-              </form>
-              <%users.push(r.sender);%>
-            <%}%>
-          <%}%>
         <%})%>
       <%}%>
-    </div>
+    </span>
 </body>
 </html>

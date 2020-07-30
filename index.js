@@ -45,8 +45,12 @@ app.use(
       // conString: "postgres://postgres:khoakhung@localhost/postgres", //- for khoa
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
+<<<<<<< HEAD
 
       // conString:'postgres://postgres:cmpt276@localhost/postgres'
+=======
+      //conString:'postgres://postgres:cmpt276@localhost/postgres'
+>>>>>>> a65e017ebe107150130b377415e26ef6fcd4add7
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -110,6 +114,22 @@ app.get(
 //allowing the Admin to delete a user from backpack database
 app.post("/admin_deleteUser", (req, res) => {
   var id = req.body.uid
+
+  /*For Testing admin deleting user's account
+  var admin = req.body.admin;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (id === '123') {
+      var after = '';
+    } else {
+      var after = '123';
+    }
+    ob = {'Admin':admin, 'Deleting_User':id, 'After_Delete_User':after};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   // delete this user id from the backpack database
   var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id + "'"
   pool.query(getUsersQuery, (error, result) => {
@@ -127,6 +147,22 @@ app.post("/admin_deletePost", (req, res) => {
   var bookname = req.body.bookname
   var coursename = req.body.coursename
   var values = [uid, bookname]
+
+  /*For Testing admin deleting user's post
+  var admin = req.body.admin;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (uid === '123' && bookname === 'CMPT') {
+      var after = '';
+    } else {
+      var after = '123';
+    }
+    ob = {'Admin':admin, 'Deleting_Post_User':uid, 'Deleting_Post_Bookname':bookname, 'After_Delete_User':after};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
@@ -245,7 +281,7 @@ app.post("/post_review", (req, res) => {
     ob = {'Written_by':'123', 'About_user':sellerID, 'Review':review, 'Date':timestamp};
     us.push(ob);
     res.json(us);
-  });*/
+  }); */
 
   if (uid && sellerID && review) {
     //Inserting the review written to the database
@@ -268,7 +304,7 @@ app.get('/reviewpage', (req, res) => {
   pool.query(query1, (error, results)=>{
     us = [];
     res.json(us);
-  });*/
+  }); */
 
   // This is login and logout checking functino
   if (isLogedin(req, res)) {
@@ -471,7 +507,7 @@ app.post("/showpassword", (req, res) => {
   var uid = req.body.uid
   var uname = req.body.uname
   var uemail = req.body.uemail
-  var values = [uid, uname, uemail]
+  var values = [uid, uname, uemail] 
   if (uid && uname && uemail) {
     pool.query(
       `SELECT * from backpack where uid=$1 AND uname=$2 AND uemail=$3`,
@@ -480,15 +516,11 @@ app.post("/showpassword", (req, res) => {
         if (error) res.end(error)
         else if (!result || !result.rows[0]) {
           res.render("pages/find_pw", {
-            // all the input enter have to be true to show the PASSWORD
-            msg: "INFORMAION is not correct!",
+            // all the input enter have to be true to send the email
+            msg: "INFORMATION is not correct!",
           })
         } else {
-          /*else{
-                res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
-                      msg: "PASSWORD: " + result.rows[0].upassword
-                });
-            }*/
+          // the email content showing the password
           const output = `
               <p>Dear User</p>
               <p>You have a lost Password request from backpack</p>
@@ -524,7 +556,7 @@ app.post("/showpassword", (req, res) => {
         }
       }
     )
-  } else {
+  } else { // if one of the inputs are left empty 
     res.render("pages/find_pw", {
       msg: "Entre your ID, Name and Email Address Please!",
     })
@@ -754,7 +786,7 @@ app.post("/upload", function (req, res) { // async function here
               //   "')"
 
                 ////////////////
-            
+
               pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng], (error, result) => {
                 if (error) {
                   res.end(error)
@@ -792,7 +824,8 @@ app.get("/reportUser", (req, res) => {
 ///////////////////////////////////////////////////////////////////
 
 app.post("/report", (req, res) => {
-  //
+  //getting the reporting user id and reported user id
+  // plus the report --> description of the event
   var id = req.body.uid
   var description = req.body.description
   var uid = req.session.ID
@@ -806,23 +839,24 @@ app.post("/report", (req, res) => {
     res.json(us);
   }); */
 
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'" // the reported user id should exist in database
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       }
       else if (!result || !result.rows[0]) {
         res.render("pages/reportUser", {
-          msg: "INFORMAION about the User ID is not correct!",
+          msg: "INFORMATION about the User ID is not correct!", //reported user ID is not correct
         })
       }
     })
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'" //find the reporting user for email
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       }
       else{
+        // email content
         const output = `
           <p> REPORT of USER: </p>
           <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
@@ -858,24 +892,24 @@ app.post("/report", (req, res) => {
 
 
 app.get("/find_id", (req, res) => {
-  res.render("pages/find_id")
+  res.render("pages/find_id") //find id page
 })
 
 app.post("/sendEmail", (req, res) => {
-  //get id and password and email
+  //get the email of the user from form
   var email = req.body.uemail
   if (email) {
-    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'" // find the email in db
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       } else if (!result || !result.rows[0]) {
         res.render("pages/find_id", {
           // all the input enter have to be true to show the PASSWORD
-          msg: "INFORMAION is not correct!",
+          msg: "INFORMATION is not correct!",
         })
       } else {
-        //var results = {'rows':result.rows}
+        // the email content
         const output = `
             <p>Dear User</p>
             <p>You have a lost ID and Password request from backpack</p>
@@ -913,7 +947,7 @@ app.post("/sendEmail", (req, res) => {
         })
       }
     })
-  } else {
+  } else { // if the submitted with no input
     res.render("pages/find_id", { msg: "Entre your Email Address Please!" })
   }
 })
@@ -992,6 +1026,15 @@ var io = socket(server, { path: "/socket.io" })
 
 //move to chatting page
 app.post("/chat", (req, res)=> {
+    /*Testing for chatting
+    var receiver=req.body.receiver;
+    var query1 = `...`;
+    pool.query(query1, (error, results)=>{
+        us = [];
+        ob = {'r':receiver};
+        us.push(ob);
+        res.json(us);
+    });*/
     if(isLogedin(req, res)) {
         var receiver=req.body.receiver;//opponent client information
         if(!receiver){
@@ -1002,10 +1045,16 @@ app.post("/chat", (req, res)=> {
                 if(error){
                     res.end(error);
                 }
+
                 if (!result || !result.rows[0]) {
                     res.render("pages/chat",{uname: req.session.displayName, db:false, receiver:receiver, sender:req.session.ID});
                 }
                 else{
+                    pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2)`,[receiver, req.session.ID], (error2, result2)=>{
+                        if(error2){
+                            res.end(error2);
+                        }
+                    })
                     var results = result.rows;
                     res.render("pages/chat",{uname: req.session.displayName, db:true ,results, receiver:receiver, sender:req.session.ID});
                 }
@@ -1019,6 +1068,14 @@ app.post("/chat", (req, res)=> {
 
 //move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
+    /*Testing for chatting
+    var query1 = `...`;
+    pool.query(query1, (error, results)=>{
+        us = [];
+        ob = {'r':receiver};
+        us.push(ob);
+        res.json(us);
+    });*/
     var admin;
     if(isLogedin(req, res)) {
         pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{//find chatting logs which the user involved
@@ -1064,6 +1121,18 @@ io.sockets.on("connection", function (socket) {
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
         pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
+            if(error){
+                throw(error);
+            }
+        })
+        pool.query(`UPDATE chatlist SET new='t' WHERE (sender=$2 AND receiver=$1)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
+            if(error){
+                throw(error);
+            }
+        })
+    })
+    socket.on("disconnect", function(username){
+        pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
             if(error){
                 throw(error);
             }
@@ -1118,4 +1187,3 @@ app.get('/search', function(req, res) {
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;
-
