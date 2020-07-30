@@ -303,13 +303,12 @@
 
     <!-- Sold button for seller  -->
     <!-- Check if it is the seller, if yes then will show sold button to remove post -->
-    <%if( r.uid == userID){%>
-      <input type="text" name="coursename" value="<%= r.course %>" style="display: none"></input>
-      <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"></input>
-      <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
-      <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
-      <button class="button-sold-selectpage" type="submit" formaction="/seller_sold" formmethod="post">Sold</button>
-    <%}%>
+    <form>
+      <%if( r.uid == userID){%>
+        <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+        <button class="button-sold-selectpage" type="submit" formaction="/seller_sold" formmethod="post">Sold</button>
+      <%}%>
+    </form>
 
     <div id="map"> </div>
 
