@@ -1176,6 +1176,20 @@ app.get('/search', function(req, res) {
 })
 
 
+// Sold button 
+app.post("/seller_sold", (req, res) => {
+  var postid = req.body.postid
+  if (postid) {
+    pool.query(
+      `DELETE FROM img WHERE postid=$1`,
+      [postid],
+      (error, result) => {
+        if (error) res.end(error)
+        res.redirect("pages/profile")
+      }
+    )
+  }
+})
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;

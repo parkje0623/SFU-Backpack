@@ -41,9 +41,6 @@
         height: 300px;
         width: 30%
       }
-      #button-sold-selectpage {
-        display: inline;
-      }
     </style>
 
   <body>
@@ -302,9 +299,16 @@
           </ul>
         </u2>      
     </ul>
-    
+
+
+    <!-- Sold button for seller  -->
+    <!-- Check if it is the seller, if yes then will show sold button to remove post -->
     <%if( r.uid == userID){%>
-      <button id="button-sold-selectpage" type="submit">Sold</button>
+      <input type="text" name="coursename" value="<%= r.course %>" style="display: none"></input>
+      <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"></input>
+      <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
+      <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+      <button class="button-sold-selectpage" type="submit" formaction="/seller_sold" formmethod="post">Sold</button>
     <%}%>
 
     <div id="map"> </div>
