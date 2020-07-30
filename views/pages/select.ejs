@@ -41,6 +41,9 @@
         height: 300px;
         width: 30%
       }
+      #button-sold-selectpage {
+        display: inline;
+      }
     </style>
 
   <body>
@@ -297,9 +300,15 @@
             <ul><span>Condition: </span> <%= r.condition %></ul>
             <ul><span>Description: </span><%= r.description %></ul>
           </ul>
-        </u2>
-      <div id="map"> </div>
+        </u2>      
     </ul>
+    
+    <%if( r.uid == userID){%>
+      <button id="button-sold-selectpage" type="submit">Sold</button>
+    <%}%>
+
+    <div id="map"> </div>
+
 
     <h2> CONTACT SELLER </h2><br>
     <form method = "post" action="/chat">
