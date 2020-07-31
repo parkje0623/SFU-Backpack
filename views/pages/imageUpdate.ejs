@@ -19,7 +19,7 @@
       rel="stylesheet"
     />
 
-    <title>Update Post</title>
+    <title>Image Upload</title>
     <nav class="username">
       <a href="/auth/logout">logout</a>
     </nav>
@@ -37,14 +37,13 @@
   </head>
   <body>
     <div class="login-form">
-      <form action="/updatepost" method="POST" enctype="multipart/form-data">
+      <form action="/upload" method="POST" enctype="multipart/form-data">
         <h2 class="text-center">File Upload</h2>
         <div class="warning">
-         
+          <%= typeof msg != 'undefined' ? msg : '' %>
         </div>
         <br/>
-        <% field.forEach(function(f) { %>
-        <input type="text" class="form-control" name="title" value="" placeholder= "<%= f.bookname %>" maxlength="50"/><br/>
+        <input type="text" class="form-control" name="title" value="" placeholder="TITLE OF THE BOOK" maxlength="50"/><br/>
         <select type="text" class="form-control" name="course" required>
           <option value="" disabled selected hidden>Choose a Course</option>
           <option> ACMA </option>
@@ -196,14 +195,15 @@
               soiled, scuffed, stained or spotted and the book may have loose
               joints, hinges, pages, etc.
             </p>
-          </span> </a><br/><br/>
+          </span> </a
+        ><br/><br/>
 
-        <input type="number" class="form-control" name="cost" value="" placeholder="<%= f.cost %>" maxlength="20"/><br/>
-        <input type="text" class="form-control" name="location" value="" placeholder="<%= f.location %>" maxlength="100"/><br/>
-        <textarea class="form-control" name="description" rows="4" cols="200" placeholder="<%= f.description %>" maxlength="300"></textarea><br/>
+        <input type="number" class="form-control" name="cost" value="" placeholder="COST" maxlength="20"/><br/>
+        <input type="text" class="form-control" name="location" value="" placeholder="LOCATION" maxlength="100"/><br/>
+        <textarea class="form-control" name="description" rows="4" cols="200" placeholder="DESCRIPTION" maxlength="300"></textarea><br />
         <input name="myImage" class="form-control" id="file-input" type="file"/><br/>
         <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
-      <% }); %>
+
       </form>
       <br/>
     </div>
