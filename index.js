@@ -1176,6 +1176,32 @@ app.get('/search', function(req, res) {
 })
 
 
+app.get("/updatepost/:id", (req, res) => {
+  var postid = parseInt(req.params.id)
+  var uid = req.session.ID //Grabs an ID of the user signed-in
+  if (uid && postid) {
+    //If user id is given, take all data of user that matches the given ID
+    pool.query(`SELECT * FROM backpack WHERE uid=$1`,[uid],(error, result) => {
+        if (error) 
+          res.end(error)
+        pool.query(`SELECT * FROM img WHERE postid=$2`,[postid],(error, img_result) => {
+            if (error) 
+              res.end(error)
+            else {
+              //Sends the data to imageUpdate.ejs
+              var results = { rows: result.rows, field: img_result.rows }
+              res.render("pages/imageUpdate", results)
+            }
+        })
+    })
+  }
+});
+
+app.post("/updatepost", (req, res) => {
+  res.send(`DONE!`)
+
+})
+
 // Sold button 
 app.post("/seller_sold", (req, res) => {
   var postid = req.body.postid
