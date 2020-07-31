@@ -1202,7 +1202,6 @@ const image_update = upload.single("myImage")
 app.post("/updatepost", function (req, res) { // async function here
   image_update(req, res, function (err) {
     var postid = req.body.postid
-        console.log(postid)
     if (err) {
       res.redirect(`/updatepost/:${postid}`)
         // if the file is not an image
@@ -1233,8 +1232,6 @@ app.post("/updatepost", function (req, res) { // async function here
         var location = data[0].formattedAddress;  // location
         var lat = data[0].latitude;
         var lng = data[0].longitude;
-        var postid = req.body.postid
-        console.log(postid)
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
@@ -1252,7 +1249,7 @@ app.post("/updatepost", function (req, res) { // async function here
               res.redirect(`/updatepost/:${postid}`)
                 //If same title exist for this user, return to selling page
                 //msg: "Error: User Already Posted Item with Same Title",
-            
+            console.log(postid)
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery = `UPDATE img SET course=$1, path=$2, bookname=$3, uid=$4, cost=$5, condition=$6, description=$7, location=$8, lat=$9, lng=$10 WHERE postid=$11`
@@ -1267,6 +1264,7 @@ app.post("/updatepost", function (req, res) { // async function here
                       res.end(error)
                     }
                   })
+                  console.log(postid)
                   res.redirect(`/updatepost/:${postid}`)
                     //msg: "File Updated!", // Sending the path to the database and the image to AWS Storage
                   
