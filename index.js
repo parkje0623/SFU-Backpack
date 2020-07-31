@@ -31,8 +31,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  //connectionString: process.env.DATABASE_URL,
+  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -41,8 +41,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      //conString: process.env.DATABASE_URL,
-       conString:'postgres://postgres:cmpt276@localhost/postgres'
+      conString: process.env.DATABASE_URL,
+      //conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -322,6 +322,7 @@ app.post('/deleteReview', (req, res) => {
   var date = req.body.date;
   var values = [date, written_user];
 
+  //Deletes selected review from the user
   pool.query(`DELETE FROM review WHERE date=$1 AND written_user=$2`, values, (error, result) => {
     if (error)
       res.end(error)
@@ -556,15 +557,11 @@ app.post("/showpassword", (req, res) => {
         if (error) res.end(error)
         else if (!result || !result.rows[0]) {
           res.render("pages/find_pw", {
-            // all the input enter have to be true to show the PASSWORD
-            msg: "INFORMAION is not correct!",
+            // all the input enter have to be true to send the email
+            msg: "INFORMATION is not correct!",
           })
         } else {
-          /*else{
-                res.render('pages/find_pw', { // show the PASSWORD (the info is correct)
-                      msg: "PASSWORD: " + result.rows[0].upassword
-                });
-            }*/
+          // the email content showing the password
           const output = `
               <p>Dear User</p>
               <p>You have a lost Password request from backpack</p>
@@ -600,7 +597,7 @@ app.post("/showpassword", (req, res) => {
         }
       }
     )
-  } else {
+  } else { // if one of the inputs are left empty
     res.render("pages/find_pw", {
       msg: "Entre your ID, Name and Email Address Please!",
     })
@@ -868,7 +865,8 @@ app.get("/reportUser", (req, res) => {
 ///////////////////////////////////////////////////////////////////
 
 app.post("/report", (req, res) => {
-  //
+  //getting the reporting user id and reported user id
+  // plus the report --> description of the event
   var id = req.body.uid
   var description = req.body.description
   var uid = req.session.ID
@@ -882,23 +880,24 @@ app.post("/report", (req, res) => {
     res.json(us);
   }); */
 
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + id + "'" // the reported user id should exist in database
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       }
       else if (!result || !result.rows[0]) {
         res.render("pages/reportUser", {
-          msg: "INFORMAION about the User ID is not correct!",
+          msg: "INFORMATION about the User ID is not correct!", //reported user ID is not correct
         })
       }
     })
-    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uid='" + uid + "'" //find the reporting user for email
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       }
       else{
+        // email content
         const output = `
           <p> REPORT of USER: </p>
           <p>The User: ${uid} and email:${result.rows[0].uemail} has made a report against ${id} </p>
@@ -934,24 +933,24 @@ app.post("/report", (req, res) => {
 
 
 app.get("/find_id", (req, res) => {
-  res.render("pages/find_id")
+  res.render("pages/find_id") //find id page
 })
 
 app.post("/sendEmail", (req, res) => {
-  //get id and password and email
+  //get the email of the user from form
   var email = req.body.uemail
   if (email) {
-    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'"
+    var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'" // find the email in db
     pool.query(getEmailQuery, (error, result) => {
       if (error) {
         res.end(error)
       } else if (!result || !result.rows[0]) {
         res.render("pages/find_id", {
           // all the input enter have to be true to show the PASSWORD
-          msg: "INFORMAION is not correct!",
+          msg: "INFORMATION is not correct!",
         })
       } else {
-        //var results = {'rows':result.rows}
+        // the email content
         const output = `
             <p>Dear User</p>
             <p>You have a lost ID and Password request from backpack</p>
@@ -989,7 +988,7 @@ app.post("/sendEmail", (req, res) => {
         })
       }
     })
-  } else {
+  } else { // if the submitted with no input
     res.render("pages/find_id", { msg: "Entre your Email Address Please!" })
   }
 })
@@ -1068,6 +1067,15 @@ var io = socket(server, { path: "/socket.io" })
 
 //move to chatting page
 app.post("/chat", (req, res)=> {
+    /*Testing for chatting
+    var receiver=req.body.receiver;
+    var query1 = `...`;
+    pool.query(query1, (error, results)=>{
+        us = [];
+        ob = {'r':receiver};
+        us.push(ob);
+        res.json(us);
+    });*/
     if(isLogedin(req, res)) {
         var receiver=req.body.receiver;//opponent client information
         if(!receiver){
@@ -1078,10 +1086,16 @@ app.post("/chat", (req, res)=> {
                 if(error){
                     res.end(error);
                 }
+
                 if (!result || !result.rows[0]) {
                     res.render("pages/chat",{uname: req.session.displayName, db:false, receiver:receiver, sender:req.session.ID});
                 }
                 else{
+                    pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2)`,[receiver, req.session.ID], (error2, result2)=>{
+                        if(error2){
+                            res.end(error2);
+                        }
+                    })
                     var results = result.rows;
                     res.render("pages/chat",{uname: req.session.displayName, db:true ,results, receiver:receiver, sender:req.session.ID});
                 }
@@ -1095,6 +1109,14 @@ app.post("/chat", (req, res)=> {
 
 //move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
+    /*Testing for chatting
+    var query1 = `...`;
+    pool.query(query1, (error, results)=>{
+        us = [];
+        ob = {'r':receiver};
+        us.push(ob);
+        res.json(us);
+    });*/
     var admin;
     if(isLogedin(req, res)) {
         pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{//find chatting logs which the user involved
@@ -1140,6 +1162,18 @@ io.sockets.on("connection", function (socket) {
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
         pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
+            if(error){
+                throw(error);
+            }
+        })
+        pool.query(`UPDATE chatlist SET new='t' WHERE (sender=$2 AND receiver=$1)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
+            if(error){
+                throw(error);
+            }
+        })
+    })
+    socket.on("disconnect", function(username){
+        pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
             if(error){
                 throw(error);
             }
@@ -1191,6 +1225,124 @@ app.get('/search', function(req, res) {
 })
 
 
+app.get("/updatepost/:id", (req, res) => {
+  var postid = parseInt(req.params.id)
+  var uid = req.session.ID //Grabs an ID of the user signed-in
+  if (uid && postid){
+    //If user id is given, take all data of user that matches the given ID
+    pool.query(`SELECT * FROM backpack WHERE uid=$1`,[uid],(error, result) => {
+        if (error)
+          res.end(error)
+        pool.query(`SELECT * FROM img WHERE postid=$1`,[postid],(error, img_result) => {
+            if (error)
+              res.end(error)
+            else {
+              //Sends the data to imageUpdate.ejs
+              var results = { rows: result.rows, field: img_result.rows }
+              res.render("pages/imageUpdate", results)
+            }
+        })
+    })
+  }
+});
+
+
+const image_update = upload.single("myImage")
+app.post("/updatepost", function (req, res) { // async function here
+  image_update(req, res, function (err) {
+    var postid = req.body.postid
+    if (err) {
+      res.redirect(`/updatepost/${postid}?`)
+        // if the file is not an image
+        //msg: err,
+
+    } else {
+      if (req.file == undefined) {
+        res.redirect(`/updatepost/${postid}?`)
+          // if no file was selected
+          //msg: "Error: No File Selected!",
+
+      } else {
+
+        geocoder.geocode(req.body.location, function (err, data){
+          if (err || !data.length) {
+            req.flash('error', 'Invalid address');
+            return res.redirect('back')
+          }
+
+        var path = req.file.location
+        var course = req.body.course.toLowerCase()
+        var bookName = req.body.title
+        var uid = req.session.ID
+        var cost = req.body.cost
+        var condition = req.body.condition
+        var description = req.body.description
+        var checking = [uid, bookName]
+        var location = data[0].formattedAddress;  // location
+        var lat = data[0].latitude;
+        var lng = data[0].longitude;
+
+        //Checks if user wanting to post already have the post with the same title
+        //Different user can post with same title, but same user cannot post the same title
+        pool.query(
+          `SELECT * FROM img WHERE uid=$1 AND bookname=$2`,
+          checking,
+          (error, result) => {
+            if (error) {
+              res.redirect(`/updatepost/${postid}?`)
+                // if the file is not an image
+                //msg: err,
+
+            }
+            if (result && result.rows[0]) {
+              res.redirect(`/updatepost/${postid}?`)
+                //If same title exist for this user, return to selling page
+                //msg: "Error: User Already Posted Item with Same Title",
+            console.log(postid)
+            } else {
+              // insert the user info into the img database (the image in AWS and the path of image in img database)
+              var getImageQuery = `UPDATE img SET course=$1, path=$2, bookname=$3, uid=$4, cost=$5, condition=$6, description=$7, location=$8, lat=$9, lng=$10 WHERE postid=$11`
+              console.log(postid)
+              pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng, postid], (error, result) => {
+                if (error) {
+                  res.end(error)
+                } else {
+                  var updatefts = `UPDATE img SET fts=to_tsvector('english', coalesce(course,'') || ' ' || coalesce(bookname,''));`
+                  pool.query(updatefts, (error, result) => {
+                    console.log(postid)
+                    if (error) {
+                      res.end(error)
+                    }
+                  })
+                  console.log(postid)
+                  res.redirect(`/updatepost/${postid}?`)
+                    //msg: "File Updated!", // Sending the path to the database and the image to AWS Storage
+
+                }
+              })
+            }
+          }
+        ) // end query
+      })
+      }
+    }
+  })
+});
+
+// Sold button
+app.post("/seller_sold", (req, res) => {
+  var postid = req.body.postid
+  if (postid) {
+    pool.query(
+      `DELETE FROM img WHERE postid=$1`,
+      [postid],
+      (error, result) => {
+        if (error) res.end(error)
+        res.redirect("/mypage")
+      }
+    )
+  }
+})
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;
