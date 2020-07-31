@@ -1201,6 +1201,7 @@ app.get("/updatepost/:id", (req, res) => {
 const image_update = upload.single("myImage")
 app.post("/updatepost", function (req, res) { // async function here
   var postid = req.body.postid
+  console.log(postid)
   image_update(req, res, function (err) {
     if (err) {
       res.redirect("/updatepost/:" + postid )
