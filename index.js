@@ -31,8 +31,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  connectionString: process.env.DATABASE_URL,
+  connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  //connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -41,8 +41,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
-       //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      //conString: process.env.DATABASE_URL,
+       conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -189,7 +189,7 @@ app.get("/select_page/:id", (req, res) => {
             //       us.push(ob);
             //       res.json(us);
             //     })
-            //   } else { 
+            //   } else {
             //     var ccourse = 'cmpt'
             //     var cuid = '321'
             //     var cost = '50'
@@ -286,6 +286,49 @@ app.post("/post_review", (req, res) => {
   }
 })
 
+//This is for admin to select one of the given user to see their reviews
+app.post('/getSelectedReview', (req, res) => {
+    var uid = req.body.uid;
+    var value = [uid];
+
+    //get all data from backpack (used to list all users in SFU-Backpack)
+    pool.query(`SELECT * FROM backpack`, (error, result) => {
+      if (error)
+        res.end(error)
+      var all_user = result.rows;
+      //Finds all review written by the selected user (admin selects the user)
+      pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
+        if (error)
+          res.end(error)
+        var select_Review = result.rows;
+
+        //If no written review found, return none as true so user can be notified in HTML
+        if (select_Review[0] === undefined) {
+          res.render("pages/adminReview", {select_Review, all_user,
+            uname: req.session.displayName, none: true,
+            admin: true, uid: uid})
+        } else { //else return none = false
+            res.render("pages/adminReview", {select_Review, all_user,
+              uname: req.session.displayName, none: false,
+              admin: true})
+        }
+      })
+    })
+})
+
+//This is for user/admin to delete a selected review
+app.post('/deleteReview', (req, res) => {
+  var written_user = req.body.written_user;
+  var date = req.body.date;
+  var values = [date, written_user];
+
+  pool.query(`DELETE FROM review WHERE date=$1 AND written_user=$2`, values, (error, result) => {
+    if (error)
+      res.end(error)
+    res.redirect('/reviewpage')
+  })
+})
+
 //This page allows user to view what reviews he/she got from other users, and what reviews user haven written to others
 app.get('/reviewpage', (req, res) => {
   var uid = req.session.ID;
@@ -311,11 +354,16 @@ app.get('/reviewpage', (req, res) => {
           res.end(error)
         var other_reviews = result.rows;
         if (req.session.ID.trim() == "admin") {
-          res.render("pages/reviews", {
-            my_reviews, other_reviews,
-            uname: req.session.displayName,
-            admin: true,
+          pool.query(`SELECT * FROM backpack`, (error, result) => {
+            if (error)
+              res.end(error)
+            var all_user = result.rows;
+            res.render("pages/reviews", { all_user,
+              my_reviews, other_reviews,
+              uname: req.session.displayName,
+              admin: true,
 
+            })
           })
         } else {
           res.render("pages/reviews", {
