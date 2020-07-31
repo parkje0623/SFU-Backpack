@@ -1200,17 +1200,17 @@ app.get("/updatepost/:id", (req, res) => {
 
 const image_update = upload.single("myImage")
 app.post("/updatepost", function (req, res) { // async function here
-  var postid = req.body.postid
-  console.log(postid)
   image_update(req, res, function (err) {
+    var postid = req.body.postid
+        console.log(postid)
     if (err) {
-      res.redirect("/updatepost/:" + postid )
+      res.redirect(`/updatepost/:${postid}`)
         // if the file is not an image
         //msg: err,
       
     } else {
       if (req.file == undefined) {
-        res.redirect("/updatepost/:" + postid )
+        res.redirect(`/updatepost/:${postid}`)
           // if no file was selected
           //msg: "Error: No File Selected!",
         
@@ -1243,13 +1243,13 @@ app.post("/updatepost", function (req, res) { // async function here
           checking,
           (error, result) => {
             if (error) {
-              res.redirect("/updatepost/:" + postid )
+              res.redirect(`/updatepost/:${postid}`)
                 // if the file is not an image
                 //msg: err,
               
             }
             if (result && result.rows[0]) {
-              res.redirect("/updatepost/:" + postid )
+              res.redirect(`/updatepost/:${postid}`)
                 //If same title exist for this user, return to selling page
                 //msg: "Error: User Already Posted Item with Same Title",
             
@@ -1267,7 +1267,7 @@ app.post("/updatepost", function (req, res) { // async function here
                       res.end(error)
                     }
                   })
-                  res.redirect("/updatepost/:" + postid )
+                  res.redirect(`/updatepost/:${postid}`)
                     //msg: "File Updated!", // Sending the path to the database and the image to AWS Storage
                   
                 }
