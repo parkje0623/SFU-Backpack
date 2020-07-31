@@ -19,12 +19,9 @@
       rel="stylesheet"
     />
 
-    <% rows.forEach(function(r) { %>
-    <title>Image Upload</title>
+    <title>Update Post</title>
     <nav class="username">
       <a href="/auth/logout">logout</a>
-      <a href="/mypage"><%= r.uname %></a>
-      <a href="/chatlist">chat list</a>
     </nav>
     <img
       id="logo"
@@ -32,17 +29,22 @@
       alt="logo"
       onclick="location.href='/mainpage'"
     />
-    <p class="logo-font">sfu-backpack</p><br><br><br>
-    <% }); %>
-   <% field.forEach(function(f) { %>
+    <p class="logo-font">sfu-backpack</p>
+    <ul>
+      <li><a class="link" href="/mypage">Back to My Page</a></li>
+      <li><a class="link" href="/buy"> Go to Buy</a></li>
+    </ul>
   </head>
   <body>
     <div class="login-form">
       <form action="/updatepost" method="POST" enctype="multipart/form-data">
         <h2 class="text-center">File Upload</h2>
-        <!-- -->
+        <div class="warning">
+         
+        </div>
         <br/>
-        <input type="text" class="form-control" name="title" value="" placeholder="<%= f.bookname %>" maxlength="50"/><br/>
+        <% field.forEach(function(f) { %>
+        <input type="text" class="form-control" name="title" value="" placeholder= "<%= f.bookname %>" maxlength="50"/><br/>
         <select type="text" class="form-control" name="course" required>
           <option value="" disabled selected hidden>Choose a Course</option>
           <option> ACMA </option>
@@ -194,14 +196,12 @@
               soiled, scuffed, stained or spotted and the book may have loose
               joints, hinges, pages, etc.
             </p>
-          </span> </a
-        ><br/><br/>
+          </span> </a><br/><br/>
 
         <input type="number" class="form-control" name="cost" value="" placeholder="<%= f.cost %>" maxlength="20"/><br/>
         <input type="text" class="form-control" name="location" value="" placeholder="<%= f.location %>" maxlength="100"/><br/>
-        <textarea class="form-control" name="description" rows="4" cols="200" placeholder="<%= f.description %>" maxlength="300"></textarea><br/>
-        <p> Current: image</p>
-        <img width="200px" src="<%= f.path %>" alt="image"><br>
+        <textarea class="form-control" name="description" rows="4" cols="200" placeholder="<%= f.description %>" maxlength="300"></textarea><br />
+        <p> Current image: <img width="200px" src="<%= f.path %>" alt="image"></p><br>
         <input name="myImage" class="form-control" id="file-input" type="file"/><br/>
         <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
       <% }); %>
