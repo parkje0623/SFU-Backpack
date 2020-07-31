@@ -1234,6 +1234,7 @@ app.post("/updatepost", function (req, res) { // async function here
         var lat = data[0].latitude;
         var lng = data[0].longitude;
         var postid = req.body.postid
+        console.log(postid)
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
