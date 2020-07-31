@@ -1197,10 +1197,87 @@ app.get("/updatepost/:id", (req, res) => {
   }
 });
 
-app.post("/updatepost", (req, res) => {
-  res.send(`DONE!`)
 
-})
+const image_update = upload.single("myImage")
+app.post("/updatepost", function (req, res) { // async function here
+  image_update(req, res, function (err) {
+    if (err) {
+      res.render("pages/imageUpdate", {
+        // if the file is not an image
+        msg: err,
+      })
+    } else {
+      if (req.file == undefined) {
+        res.render("pages/imageUpdate", {
+          // if no file was selected
+          msg: "Error: No File Selected!",
+        })
+      } else {
+
+        geocoder.geocode(req.body.location, function (err, data){
+          if (err || !data.length) {
+            req.flash('error', 'Invalid address');
+            return res.redirect('back')
+          }
+
+        var path = req.file.location
+        var course = req.body.course.toLowerCase()
+        var bookName = req.body.title
+        var uid = req.session.ID
+        var cost = req.body.cost
+        var condition = req.body.condition
+        var description = req.body.description
+        var checking = [uid, bookName]
+        var location = data[0].formattedAddress;  // location
+        var lat = data[0].latitude;
+        var lng = data[0].longitude;
+        var postid = req.body.postid
+
+        //Checks if user wanting to post already have the post with the same title
+        //Different user can post with same title, but same user cannot post the same title
+        pool.query(
+          `SELECT * FROM img WHERE uid=$1 AND bookname=$2`,
+          checking,
+          (error, result) => {
+            if (error) {
+              res.render("pages/imageUpdate", {
+                // if the file is not an image
+                msg: err,
+              })
+            }
+            if (result && result.rows[0]) {
+              res.render("pages/imageUpdate", {
+                //If same title exist for this user, return to selling page
+                msg: "Error: User Already Posted Item with Same Title",
+              })
+            } else {
+              // insert the user info into the img database (the image in AWS and the path of image in img database)
+              var getImageQuery = `UPDATE img SET course=$1, path=$2, bookname=$3, uid=$4, cost=$5, condition=$6, description=$7, location=$8, lat=$9, lng=$10 WHERE postid=$11`
+              uemail=$1 AND uname=$2
+              
+              pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng, postid], (error, result) => {
+                if (error) {
+                  res.end(error)
+                } else {
+                  var updatefts = `UPDATE img SET fts=to_tsvector('english', coalesce(course,'') || ' ' || coalesce(bookname,''));`
+                  pool.query(updatefts, (error, result) => {
+                    if (error) {
+                      res.end(error)
+                    }
+                  })
+                  res.render("pages/imageUpdate", {
+                    msg: "File Updated!", // Sending the path to the database and the image to AWS Storage
+                  })
+                }
+              })
+            }
+          }
+        ) // end query
+      })
+      }
+    }
+  })
+});
 
 // Sold button 
 app.post("/seller_sold", (req, res) => {
