@@ -44,6 +44,8 @@
               <p class="logo-font">sfu-backpack</p>
     </div>
     <ul id="messages">
+      <br>
+      <br>
       <%if(db===true){%>
         <% results.forEach(function(r) { %>
           <li><strong><%= r.senderid%>:</strong> <%= r.texts %></li>
