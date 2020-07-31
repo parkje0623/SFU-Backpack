@@ -1179,12 +1179,12 @@ app.get('/search', function(req, res) {
 app.get("/updatepost/:id", (req, res) => {
   var postid = parseInt(req.params.id)
   var uid = req.session.ID //Grabs an ID of the user signed-in
-  if (uid && postid) {
+  if (uid && postid){
     //If user id is given, take all data of user that matches the given ID
     pool.query(`SELECT * FROM backpack WHERE uid=$1`,[uid],(error, result) => {
         if (error) 
           res.end(error)
-        pool.query(`SELECT * FROM img WHERE postid=$2`,[postid],(error, img_result) => {
+        pool.query(`SELECT * FROM img WHERE postid=$1`,[postid],(error, img_result) => {
             if (error) 
               res.end(error)
             else {
