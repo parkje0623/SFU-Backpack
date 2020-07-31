@@ -1253,7 +1253,6 @@ app.post("/updatepost", function (req, res) { // async function here
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery = `UPDATE img SET course=$1, path=$2, bookname=$3, uid=$4, cost=$5, condition=$6, description=$7, location=$8, lat=$9, lng=$10 WHERE postid=$11`
-              uemail=$1 AND uname=$2
               
               pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng, postid], (error, result) => {
                 if (error) {
