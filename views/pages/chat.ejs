@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+<html lang="en" dir="ltr">
 <html>
   <head>
     <title>chatting</title>
-
+    <meta charset="utf-8" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font: 13px Helvetica, Arial; }
@@ -25,6 +26,25 @@
     
   </head>
   <body>
+    <div class="top-container">
+      <!-- LOGIN FEATURE -->
+      <form>
+        <nav class="login-bar">
+          <%if( uname ===false){%>
+          <a href="/login">login</a>
+        <%}%>
+          <%if( uname !=false){%>
+            <a href="/auth/logout">logout</a>
+            <a href="/mypage"><%= uname %></a>
+        <%}%>
+          <%if( admin == true){%>
+          <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+        <%}%>
+        </nav>
+      </form>
+      <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
+              <p class="logo-font">sfu-backpack</p>
+    </div>
     <ul id="messages">
       <%if(db===true){%>
         <% results.forEach(function(r) { %>
