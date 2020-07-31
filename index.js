@@ -1184,7 +1184,7 @@ app.get("/updatepost/:id", (req, res) => {
     pool.query(`SELECT * FROM backpack WHERE uid=$1`,[uid],(error, result) => {
         if (error) 
           res.end(error)
-        pool.query(`SELECT * FROM img WHERE postid=$1`,[postid],(error, img_result) => {
+        pool.query(`SELECT * FROM img WHERE postid=$2`,[postid],(error, img_result) => {
             if (error) 
               res.end(error)
             else {

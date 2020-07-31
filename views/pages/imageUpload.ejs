@@ -44,7 +44,8 @@
         </div>
         <br/>
         <input type="text" class="form-control" name="title" value="" placeholder="TITLE OF THE BOOK" maxlength="50"/><br/>
-        <select type="text" class="form-control" name="course">
+        <select type="text" class="form-control" name="course" required>
+          <option value="" disabled selected hidden>Choose a Course</option>
           <option> ACMA </option>
           <option> ALS </option>
           <option> APMA </option>
@@ -133,7 +134,8 @@
           <option> URB </option>
           <option> WL </option>
           <option> OTHERS </option> </select><br/>
-        <select type="text" class="form-control" name="condition">
+        <select type="text" class="form-control" name="condition" required>
+          <option value="" disabled selected hidden>Choose the Condition</option>
           <option> Brand New </option>
           <option> Fine </option>
           <option> Very Good </option>
