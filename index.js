@@ -189,7 +189,7 @@ app.get("/select_page/:id", (req, res) => {
             //       us.push(ob);
             //       res.json(us);
             //     })
-            //   } else { 
+            //   } else {
             //     var ccourse = 'cmpt'
             //     var cuid = '321'
             //     var cost = '50'
@@ -286,6 +286,50 @@ app.post("/post_review", (req, res) => {
   }
 })
 
+//This is for admin to select one of the given user to see their reviews
+app.post('/getSelectedReview', (req, res) => {
+    var uid = req.body.uid;
+    var value = [uid];
+
+    //get all data from backpack (used to list all users in SFU-Backpack)
+    pool.query(`SELECT * FROM backpack`, (error, result) => {
+      if (error)
+        res.end(error)
+      var all_user = result.rows;
+      //Finds all review written by the selected user (admin selects the user)
+      pool.query(`SELECT * FROM review WHERE written_user=$1`, value, (error, result) => {
+        if (error)
+          res.end(error)
+        var select_Review = result.rows;
+
+        //If no written review found, return none as true so user can be notified in HTML
+        if (select_Review[0] === undefined) {
+          res.render("pages/adminReview", {select_Review, all_user,
+            uname: req.session.displayName, none: true,
+            admin: true, uid: uid})
+        } else { //else return none = false
+            res.render("pages/adminReview", {select_Review, all_user,
+              uname: req.session.displayName, none: false,
+              admin: true})
+        }
+      })
+    })
+})
+
+//This is for user/admin to delete a selected review
+app.post('/deleteReview', (req, res) => {
+  var written_user = req.body.written_user;
+  var date = req.body.date;
+  var values = [date, written_user];
+
+  //Deletes selected review from the user
+  pool.query(`DELETE FROM review WHERE date=$1 AND written_user=$2`, values, (error, result) => {
+    if (error)
+      res.end(error)
+    res.redirect('/reviewpage')
+  })
+})
+
 //This page allows user to view what reviews he/she got from other users, and what reviews user haven written to others
 app.get('/reviewpage', (req, res) => {
   var uid = req.session.ID;
@@ -311,11 +355,16 @@ app.get('/reviewpage', (req, res) => {
           res.end(error)
         var other_reviews = result.rows;
         if (req.session.ID.trim() == "admin") {
-          res.render("pages/reviews", {
-            my_reviews, other_reviews,
-            uname: req.session.displayName,
-            admin: true,
+          pool.query(`SELECT * FROM backpack`, (error, result) => {
+            if (error)
+              res.end(error)
+            var all_user = result.rows;
+            res.render("pages/reviews", { all_user,
+              my_reviews, other_reviews,
+              uname: req.session.displayName,
+              admin: true,
 
+            })
           })
         } else {
           res.render("pages/reviews", {
@@ -499,7 +548,7 @@ app.post("/showpassword", (req, res) => {
   var uid = req.body.uid
   var uname = req.body.uname
   var uemail = req.body.uemail
-  var values = [uid, uname, uemail] 
+  var values = [uid, uname, uemail]
   if (uid && uname && uemail) {
     pool.query(
       `SELECT * from backpack where uid=$1 AND uname=$2 AND uemail=$3`,
@@ -548,7 +597,7 @@ app.post("/showpassword", (req, res) => {
         }
       }
     )
-  } else { // if one of the inputs are left empty 
+  } else { // if one of the inputs are left empty
     res.render("pages/find_pw", {
       msg: "Entre your ID, Name and Email Address Please!",
     })
@@ -1182,6 +1231,124 @@ app.get('/search', function(req, res) {
 })
 
 
+app.get("/updatepost/:id", (req, res) => {
+  var postid = parseInt(req.params.id)
+  var uid = req.session.ID //Grabs an ID of the user signed-in
+  if (uid && postid){
+    //If user id is given, take all data of user that matches the given ID
+    pool.query(`SELECT * FROM backpack WHERE uid=$1`,[uid],(error, result) => {
+        if (error)
+          res.end(error)
+        pool.query(`SELECT * FROM img WHERE postid=$1`,[postid],(error, img_result) => {
+            if (error)
+              res.end(error)
+            else {
+              //Sends the data to imageUpdate.ejs
+              var results = { rows: result.rows, field: img_result.rows }
+              res.render("pages/imageUpdate", results)
+            }
+        })
+    })
+  }
+});
+
+
+const image_update = upload.single("myImage")
+app.post("/updatepost", function (req, res) { // async function here
+  image_update(req, res, function (err) {
+    var postid = req.body.postid
+    if (err) {
+      res.redirect(`/updatepost/${postid}?`)
+        // if the file is not an image
+        //msg: err,
+
+    } else {
+      if (req.file == undefined) {
+        res.redirect(`/updatepost/${postid}?`)
+          // if no file was selected
+          //msg: "Error: No File Selected!",
+
+      } else {
+
+        geocoder.geocode(req.body.location, function (err, data){
+          if (err || !data.length) {
+            req.flash('error', 'Invalid address');
+            return res.redirect('back')
+          }
+
+        var path = req.file.location
+        var course = req.body.course.toLowerCase()
+        var bookName = req.body.title
+        var uid = req.session.ID
+        var cost = req.body.cost
+        var condition = req.body.condition
+        var description = req.body.description
+        var checking = [uid, bookName]
+        var location = data[0].formattedAddress;  // location
+        var lat = data[0].latitude;
+        var lng = data[0].longitude;
+
+        //Checks if user wanting to post already have the post with the same title
+        //Different user can post with same title, but same user cannot post the same title
+        pool.query(
+          `SELECT * FROM img WHERE uid=$1 AND bookname=$2`,
+          checking,
+          (error, result) => {
+            if (error) {
+              res.redirect(`/updatepost/${postid}?`)
+                // if the file is not an image
+                //msg: err,
+
+            }
+            if (result && result.rows[0]) {
+              res.redirect(`/updatepost/${postid}?`)
+                //If same title exist for this user, return to selling page
+                //msg: "Error: User Already Posted Item with Same Title",
+            console.log(postid)
+            } else {
+              // insert the user info into the img database (the image in AWS and the path of image in img database)
+              var getImageQuery = `UPDATE img SET course=$1, path=$2, bookname=$3, uid=$4, cost=$5, condition=$6, description=$7, location=$8, lat=$9, lng=$10 WHERE postid=$11`
+              console.log(postid)
+              pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng, postid], (error, result) => {
+                if (error) {
+                  res.end(error)
+                } else {
+                  var updatefts = `UPDATE img SET fts=to_tsvector('english', coalesce(course,'') || ' ' || coalesce(bookname,''));`
+                  pool.query(updatefts, (error, result) => {
+                    console.log(postid)
+                    if (error) {
+                      res.end(error)
+                    }
+                  })
+                  console.log(postid)
+                  res.redirect(`/updatepost/${postid}?`)
+                    //msg: "File Updated!", // Sending the path to the database and the image to AWS Storage
+
+                }
+              })
+            }
+          }
+        ) // end query
+      })
+      }
+    }
+  })
+});
+
+// Sold button
+app.post("/seller_sold", (req, res) => {
+  var postid = req.body.postid
+  if (postid) {
+    pool.query(
+      `DELETE FROM img WHERE postid=$1`,
+      [postid],
+      (error, result) => {
+        if (error) res.end(error)
+        res.redirect("/mypage")
+      }
+    )
+  }
+})
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;

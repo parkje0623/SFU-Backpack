@@ -67,44 +67,42 @@
     </div>
 
     <%if( admin == true){%>
-      <form>
-        <div class="all_user">
-          <h1> List of Users </h1>
-            <div class="users">
-              <% all_user.forEach(function(attr) { %>
-                <form>
-                  <input type="text" name="uid" value="<%= attr.uid %>" style="display: none"> </input>
-                  <button type="submit" id="reviewButton" formaction="/getSelectedReview" formmethod="post"><%= attr.uid %></button>
-                  <br><br>
-                </form>
-              <%});%>
-            </div>
-        </div>
-      </form>
-    <%}%>
-
-    <%if( admin != true){%>
-      <div class="all_reviews">
-        <h1> Reviews About <%= uname %> </h1>
-        <% other_reviews.forEach(function(attr) { %>
-          <div class="About_me">
-            Date Written: <%= attr.date %> <br>
-            Review by: <%= attr.written_user %> <br> </p>
-            <%= attr.description %>
+      <div class="all_user">
+        <h1> List of Users </h1>
+          <div class="users">
+            <% all_user.forEach(function(attr) { %>
+              <form>
+                <input type="text" name="uid" value="<%= attr.uid %>" style="display: none"> </input>
+                <button type="submit" id="reviewButton" formaction="/getSelectedReview" formmethod="post"><%= attr.uid %></button>
+                <br><br>
+              </form>
+            <%});%>
           </div>
-        <%});%>
+      </div>
 
-        <h1> Reviews Written By <%= uname %> </h1>
-        <% my_reviews.forEach(function(attr) { %>
-          <div class="Written_by_me">
-            Date Written: <%= attr.date %> <br>
-            Review by: <%= attr.written_user %> <br> </p>
-            <%= attr.description %>
+      <div class="noReviewYet">
+        <%if( none == true){%>
+          <h1> No Reviews Written By <%= uid %> Yet! </h1>
+        <%}%>
+      </div>
+
+      <% var i = 1; %>
+      <div class="selecetedReview">
+        <% select_Review.forEach(function(r) { %>
+          <% if ( i == 1) {%>
+            <h1> Reviews Written By <%= r.written_user %> </h1>
+            <% i = 0; %>
+          <%};%>
+
+          <div class="myReview">
+            Date Written: <%= r.date %> <br>
+            Review by: <%= r.written_user %> <br> </p>
+            <%= r.description %>
           </div>
           <form>
-            <input type="text" name="date" value="<%= attr.date %>" style="display: none"> </input>
-            <input type="text" name="written_user" value="<%= attr.written_user %>" style="display: none"> </input>
-            <button type="submit" id="deleteUserReview" formaction="/deleteReview" formmethod="post">Delete</button>
+            <input type="text" name="date" value="<%= r.date %>" style="display: none"> </input>
+            <input type="text" name="written_user" value="<%= r.written_user %>" style="display: none"> </input>
+            <button type="submit" id="deleteReview" formaction="/deleteReview" formmethod="post">Delete</button>
           </form>
         <%});%>
       </div>

@@ -297,9 +297,26 @@
             <ul><span>Condition: </span> <%= r.condition %></ul>
             <ul><span>Description: </span><%= r.description %></ul>
           </ul>
-        </u2>
-      <div id="map"> </div>
+        </u2>      
     </ul>
+
+
+    <!-- Sold button for seller  -->
+    <!-- Check if it is the seller, if yes then will show sold button to remove post -->
+    <form>
+      <%if( r.uid == userID){%>
+        <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+        <button class="button-sold-selectpage" type="submit" formaction="/seller_sold" formmethod="post">Sold</button>
+      <%}%>
+    </form><br>
+    <!-- update button for seller  -->
+    <form>
+      <%if( r.uid == userID){%>
+        <button type="submit" class="button-update-selectpage" formaction="/updatepost/<%= r.postid %>" formmethod="GET">Update</button>
+      <%}%>
+    </form>
+    <div id="map"> </div>
+
 
     <h2> CONTACT SELLER </h2><br>
     <form method = "post" action="/chat">
