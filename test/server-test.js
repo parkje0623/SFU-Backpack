@@ -62,7 +62,7 @@ describe('Reviews', function() {
   })
 });
 
-describe('Report', function(done) {
+describe('User-report', function(done) {
   it('Proving correct ID should pass the request for /report', function(done) {
     chai.request(server).post('/report').send({'uid':'123', 'description':'Good Book'})
       .end(function(error, res) {
@@ -73,9 +73,9 @@ describe('Report', function(done) {
       done();
   })
 
-<<<<<<< HEAD
-});
-=======
+
+
+
   it('Proving wrong ID should fail the request for /report', function(done) {
     chai.request(server).post('/report').send({'uid':'1234777', 'description':'Good Book'})
       .end(function(error, res) {
@@ -93,9 +93,6 @@ describe('Report', function(done) {
 		done();
 	})
 })
->>>>>>> a65e017ebe107150130b377415e26ef6fcd4add7
-
-
 
 describe('Chatting', function () {
     //tests associated with users
@@ -111,41 +108,50 @@ describe('Chatting', function () {
 
 
 
-it('Proving wrong ID should fail the request for /report', function(done) {
-    chai.request(server).post('/report').send({'uid':'1234', 'description':'Good Book'})
-      .end(function(error, res) {
-          res.should.have.status(200);
-          res.body[0].id.should.equal('123');
-          res.body[0].description.should.equal('Good Book');
-      });
-<<<<<<< HEAD
-=======
-      done();
+
+describe('Forgot-ID',function(){
+  it('Proving correct Email should pass the request for /sendEmail', function(done) {
+     chai.request(server).post('/sendEmail').send({'uemail':'ss@ab.com'})
+       .end(function(error, res) {
+         res.should.have.status(200);
+         res.body[0].email.should.equal('ss@ab.com');
+       });
+       done();
+   })
+
+
+  it('should take you to the page find ID on a successful GET request for /find_id',function(done){
+    chai.request(server).get('/find_id').end(function(error,res){
+      res.should.have.status(200);
+    })
+    done();
   })
 
-
-	it('should take you to the page find ID on a successful GET request for /find_id',function(done){
-		chai.request(server).get('/find_id').end(function(error,res){
-			res.should.have.status(200);
-		})
-		done();
-	})
-
->>>>>>> a65e017ebe107150130b377415e26ef6fcd4add7
-})
+ });
 
 
+describe('Forgot-Password',function(){
+  it('Proving correct ID, Name and Email should pass the request for /showpassword', function(done) {
+     chai.request(server).post('/showpassword').send({'uemail':'ss@ab.com','uid':'123','uname':'sara'})
+       .end(function(error, res) {
+         res.should.have.status(200);
+         res.body[0].uemail.should.equal('ss@ab.com');
+         res.body[0].uid.should.equal('123');
+         res.body[0].uname.should.equal('sara');
+       });
+       done();
+   })
 
-<<<<<<< HEAD
-=======
-	it('should take you to the page find Password on a successful GET request for /find_pw',function(done){
-		chai.request(server).get('/find_pw').end(function(error,res){
-			res.should.have.status(200);
-		})
-		done();
-	})
-})
->>>>>>> a65e017ebe107150130b377415e26ef6fcd4add7
+
+  it('should take you to the page find Password on a successful GET request for /find_pw',function(done){
+    chai.request(server).get('/find_pw').end(function(error,res){
+      res.should.have.status(200);
+    })
+    done();
+  })
+
+ });
+
 
 describe('Admin Feature', function() {
   //Test Associated With Admin features
