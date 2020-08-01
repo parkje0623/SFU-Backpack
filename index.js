@@ -1347,6 +1347,26 @@ app.post("/seller_sold", (req, res) => {
 })
 
 
+<<<<<<< HEAD
+=======
+app.post("/delete_cart", (req, res) => {
+    var postid=req.body.postid;
+    if(isLogedin){
+        if(postid){
+            pool.query(`DELETE FROM cart WHERE postid=$1 AND uid=$2`,[postid, req.session.ID], (error, result) => {
+                if(error){
+                    res.end(error);
+                }
+                res.redirect("/cart");
+            })
+        }
+    }
+    else{
+        res.redirect("/login");
+    }
+})
+
+>>>>>>> 6030a3042536016ed3ebb8d3356546540423b1a0
 app.get("/cart", (req,res) => {
   pool.query(`SELECT * FROM cart WHERE uid = $1`,[req.session.ID], (error, result) => {
     if (error) {
