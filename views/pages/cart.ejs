@@ -67,6 +67,10 @@
       <p class="logo-font">sfu-backpack</p>
     </div>
     <h1>CART</h1>
-
+    <% results.forEach(function(r) { %>
+      <ul class="book-name-buyingpage">
+        <ul><span>Postid: </span> <%= r.postid %></ul>
+      </ul>
+    <%};%>
   </body>
 </html>
