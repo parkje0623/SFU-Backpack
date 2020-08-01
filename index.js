@@ -1170,13 +1170,6 @@ io.sockets.on("connection", function (socket) {
             }
         })
     })
-    socket.on("disconnect", function(username){
-        pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
-            if(error){
-                throw(error);
-            }
-        })
-    })
 })
 //socket server code end//
 ///////////////////////////////
