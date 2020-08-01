@@ -32,7 +32,9 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
   connectionString: process.env.DATABASE_URL,
+
 })
 
 //login session access
@@ -43,6 +45,7 @@ app.use(
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      // conString: "postgres://postgres:khoakhung@localhost/postgres",
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -1347,10 +1350,6 @@ app.post("/seller_sold", (req, res) => {
 })
 
 
-
-
-
-
 app.get("/cart", (req,res) => {
   pool.query(`SELECT * FROM cart WHERE uid = $1`,[req.session.ID], (error, result) => {
     if (error) {
@@ -1380,21 +1379,22 @@ app.get("/cart", (req,res) => {
 })
 
 app.post("/add_to_cart", (req,res) => {
-  var uid = req.session.ID
   var postid = req.body.postid
   if(isLogedin){
+    var uid = req.session.ID
+    console.log(uid);
     if(postid){
       pool.query(`INSERT INTO cart (uid, postid) VALUES ($1, $2)`, [uid, postid], (error, result) => {
         if(error){
           res.end(error);
-         }
+          }
         res.redirect("/cart");
-        })
+      })
     }
-  }
   else{
-      res.redirect("/login");
+    res.redirect("/login");
   }
+}
 })
 
 app.post("/delete_cart", (req, res) => {
