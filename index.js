@@ -1164,12 +1164,7 @@ io.sockets.on("connection", function (socket) {
     })
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
-            if(error){
-                throw(error);
-            }
-        })
-        pool.query(`UPDATE chatlist SET new='t' WHERE (sender=$2 AND receiver=$1)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
+        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID, new) VALUES ($1, $2, $3, $4, 't')`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
             if(error){
                 throw(error);
             }
