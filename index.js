@@ -1382,19 +1382,48 @@ app.post("/add_to_cart", (req,res) => {
   var postid = req.body.postid
   if(isLogedin){
     var uid = req.session.ID
-    console.log(uid);
     if(postid){
-      pool.query(`INSERT INTO cart (uid, postid) VALUES ($1, $2)`, [uid, postid], (error, result) => {
-        if(error){
-          res.end(error);
+      pool.query (`SELECT * FROM cart WHERE postid = $1`, [postid], (error, result) =>{
+        if (error) {
+          res.end (error)
+        }
+        else if (result && result.rows[0]) {
+          pool.query(`SELECT * FROM cart WHERE uid = $1`,[req.session.ID], (error, result) => { 
+            if (error) {
+              res.end(error)
+            }
+            var results = result.rows
+          if (req.session.ID.trim() == "admin") {
+            res.render("pages/cart", {
+              results,
+              uname: req.session.displayName,
+              admin: true,
+              msg: "Item is already in the cart",
+            })
+          } else {
+            res.render("pages/cart", {
+              results,
+              uname: req.session.displayName,
+              admin: false,
+              msg: "Item is already in the cart",
+            })
           }
-        res.redirect("/cart");
+        })
+        }
+        else {
+          pool.query(`INSERT INTO cart (uid, postid) VALUES ($1, $2)`, [uid, postid], (error, result) => {
+            if(error){
+              res.end(error);
+              }
+            res.redirect("/cart");
+          })
+        }
       })
     }
+  }
   else{
     res.redirect("/login");
   }
-}
 })
 
 app.post("/delete_cart", (req, res) => {

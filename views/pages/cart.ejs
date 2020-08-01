@@ -67,10 +67,13 @@
       <p class="logo-font">sfu-backpack</p>
     </div>
     <h1>CART</h1>
+    <div class="warning" style="color: red;">
+      <%= typeof msg != 'undefined' ? msg: '' %>
+    </div>
     <% results.forEach(function(r) { %>
       <ul class="book-name-buyingpage">
         <ul><span>Postid: </span> <%= r.postid %></ul>
       </ul>
-    <%};%>
+    <%});%>
   </body>
 </html>
