@@ -301,6 +301,11 @@
     </ul>
 
 
+    <form>
+        <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+        <input type="text" name="postid" value="<%= r.uid %>" style="display: none"> </input>
+        <button class="button-sold-selectpage" type="submit" formaction="/add" formmethod="post">Add to cart</button>
+    </form><br>
     <!-- Sold button for seller  -->
     <!-- Check if it is the seller, if yes then will show sold button to remove post -->
     <form>
