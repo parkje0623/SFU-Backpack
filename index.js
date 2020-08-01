@@ -1258,15 +1258,16 @@ app.post("/updatepost", function (req, res) { // async function here
   image_update(req, res, function (err) {
     var postid = req.body.postid
     if (err) {
-      res.redirect(`/updatepost/${postid}?`)
+      alert(err)
+      //res.redirect(`/updatepost/${postid}?`)
         // if the file is not an image
         //msg: err,
-
     } else {
       if (req.file == undefined) {
-        res.redirect(`/updatepost/${postid}?`)
+        //res.redirect(`/updatepost/${postid}?`)
           // if no file was selected
           //msg: "Error: No File Selected!",
+          alert("Error: No File Selected!")
 
       } else {
 
@@ -1295,33 +1296,33 @@ app.post("/updatepost", function (req, res) { // async function here
           checking,
           (error, result) => {
             if (error) {
-              res.redirect(`/updatepost/${postid}?`)
+              //res.redirect(`/updatepost/${postid}?`)
                 // if the file is not an image
                 //msg: err,
+                alert(err)
 
             }
             if (result && result.rows[0]) {
-              res.redirect(`/updatepost/${postid}?`)
+              //res.redirect(`/updatepost/${postid}?`)
                 //If same title exist for this user, return to selling page
                 //msg: "Error: User Already Posted Item with Same Title",
-            console.log(postid)
+                alert("Error: User Already Posted Item with Same Title")
+            
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery = `UPDATE img SET course=$1, path=$2, bookname=$3, uid=$4, cost=$5, condition=$6, description=$7, location=$8, lat=$9, lng=$10 WHERE postid=$11`
-              console.log(postid)
+
               pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng, postid], (error, result) => {
                 if (error) {
                   res.end(error)
                 } else {
                   var updatefts = `UPDATE img SET fts=to_tsvector('english', coalesce(course,'') || ' ' || coalesce(bookname,''));`
                   pool.query(updatefts, (error, result) => {
-                    console.log(postid)
                     if (error) {
                       res.end(error)
                     }
                   })
-                  console.log(postid)
-                  res.redirect(`/updatepost/${postid}?`)
+                  res.redirect(`/select_page/${postid}?`)
                     //msg: "File Updated!", // Sending the path to the database and the image to AWS Storage
 
                 }
