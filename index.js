@@ -1346,5 +1346,22 @@ app.post("/seller_sold", (req, res) => {
   }
 })
 
+app.post("/delete_cart", (req, res) => {
+    var postid=req.body.postid;
+    if(isLogedin){
+        if(postid){
+            pool.query(`DELETE FROM cart WHERE postid=$1 AND uid=$2`,[postid, req.session.ID], (error, result) => {
+                if(error){
+                    res.end(error);
+                }
+                res.redirect("/cart");
+            })
+        }
+    }
+    else{
+        res.redirect("/login");
+    }
+})
+
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
 module.exports = app;
