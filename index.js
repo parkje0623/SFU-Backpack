@@ -1086,6 +1086,12 @@ app.post("/chat", (req, res)=> {
                 if(error){
                     res.end(error);
                 }
+                if (req.session.ID.trim() == "admin") {
+                    admin=true;
+                }
+                else{
+                    admin=false;
+                }
 
                 if (!result || !result.rows[0]) {
                     res.render("pages/chat",{uname: req.session.displayName, db:false, receiver:receiver, sender:req.session.ID});
