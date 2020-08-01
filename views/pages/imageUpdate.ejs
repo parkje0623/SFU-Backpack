@@ -31,7 +31,9 @@
     <div class="login-form">
       <form action="/updatepost" method="POST" enctype="multipart/form-data">
         <h2 class="text-center">File Upload</h2>
-        <%= typeof msg != 'undefined' ? msg : '' %>
+        <div class="warning">
+          <%= typeof msg != 'undefined' ? msg : '' %>
+        </div>
         <br/>
         <input type="text" name="postid" value="<%= f.postid %>" style="display: none"> </input><br>
         <input type="text" class="form-control" name="title" value="" placeholder="<%= f.bookname %>" maxlength="50"/><br/>
