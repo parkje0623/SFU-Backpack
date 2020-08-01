@@ -301,7 +301,9 @@
           </ul>
         </u2>      
     </ul>
-
+    <div class="warning" style="color: red;">
+      <%= typeof msg != 'undefined' ? msg: '' %>
+    </div>
     <form>
         <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
         <button class="button-sold-selectpage" type="submit" formaction="/add_to_cart" formmethod="post">Add to cart</button>
