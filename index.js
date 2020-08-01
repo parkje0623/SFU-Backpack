@@ -32,8 +32,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
-  connectionString: process.env.DATABASE_URL,
+  connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
+  // connectionString: process.env.DATABASE_URL,
 
 })
 
@@ -43,9 +43,9 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
+      // conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
-      // conString: "postgres://postgres:khoakhung@localhost/postgres",
+      conString: "postgres://postgres:khoakhung@localhost/postgres",
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -1351,35 +1351,37 @@ app.post("/seller_sold", (req, res) => {
 
 
 app.get("/cart", (req,res) => {
-  pool.query(`SELECT * FROM cart WHERE uid = $1`,[req.session.ID], (error, result) => {
-    if (error) {
-      res.end(error)
-    }
+  pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
+    console.log(result.rows)
     var results = result.rows
     if (isLogedin(req, res)) {
-      // This is login and logout function
-      if (req.session.ID.trim() == "admin") {
-        res.render("pages/cart", {
-          results,
-          uname: req.session.displayName,
-          admin: true,
-        })
+    // This is login and logout function
+    if (req.session.ID.trim() == "admin") {
+      res.render("pages/cart", {
+        results,
+        uname: req.session.displayName,
+        admin: true,
+      })
 
-      } else {
-        res.render("pages/cart", {
-          results,
-          uname: req.session.displayName,
-          admin: false,
-        })
-      }
     } else {
-      res.render("pages/cart", { results, uname: false, admin: false })
+      res.render("pages/cart", {
+        results,
+        uname: req.session.displayName,
+        admin: false,
+      })
     }
+  } else {
+    res.render("pages/cart", { results, uname: false, admin: false })
+  }
   })
 })
 
 app.post("/add_to_cart", (req,res) => {
   var postid = req.body.postid
+  var bookname = req.body.bookname
+  var cost = req.body.cost
+  var image = req.body.image
+  var condition = req.body.condition
   if(isLogedin){
     var uid = req.session.ID
     if(postid){

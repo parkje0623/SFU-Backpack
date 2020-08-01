@@ -71,9 +71,19 @@
       <%= typeof msg != 'undefined' ? msg: '' %>
     </div>
     <% results.forEach(function(r) { %>
-      <ul class="book-name-buyingpage">
-        <ul><span>Postid: </span> <%= r.postid %></ul>
-      </ul>
+      <u2 class="div-display-bookname-bookimage">
+        <img width="200px" src="<%= r.path %>" alt="image">
+        <ul class="book-name-buyingpage">
+          <ul><span>Bookname: </span><%= r.bookname %></ul>
+          <ul><span>Seller: </span> <%= r.uid %></ul>
+          <ul><span>Price: </span> <%= r.cost %></ul>
+          <ul><span>Condition: </span> <%= r.condition %></ul>
+          <ul><span>Postid: </span> <%= r.postid %></ul>
+
+        </ul>
+      </u2> 
+      <br>   
+      <br>  
     <%});%>
   </body>
 </html>
