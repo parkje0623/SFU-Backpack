@@ -1079,7 +1079,7 @@ app.post("/chat", (req, res)=> {
             res.redirect("/mainpage");
         }
         else{
-            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1) ORDER BY num ASC`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
                 if(error){
                     res.end(error);
                 }
@@ -1164,14 +1164,20 @@ io.sockets.on("connection", function (socket) {
     })
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID, new) VALUES ($1, $2, $3, $4, 't')`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
-            if(error){
-                throw(error);
+        pool.query(`Select * from chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[socket.receiver,socket.sender], (error2, result2)=>{ //saves chatting log
+            if(error2){
+                throw(error2);
             }
+            var len=result2.rows.length;
+            pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID, new, num) VALUES ($1, $2, $3, $4, 't', $5)`,[socket.receiver,socket.sender, message, socket.username, len], (error, result)=>{ //saves chatting log
+                if(error){
+                    throw(error);
+                }
+            })
         })
     })
     socket.on("disconnect", function(){
-        pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2) AND new='f'`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
+        pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
             if(error){
                 throw(error);
             }

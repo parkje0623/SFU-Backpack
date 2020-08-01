@@ -76,34 +76,83 @@
       <%if(db===true){%>
         <%var users=[];%>
         <%var newUsers=[];%>
+        <%var check=true;%>
+
         <% results.forEach(function(r) { %>
+
+          <%check=true;%>
+
           <% newUsers.forEach(function(n) { %>
-            <%if(uid.trim()===r.receiver.trim() && r.new===true && n!=r.sender){%>
-              <%newUsers.push(r.sender);%>
+            <%if(n==r.sender){%>
+              <%check=false;%>
             <%}%>
-            <% users.forEach(function(u) { %>
-              <%if(uid.trim()===r.receiver.trim() && r.new===false && u!=r.sender && n!=r.sender){%>
-                <%users.push(r.sender);%>
-              <%}%>
-              <%if(uid.trim()===r.sender.trim() && r.new===false && u!=r.receiver && n!=r.receiver){%>
-                <%users.push(r.receiver);%>
-              <%}%>
-            <%})%>
           <%})%>
+
+          <%if(uid.trim()===r.receiver.trim() && r.new===true && check===true){%>
+            <%newUsers.push(r.sender);%>
+          <%}%>
+        
         <%})%>
+
+        <% results.forEach(function(r) { %>
+
+          <%check=true;%>
+
+          <% newUsers.forEach(function(n) { %>
+            <%if(n==r.sender){%>
+              <%check=false;%>
+            <%}%>
+          <%})%>
+
+          <% users.forEach(function(u) { %>
+            <%if(u==r.sender){%>
+              <%check=false;%>
+            <%}%>
+          <%})%>
+
+          <%if(uid.trim()===r.receiver.trim() && check===true){%>
+            <%users.push(r.sender);%>
+          <%}%>
+
+        <%})%>
+        
+        <% results.forEach(function(r) { %>
+
+          <%check=true;%>
+
+          <% newUsers.forEach(function(n) { %>
+            <%if(n==r.receiver){%>
+              <%check=false;%>
+            <%}%>
+          <%})%>
+
+          <% users.forEach(function(u) { %>
+            <%if(u==r.receiver){%>
+              <%check=false;%>
+            <%}%>
+          <%})%>
+
+          <%if(uid.trim()===r.sender.trim() && check===true){%>
+            <%users.push(r.receiver);%>
+          <%}%>
+
+        <%})%>
+        
         <% newUsers.forEach(function(n) { %>
           <form method = "post" action="/chat">
-                <input type = "hidden" name=receiver value=n><br>
-                <input type = "submit" value=n>
+                <input type = "hidden" name=receiver value=<%= n %>><br>
+                <input type = "submit" value=<%= n %>>
                 <i class="fa fa-bell"></i>
           </form>
         <%})%>
+
         <% users.forEach(function(u) { %>
           <form method = "post" action="/chat">
-                <input type = "hidden" name=receiver value=u><br>
-                <input type = "submit" value=u>
+                <input type = "hidden" name=receiver value=<%= u %>><br>
+                <input type = "submit" value=<%= u %>>
           </form>
         <%})%>
+        
       <%}%>
     </span>
 </body>
