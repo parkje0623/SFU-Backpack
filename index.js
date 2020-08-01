@@ -30,9 +30,9 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 
 //user database access
 pool = new Pool({
-  //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
+  connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  connectionString: process.env.DATABASE_URL,
+  //connectionString: process.env.DATABASE_URL,
 })
 
 //login session access
@@ -40,8 +40,8 @@ var app = express()
 app.use(
   session({
     store: new Psession({
-      //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
+      conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+      //conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
     }),
     secret: "!@SDF$@#SDF",
@@ -1165,6 +1165,13 @@ io.sockets.on("connection", function (socket) {
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
         pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID, new) VALUES ($1, $2, $3, $4, 't')`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
+            if(error){
+                throw(error);
+            }
+        })
+    })
+    socket.on("disconnect", function(){
+        pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2) AND new='f'`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
             if(error){
                 throw(error);
             }
