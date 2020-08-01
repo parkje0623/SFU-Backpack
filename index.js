@@ -793,10 +793,7 @@ app.post("/upload", function (req, res) { // async function here
           checking,
           (error, result) => {
             if (error) {
-              res.render("pages/imageUpload", {
-                // if the file is not an image
-                msg: err,
-              })
+              res.end(error)
             }
             if (result && result.rows[0]) {
               res.render("pages/imageUpload", {
@@ -1244,7 +1241,7 @@ app.get("/updatepost/:id", (req, res) => {
               res.end(error)
             else {
               //Sends the data to imageUpdate.ejs
-              var results = { rows: result.rows, field: img_result.rows }
+              var results = { rows: result.rows, field: img_result.rows, msg:erro}
               res.render("pages/imageUpdate", results)
             }
         })
@@ -1258,16 +1255,17 @@ app.post("/updatepost", function (req, res) { // async function here
   image_update(req, res, function (err) {
     var postid = req.body.postid
     if (err) {
-      alert(err)
-      //res.redirect(`/updatepost/${postid}?`)
+      erro = err
+      res.redirect(`/updatepost/${postid}?`)
         // if the file is not an image
         //msg: err,
     } else {
       if (req.file == undefined) {
-        //res.redirect(`/updatepost/${postid}?`)
+        erro = "Error: No File Selected!"
+        res.redirect(`/updatepost/${postid}?`)
           // if no file was selected
           //msg: "Error: No File Selected!",
-          alert("Error: No File Selected!")
+          
 
       } else {
 
@@ -1296,17 +1294,13 @@ app.post("/updatepost", function (req, res) { // async function here
           checking,
           (error, result) => {
             if (error) {
-              //res.redirect(`/updatepost/${postid}?`)
-                // if the file is not an image
-                //msg: err,
-                alert(err)
-
+              res.end(error)
             }
             if (result && result.rows[0]) {
-              //res.redirect(`/updatepost/${postid}?`)
                 //If same title exist for this user, return to selling page
                 //msg: "Error: User Already Posted Item with Same Title",
-                alert("Error: User Already Posted Item with Same Title")
+                erro = "Error: User Already Posted Item with Same Title"
+                res.redirect(`/updatepost/${postid}?`)
             
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
