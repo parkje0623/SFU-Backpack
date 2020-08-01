@@ -1227,7 +1227,7 @@ app.get('/search', function(req, res) {
   }
 })
 
-
+erro = "1"
 app.get("/updatepost/:id", (req, res) => {
   var postid = parseInt(req.params.id)
   var uid = req.session.ID //Grabs an ID of the user signed-in
