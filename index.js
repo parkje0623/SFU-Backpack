@@ -1383,7 +1383,7 @@ app.post("/add_to_cart", (req,res) => {
   if(isLogedin){
     var uid = req.session.ID
     if(postid){
-      pool.query (`SELECT * FROM cart WHERE postid = $1`, [postid], (error, result) =>{
+      pool.query (`SELECT * FROM cart WHERE postid = $1 and uid = $2`, [postid, uid], (error, result) =>{
         if (error) {
           res.end (error)
         }
