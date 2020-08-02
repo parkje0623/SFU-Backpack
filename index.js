@@ -1354,6 +1354,9 @@ app.post("/seller_sold", (req, res) => {
 
 app.get("/cart", (req,res) => {
   pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
+    if (error) {
+      res.end(error)
+    }
     var results = result.rows
     if (isLogedin(req, res)) {
     // This is login and logout function
@@ -1391,7 +1394,7 @@ app.post("/add_to_cart", (req,res) => {
           res.end (error)
         }
         else if (result && result.rows[0]) {
-          pool.query(`SELECT * FROM cart WHERE uid = $1`,[req.session.ID], (error, result) => { 
+          pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
             if (error) {
               res.end(error)
             }
