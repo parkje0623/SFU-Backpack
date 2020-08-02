@@ -161,10 +161,9 @@ app.post("/admin_deletePost", (req, res) => {
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
-      `DELETE FROM img WHERE uid=$1 AND bookname=$2`,
-      values,
-      (error, result) => {
-        if (error) res.end(error)
+      `DELETE FROM img WHERE postid=$1`,[postid], (error, result) => {
+        if (error)
+        { res.end(error) }
         //After deleting, redirects user to the most recent course section from buying page.
         pool.query(`DELETE FROM cart WHERE postid=$1`,[postid],(error, result) => {
           if (error){
@@ -776,8 +775,8 @@ app.post("/upload", function (req, res) { // async function here
         })
       } else {
 
-        geocoder.geocode(req.body.location, function (err, data){
-          if (err || !data.length) {
+        geocoder.geocode(req.body.location, (error, data) => {
+          if (error || !data.length) {
             res.render("pages/imageUpload", {
               // location is incorrect
               msg: "Error: Invalid location!",
