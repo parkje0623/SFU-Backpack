@@ -142,7 +142,7 @@ app.post("/admin_deletePost", (req, res) => {
   var bookname = req.body.bookname
   var coursename = req.body.coursename
   var values = [uid, bookname]
-
+  var postid = req.body.postid
   /*For Testing admin deleting user's post
   var admin = req.body.admin;
   var query1 = '...';
