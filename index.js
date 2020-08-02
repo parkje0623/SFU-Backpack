@@ -31,8 +31,9 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
   // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
+  // connectionString: "postgres://postgres:@localhost/postgres"
   connectionString: process.env.DATABASE_URL,
 
 })
@@ -46,6 +47,7 @@ app.use(
       conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
       // conString: "postgres://postgres:khoakhung@localhost/postgres",
+      // conString: "postgres://postgres:@localhost/postgres", //kai
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -87,6 +89,8 @@ app.get("/mainpage", (req, res) => {
 app.get("/signUp", (req, res) => {
   res.render("pages/signUp")
 })
+
+
 
 //path to find pw page
 app.get("/find_pw", (req, res) => {
@@ -1034,7 +1038,7 @@ app.get("/buy", (req, res) => {
 app.get("/post/:id", (req, res) => {
   // This will lead to books with specific course
   var cname = req.params.id // Get data from course name
-  pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
+  pool.query(`SELECT * FROM img WHERE course=$1 ORDER BY postid DESC`, [cname], (error, result) => {
     if (error) {
       res.end(error)
     }

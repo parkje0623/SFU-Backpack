@@ -27,89 +27,121 @@
     ></script>
     <!-- BOOTSTRAP -->
 
+    <!-- Font Awesome icons (free version)-->
+  <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
+  <!-- Third party plugin CSS-->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="./stylesheets/mainpage_styles.css" rel="stylesheet" />
+
+
+
     <link rel="stylesheet" href="./stylesheets/styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
+    
   </head>
-  <body>
-    <div class="top-container">
-      <nav class="search-bar">
-        <form>
-          <input
-            class="search-input"
-            type="text"
-            name='text'
-            placeholder="Insert course or bookname"
-            aria-label="Search.."
-          />
-          <button class="search-btn" formaction="/search" type="submit">Search</button>
-        </form>
-      </nav>
-      <form>
-        <nav class="login-bar">
-          <%if( uname ===false){%>
-          <a href="/login">login</a>
-        <%}%>
-          <%if( uname !=false){%>
-            <a href="/auth/logout">logout</a>
-            <a href="/mypage"><%= uname %></a>
-            <a href="/chatlist">message</a>
-            <a href="/cart">Cart</a>
-        <%}%>
-          <%if( admin == true){%>
-          <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
-        <%}%>
-        </nav>
-      </form>
+  <body>  <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+    <div class="container">
+      
+      <img id="logo" onclick="location.href='/mainpage'" src="logo.png" alt="logo" />
+        <p class="logo-font" onclick="location.href='/mainpage'">sfu-backpack</p>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto my-2 my-lg-0">
 
-      <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-      <p class="logo-font">sfu-backpack</p>
-    </div>
-
-    <%if( admin == true){%>
-      <form>
-        <div class="all_user">
-          <h1> List of Users </h1>
-            <div class="users">
-              <% all_user.forEach(function(attr) { %>
+                <li class="nav-item"><a class="nav-link" href="/upload">POST</a></li>
+                <li class="nav-item"><a class="nav-link" href="/reportUser">REPORT</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/reviewpage">REVIEW</a></li>
                 <form>
-                  <input type="text" name="uid" value="<%= attr.uid %>" style="display: none"> </input>
-                  <button type="submit" id="reviewButton" formaction="/getSelectedReview" formmethod="post"><%= attr.uid %></button>
-                  <br><br>
+                  <nav class="nav-item">
+                    <%if( uname ===false){%>
+                    <a class="nav-link" href="/login">LOGIN</a>
+                  <%}%>
+                    <%if( uname !=false){%>
+                      <a class="nav-link" href="/auth/logout">LOGOUT</a>
+                      
+                  <%}%>
+              
+                    <%if( admin == true){%>
+                    <a class="nav-link" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+                  <%}%>
+                  </nav>
                 </form>
-              <%});%>
-            </div>
+                <form>
+                  <nav class="nav-item">
+                    <%if( uname !=false){%>
+                      <a class="nav-link" href="/mypage">MYPAGE</a>
+                      
+                  <%}%>
+                  </nav>
+
+                </form>
+            </ul>
+
         </div>
-      </form>
-    <%}%>
+   
+    </div>
+</nav>
+   
 
-    <%if( admin != true){%>
-      <div class="all_reviews">
-        <h1> Reviews About <%= uname %> </h1>
-        <% other_reviews.forEach(function(attr) { %>
-          <div class="About_me">
-            Date Written: <%= attr.date %> <br>
-            Review by: <%= attr.written_user %> <br> </p>
-            <%= attr.description %>
-          </div>
-        <%});%>
 
-        <h1> Reviews Written By <%= uname %> </h1>
-        <% my_reviews.forEach(function(attr) { %>
-          <div class="Written_by_me">
-            Date Written: <%= attr.date %> <br>
-            Review by: <%= attr.written_user %> <br> </p>
-            <%= attr.description %>
+
+ <header class="masthead">
+  <div class="container h-100">
+    <div class="row h-100 align-items-center justify-content-center text-center">
+
+      <%if( admin == true){%>
+        <form>
+          <div class="all_user">
+            <h1> List of Users </h1>
+              <div class="users">
+                <% all_user.forEach(function(attr) { %>
+                  <form>
+                    <input type="text" name="uid" value="<%= attr.uid %>" style="display: none"> </input>
+                    <button type="submit" id="reviewButton" formaction="/getSelectedReview" formmethod="post"><%= attr.uid %></button>
+                    <br><br>
+                  </form>
+                <%});%>
+              </div>
           </div>
-          <form>
-            <input type="text" name="date" value="<%= attr.date %>" style="display: none"> </input>
-            <input type="text" name="written_user" value="<%= attr.written_user %>" style="display: none"> </input>
-            <button type="submit" id="deleteUserReview" formaction="/deleteReview" formmethod="post">Delete</button>
-          </form>
-        <%});%>
-      </div>
-    <%}%>
+        </form>
+      <%}%>
+  
+      <%if( admin != true){%>
+        <div class="all_reviews">
+          <h1> Reviews About <%= uname %> </h1>
+          <% other_reviews.forEach(function(attr) { %>
+            <div class="About_me">
+              Date Written: <%= attr.date %> <br>
+              Review by: <%= attr.written_user %> <br> </p>
+              <%= attr.description %>
+            </div>
+          <%});%>
+  
+          <h1> Reviews Written By <%= uname %> </h1>
+          <% my_reviews.forEach(function(attr) { %>
+            <div class="Written_by_me">
+              Date Written: <%= attr.date %> <br>
+              Review by: <%= attr.written_user %> <br> </p>
+              <%= attr.description %>
+            </div>
+            <form>
+              <input type="text" name="date" value="<%= attr.date %>" style="display: none"> </input>
+              <input type="text" name="written_user" value="<%= attr.written_user %>" style="display: none"> </input>
+              <button type="submit" id="deleteUserReview" formaction="/deleteReview" formmethod="post">Delete</button>
+            </form>
+          <%});%>
+        </div>
+      <%}%>
+    </div>
+  </div>
+ </header>
+   
   </body>
 </html>
