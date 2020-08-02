@@ -79,9 +79,14 @@
           <ul><span>Price: </span> <%= r.cost %></ul>
           <ul><span>Condition: </span> <%= r.condition %></ul>
           <ul><span>Postid: </span> <%= r.postid %></ul>
-
         </ul>
       </u2> 
+      <form>
+        <button type="submit" class="select-btn-buyingpage" formaction="/select_page/<%= r.postid %>" formmethod="GET">Select</button>
+
+        <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+        <button type="submit" class="select-btn-buyingpage" formaction="/delete_cart" formmethod="POST">Remove</button>
+      </form>
       <br>   
       <br>  
     <%});%>

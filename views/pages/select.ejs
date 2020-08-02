@@ -301,11 +301,14 @@
           </ul>
         </u2>      
     </ul>
-    <div class="warning" style="color: red;">
-      <%= typeof msg != 'undefined' ? msg: '' %>
-    </div>
+
     <form>
         <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+        <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"> </input>
+        <input type="text" name="condition" value="<%= r.condition %>" style="display: none"> </input>
+        <input type="text" name="image" value="<%= r.path %>" style="display: none"> </input>
+        <input type="text" name="cost" value="<%= r.cost %>" style="display: none"> </input>
+        <input type="text" name="sellerid" value="<%= r.uid %>" style="display: none"> </input>
         <button class="button-sold-selectpage" type="submit" formaction="/add_to_cart" formmethod="post">Add to cart</button>
     </form><br>
     <!-- Sold button for seller  -->

@@ -32,8 +32,8 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
-  connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
-  // connectionString: process.env.DATABASE_URL,
+  // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
+  connectionString: process.env.DATABASE_URL,
 
 })
 
@@ -43,9 +43,9 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      // conString: process.env.DATABASE_URL,
+      conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
-      conString: "postgres://postgres:khoakhung@localhost/postgres",
+      // conString: "postgres://postgres:khoakhung@localhost/postgres",
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -1352,7 +1352,6 @@ app.post("/seller_sold", (req, res) => {
 
 app.get("/cart", (req,res) => {
   pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
-    console.log(result.rows)
     var results = result.rows
     if (isLogedin(req, res)) {
     // This is login and logout function
