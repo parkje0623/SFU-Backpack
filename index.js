@@ -166,8 +166,13 @@ app.post("/admin_deletePost", (req, res) => {
       (error, result) => {
         if (error) res.end(error)
         //After deleting, redirects user to the most recent course section from buying page.
-        var redirect_to = "post/"
-        res.redirect(redirect_to + coursename)
+        pool.query(`DELETE FROM cart WHERE postid=$1`,[postid],(error, result) => {
+          if (error){
+            res.end(error)
+          }
+          var redirect_to = "post/"
+          res.redirect(redirect_to + coursename)
+        })
       }
     )
   }
@@ -1344,8 +1349,15 @@ app.post("/seller_sold", (req, res) => {
       `DELETE FROM img WHERE postid=$1`,
       [postid],
       (error, result) => {
-        if (error) res.end(error)
-        res.redirect("/mypage")
+        if (error){
+          res.end(error)
+        } 
+        pool.query(`DELETE FROM cart WHERE postid=$1`,[postid],(error, result) => {
+            if (error){
+              res.end(error)
+            }
+            res.redirect("/mypage")
+          })
       }
     )
   }
