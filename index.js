@@ -798,6 +798,15 @@ app.post("/upload", function (req, res) { // async function here
         var location = data[0].formattedAddress;  // location
         var lat = data[0].latitude;
         var lng = data[0].longitude;
+        /// Get time
+        var date_ob = new Date();
+        var date = ("0" + date_ob.getDate()).slice(-2);
+        var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+        var year = date_ob.getFullYear();
+        var hours = date_ob.getHours();
+        var minutes = date_ob.getMinutes();
+        var seconds = date_ob.getSeconds();
+        var timestamp = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
@@ -815,7 +824,7 @@ app.post("/upload", function (req, res) { // async function here
               })
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
-              var getImageQuery = `INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+              var getImageQuery = `INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng, timepost) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`
               // khoa comment out for testing
               // var getImageQuery =
               //   "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES('" +
@@ -838,7 +847,7 @@ app.post("/upload", function (req, res) { // async function here
 
                 ////////////////
 
-              pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng], (error, result) => {
+              pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng, timestamp], (error, result) => {
                 if (error) {
                   res.end(error)
                 } else {
