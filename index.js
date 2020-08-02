@@ -271,9 +271,10 @@ app.post("/post_review", (req, res) => {
   var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
   var year = date_ob.getFullYear();
   var hours = date_ob.getHours();
+  var vancouver_time = hours - 7;
   var minutes = date_ob.getMinutes();
   var seconds = date_ob.getSeconds();
-  var timestamp = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+  var timestamp = year + "-" + month + "-" + date + " " + vancouver_time + ":" + minutes + ":" + seconds;
 
   var values = [timestamp, uid, sellerID, review];
 
