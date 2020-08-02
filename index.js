@@ -1028,7 +1028,7 @@ app.get("/buy", (req, res) => {
 app.get("/post/:id", (req, res) => {
   // This will lead to books with specific course
   var cname = req.params.id // Get data from course name
-  pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
+  pool.query(`SELECT * FROM img WHERE course=$1 ORDER BY postid DESC`, [cname], (error, result) => {
     if (error) {
       res.end(error)
     }
