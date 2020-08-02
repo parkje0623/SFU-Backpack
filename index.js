@@ -804,9 +804,10 @@ app.post("/upload", function (req, res) { // async function here
         var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
         var year = date_ob.getFullYear();
         var hours = date_ob.getHours();
+        var vancouver_time = hours - 7;
         var minutes = date_ob.getMinutes();
         var seconds = date_ob.getSeconds();
-        var timestamp = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+        var timestamp = year + "-" + month + "-" + date + " " + vancouver_time + ":" + minutes + ":" + seconds;
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
