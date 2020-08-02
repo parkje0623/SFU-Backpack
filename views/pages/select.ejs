@@ -35,14 +35,6 @@
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
-    <style media="screen">
-      #map {
-        margin-top: 20px;
-        height: 300px;
-        width: 30%
-      }
-    </style>
-
   <body>
     <div class="top-container">
       <nav class="search-bar">
@@ -301,11 +293,13 @@
           </ul>
         </u2>      
     </ul>
-    <div class="warning" style="color: red;">
-      <%= typeof msg != 'undefined' ? msg: '' %>
-    </div>
+
     <form>
         <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+        <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"> </input>
+        <input type="text" name="condition" value="<%= r.condition %>" style="display: none"> </input>
+        <input type="text" name="image" value="<%= r.path %>" style="display: none"> </input>
+        <input type="text" name="cost" value="<%= r.cost %>" style="display: none"> </input>
         <button class="button-sold-selectpage" type="submit" formaction="/add_to_cart" formmethod="post">Add to cart</button>
     </form><br>
     <!-- Sold button for seller  -->
@@ -322,7 +316,7 @@
         <button type="submit" class="button-update-selectpage" formaction="/updatepost/<%= r.postid %>" formmethod="GET">Update</button>
       <%}%>
     </form>
-    <div id="map"> </div>
+    <div id="map_selectpage"> </div>
 
 
     <h2> CONTACT SELLER </h2><br>
@@ -381,7 +375,7 @@
             center: {lat: glat, lng: glng}    // set up map with location
           }
           //new map
-        var map = new google.maps.Map(document.getElementById('map'), options);
+        var map = new google.maps.Map(document.getElementById('map_selectpage'), options);
         //add marker
         var link = '<a href="/select_page/' + postID + '">';
         var marker = new google.maps.Marker({

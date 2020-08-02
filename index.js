@@ -31,8 +31,9 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
   // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
+  // connectionString: "postgres://postgres:@localhost/postgres"
   connectionString: process.env.DATABASE_URL,
 
 })
@@ -46,6 +47,7 @@ app.use(
       conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
       // conString: "postgres://postgres:khoakhung@localhost/postgres",
+      // conString: "postgres://postgres:@localhost/postgres", //kai
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -87,6 +89,8 @@ app.get("/mainpage", (req, res) => {
 app.get("/signUp", (req, res) => {
   res.render("pages/signUp")
 })
+
+
 
 //path to find pw page
 app.get("/find_pw", (req, res) => {
@@ -142,7 +146,7 @@ app.post("/admin_deletePost", (req, res) => {
   var bookname = req.body.bookname
   var coursename = req.body.coursename
   var values = [uid, bookname]
-
+  var postid = req.body.postid
   /*For Testing admin deleting user's post
   var admin = req.body.admin;
   var query1 = '...';
@@ -161,13 +165,17 @@ app.post("/admin_deletePost", (req, res) => {
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
-      `DELETE FROM img WHERE uid=$1 AND bookname=$2`,
-      values,
-      (error, result) => {
-        if (error) res.end(error)
+      `DELETE FROM img WHERE postid=$1`,[postid], (error, result) => {
+        if (error)
+        { res.end(error) }
         //After deleting, redirects user to the most recent course section from buying page.
-        var redirect_to = "post/"
-        res.redirect(redirect_to + coursename)
+        pool.query(`DELETE FROM cart WHERE postid=$1`,[postid],(error, result) => {
+          if (error){
+            res.end(error)
+          }
+          var redirect_to = "post/"
+          res.redirect(redirect_to + coursename)
+        })
       }
     )
   }
@@ -771,10 +779,13 @@ app.post("/upload", function (req, res) { // async function here
         })
       } else {
 
-        geocoder.geocode(req.body.location, function (err, data){
-          if (err || !data.length) {
-            req.flash('error', 'Invalid address');
-            return res.redirect('back')
+        geocoder.geocode(req.body.location, (status, data) => {
+          if (status !== google.maps.GeocoderStatus.OK && data.length <= 0) {
+          // if (err || !data.length) {
+            res.render("pages/imageUpload", {
+              // location is incorrect
+              msg: "Error: Invalid location!",
+            })
           }
 
         var path = req.file.location
@@ -1342,8 +1353,15 @@ app.post("/seller_sold", (req, res) => {
       `DELETE FROM img WHERE postid=$1`,
       [postid],
       (error, result) => {
-        if (error) res.end(error)
-        res.redirect("/mypage")
+        if (error){
+          res.end(error)
+        } 
+        pool.query(`DELETE FROM cart WHERE postid=$1`,[postid],(error, result) => {
+            if (error){
+              res.end(error)
+            }
+            res.redirect("/mypage")
+          })
       }
     )
   }
@@ -1351,44 +1369,48 @@ app.post("/seller_sold", (req, res) => {
 
 
 app.get("/cart", (req,res) => {
-  pool.query(`SELECT * FROM cart WHERE uid = $1`,[req.session.ID], (error, result) => {
+  pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
     if (error) {
       res.end(error)
     }
     var results = result.rows
     if (isLogedin(req, res)) {
-      // This is login and logout function
-      if (req.session.ID.trim() == "admin") {
-        res.render("pages/cart", {
-          results,
-          uname: req.session.displayName,
-          admin: true,
-        })
+    // This is login and logout function
+    if (req.session.ID.trim() == "admin") {
+      res.render("pages/cart", {
+        results,
+        uname: req.session.displayName,
+        admin: true,
+      })
 
-      } else {
-        res.render("pages/cart", {
-          results,
-          uname: req.session.displayName,
-          admin: false,
-        })
-      }
     } else {
-      res.render("pages/cart", { results, uname: false, admin: false })
+      res.render("pages/cart", {
+        results,
+        uname: req.session.displayName,
+        admin: false,
+      })
     }
+  } else {
+    res.render("pages/cart", { results, uname: false, admin: false })
+  }
   })
 })
 
 app.post("/add_to_cart", (req,res) => {
   var postid = req.body.postid
+  var bookname = req.body.bookname
+  var cost = req.body.cost
+  var image = req.body.image
+  var condition = req.body.condition
   if(isLogedin){
     var uid = req.session.ID
     if(postid){
-      pool.query (`SELECT * FROM cart WHERE postid = $1`, [postid], (error, result) =>{
+      pool.query (`SELECT * FROM cart WHERE postid = $1 and uid = $2`, [postid, uid], (error, result) =>{
         if (error) {
           res.end (error)
         }
         else if (result && result.rows[0]) {
-          pool.query(`SELECT * FROM cart WHERE uid = $1`,[req.session.ID], (error, result) => { 
+          pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
             if (error) {
               res.end(error)
             }

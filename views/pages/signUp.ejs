@@ -11,6 +11,15 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<!-- Font Awesome icons (free version)-->
+<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+<!-- Google fonts-->
+<link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
+<!-- Third party plugin CSS-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
+<!-- Core theme CSS (includes Bootstrap)-->
+<link href="./stylesheets/mainpage_styles.css" rel="stylesheet" />
 <style>
 body {
 	color: #fff;
@@ -101,109 +110,137 @@ body {
 }
 </style>
 </head>
-<body>
-<div class="signup-form">
-    <form action="/adduser" method="post">
-		<h2>Registration</h2>
-		<p>Please fill in this form to create an account!</p>
-		<hr>
-		<div class= "warning" style="color:red;">
-        	<%= typeof msg != 'undefined' ? msg : '' %>
-      	</div><br>
-        <div class="form-group">
-			<div class="input-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">
-						<span class="fa fa-user-circle"></span>
-					</span>
-				</div>
-				<input type="text" class="form-control" name="uid" placeholder="ID" required="required" maxlength="10">
+<body >
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+		<div class="container">
+		  <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'" />
+			<p class="logo-font" onclick="location.href='/mainpage'"/>sfu-backpack</p>
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto my-2 my-lg-0">
+				</ul>
 			</div>
-        </div>
-
-        <div class="form-group">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <span class="fa fa-user"></span>
-              </span>
-            </div>
-            <input type="text" class="form-control" name="uname" placeholder="Username" required="required" maxlength="10">
-          </div>
-            </div>
-
-        <div class="form-group">
-			<div class="input-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">
-						<i class="fa fa-paper-plane"></i>
-					</span>
-				</div>
-				<input type="email" class="form-control" name="uemail" placeholder="Email Address" required="required" maxlength="30">
-			</div>
-        </div>
-
-		<div class="form-group">
-			<div class="input-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">
-						<i class="fa fa-lock"></i>
-					</span>
-				</div>
-				<input type="password" class="form-control hide pass" name="upassword" placeholder="Password" required="required" maxlength="30">
-			</div>
-        </div>
-
-		<div class="form-group">
-			<div class="input-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">
-						<i class="fa fa-lock"></i>
-						<i class="fa fa-check"></i>
-					</span>
-				</div>
-				<input type="password" class="form-control hide pass" name="upasswordcon" placeholder="Confirm Password" required="required" maxlength="30">
-			</div>
-        </div>
-        <div class="form-group">
-			<label class="form-check-label">
-				<input type="checkbox" required="required"> </input>
-				I accept the <a class="condition_use" onclick="pop_up_condition()">Terms of Use and Privacy Policy
-				<span class="popuptext" id="popup">
-          <h2> Conditions of Use </h2>
-          <p> Welcome to Backpack. Backpack service provide website features and other products and services to you when you visit or use backpack. Backpack provides the Backpack Services subject to the following conditions. </p>
-
-					<h2> By using Backpack Services, you agree to following conditions. Please read carefully. </h2>
-          <p> We offer a wide range of Backpack Services and when you use a Backpack Service (for example, your Profile, Buy, Sell, or Review) you will be subject to Service Terms relating to the Backpack Service you want to use. If these Conditions of Use are inconsistent, an action towards your inconsistency will be taken by the Backpack Service Terms.  </p>
-
-					<h2> PRIVACY </h2>
-          <p> The Privacy Notice describes how Backpack collects and process your personal information through Backpack website and Services. We work to protect the security of your personal information while using the Backpack. We will automatically collect and store the information you provide in relation to Backpack Services and any of the information will not be accessible by others. We release account and other information when we believe the release is appropriate when you would like to contact the other person for Products and Services only. It is important for you to protect unauthorized access to your password and to your computers, devices, and applications. By using Backpack, you are consenting to the practices described in the Privacy Notice. </p>
-
-					<h2> COPYRIGHT </h2>
-          <p> All content included in or available in Backpack Services such as, text, design, or buttons is property of Backpack. The content included in or available in Backpack Services is protected by the copyright laws. </p>
-
-					<h2> LICENSE AND ACCESS </h2>
-	        <p> Subject to Conditions of Use and Backpack Service, Backpack grant you a limited and non-exclusive license to access and make personal and non-commercial use of Backpack Services. This license does not include any resale or commercial use of any Backpack Services, or its contents; any downloading, copying, or other use of account information for the benefit of third party, or data gathering and extraction. All rights not expressly granted to you in these Condition of Use. Licenses are granted by Backpack to agree to limited access only, if you do not comply with these Conditions of Use, Backpack will terminate your license and access. </p>
-
-					<h2> YOUR ACCOUNT </h2>
-		      <p> You will need your own Backpack account to use Backpack Services, and you are required to be logged in to the account. You are responsible for maintaining the confidentiality of your account and password and you agree to accept responsibility for all activities that occur under your account. You may choose to edit or remove your account and Backpack will be responsible for updating your account to most recent data received. Removing your account will delete the data from our Backpack Service completely. </p>
-
-					<h2> BUY, SELL, REVIEW and Other Content </h2>
-					<p> You may post review or item wanting to sell or contact seller to buy the items listed in Backpack. If you do post content in Backpack Services, you automatically grant Backpack to monitor the content posted and remove the post if inappropriate regarding to our Service Terms (for example, unrelated posts, inappropriate language, etc.). Violating any of the Condition of Use regards to posting may lead to deletion of an account from Backpack Services.</p>
-					<button type="button" class="accept"> OK </button>
-				</span>
-			</a></label>
+	   
 		</div>
-		<div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
+	</nav>
+	<header class="masthead">
+		<div class="container h-100">
+			<section class="row justify-content-center">
+				<div class="signup-form">
+					<form action="/adduser" method="post">
+						<h2>Registration</h2>
+						<p>Please fill in this form to create an account!</p>
+						<hr>
+						<div class= "warning" style="color:red;">
+							<%= typeof msg != 'undefined' ? msg : '' %>
+						  </div><br>
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fa fa-user-circle"></span>
+									</span>
+								</div>
+								<input type="text" class="form-control" name="uid" placeholder="ID" required="required" maxlength="10">
+							</div>
+						</div>
+				
+						<div class="form-group">
+						  <div class="input-group">
+							<div class="input-group-prepend">
+							  <span class="input-group-text">
+								<span class="fa fa-user"></span>
+							  </span>
+							</div>
+							<input type="text" class="form-control" name="uname" placeholder="Username" required="required" maxlength="10">
+						  </div>
+							</div>
+				
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<i class="fa fa-paper-plane"></i>
+									</span>
+								</div>
+								<input type="email" class="form-control" name="uemail" placeholder="Email Address" required="required" maxlength="30">
+							</div>
+						</div>
+				
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<i class="fa fa-lock"></i>
+									</span>
+								</div>
+								<input type="password" class="form-control hide pass" name="upassword" placeholder="Password" required="required" maxlength="30">
+							</div>
+						</div>
+				
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<i class="fa fa-lock"></i>
+										<i class="fa fa-check"></i>
+									</span>
+								</div>
+								<input type="password" class="form-control hide pass" name="upasswordcon" placeholder="Confirm Password" required="required" maxlength="30">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="form-check-label">
+								<input type="checkbox" required="required"> </input>
+								I accept the <a class="condition_use" onclick="pop_up_condition()">Terms of Use and Privacy Policy
+								<span class="popuptext" id="popup">
+						  <h2> Conditions of Use </h2>
+						  <p> Welcome to Backpack. Backpack service provide website features and other products and services to you when you visit or use backpack. Backpack provides the Backpack Services subject to the following conditions. </p>
+				
+									<h2> By using Backpack Services, you agree to following conditions. Please read carefully. </h2>
+						  <p> We offer a wide range of Backpack Services and when you use a Backpack Service (for example, your Profile, Buy, Sell, or Review) you will be subject to Service Terms relating to the Backpack Service you want to use. If these Conditions of Use are inconsistent, an action towards your inconsistency will be taken by the Backpack Service Terms.  </p>
+				
+									<h2> PRIVACY </h2>
+						  <p> The Privacy Notice describes how Backpack collects and process your personal information through Backpack website and Services. We work to protect the security of your personal information while using the Backpack. We will automatically collect and store the information you provide in relation to Backpack Services and any of the information will not be accessible by others. We release account and other information when we believe the release is appropriate when you would like to contact the other person for Products and Services only. It is important for you to protect unauthorized access to your password and to your computers, devices, and applications. By using Backpack, you are consenting to the practices described in the Privacy Notice. </p>
+				
+									<h2> COPYRIGHT </h2>
+						  <p> All content included in or available in Backpack Services such as, text, design, or buttons is property of Backpack. The content included in or available in Backpack Services is protected by the copyright laws. </p>
+				
+									<h2> LICENSE AND ACCESS </h2>
+							<p> Subject to Conditions of Use and Backpack Service, Backpack grant you a limited and non-exclusive license to access and make personal and non-commercial use of Backpack Services. This license does not include any resale or commercial use of any Backpack Services, or its contents; any downloading, copying, or other use of account information for the benefit of third party, or data gathering and extraction. All rights not expressly granted to you in these Condition of Use. Licenses are granted by Backpack to agree to limited access only, if you do not comply with these Conditions of Use, Backpack will terminate your license and access. </p>
+				
+									<h2> YOUR ACCOUNT </h2>
+							  <p> You will need your own Backpack account to use Backpack Services, and you are required to be logged in to the account. You are responsible for maintaining the confidentiality of your account and password and you agree to accept responsibility for all activities that occur under your account. You may choose to edit or remove your account and Backpack will be responsible for updating your account to most recent data received. Removing your account will delete the data from our Backpack Service completely. </p>
+				
+									<h2> BUY, SELL, REVIEW and Other Content </h2>
+									<p> You may post review or item wanting to sell or contact seller to buy the items listed in Backpack. If you do post content in Backpack Services, you automatically grant Backpack to monitor the content posted and remove the post if inappropriate regarding to our Service Terms (for example, unrelated posts, inappropriate language, etc.). Violating any of the Condition of Use regards to posting may lead to deletion of an account from Backpack Services.</p>
+									<button type="button" class="accept"> OK </button>
+								</span>
+							</a></label>
+						</div>
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
+						</div>
+						<div class="text-center">Already have an account? <a href="/login">Login here</a></div>
+				
+					<div class="text-center">Back to Mainpage? <a href="/mainpage">Main here</a></div>
+				
+					</form>
+				
+					
+				</div>
+			</section>
 		</div>
+	</header>
+<!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+<!-- Third party plugin JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+<!-- Core theme JS-->
 
-    </form>
-
-	<div class="text-center">Already have an account? <a href="/login">Login here</a></div>
-
-	<div class="text-center">Back to Mainpage? <a href="/mainpage">Main here</a></div>
-</div>
+<script type="text/javascript" src="./mainpage_scripts.js"></script>
 </body>
 <script type="text/javascript" src="./signUp.js">
 </script>

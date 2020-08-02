@@ -63,7 +63,7 @@
         </nav>
       </form>
 
-      <img id="logo" src="logo.png" alt="logo" />
+      <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
       <p class="logo-font">sfu-backpack</p>
     </div>
     <h1>CART</h1>
@@ -71,9 +71,24 @@
       <%= typeof msg != 'undefined' ? msg: '' %>
     </div>
     <% results.forEach(function(r) { %>
-      <ul class="book-name-buyingpage">
-        <ul><span>Postid: </span> <%= r.postid %></ul>
-      </ul>
+      <u2 class="div-display-bookname-bookimage">
+        <img width="200px" src="<%= r.path %>" alt="image">
+        <ul class="book-name-buyingpage">
+          <ul><span>Bookname: </span><%= r.bookname %></ul>
+          <ul><span>Seller: </span> <%= r.uid %></ul>
+          <ul><span>Price: </span> <%= r.cost %></ul>
+          <ul><span>Condition: </span> <%= r.condition %></ul>
+          <ul><span>Postid: </span> <%= r.postid %></ul>
+        </ul>
+      </u2> 
+      <form>
+        <button type="submit" class="select-btn-buyingpage" formaction="/select_page/<%= r.postid %>" formmethod="GET">Select</button>
+
+        <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+        <button type="submit" class="select-btn-buyingpage" formaction="/delete_cart" formmethod="POST">Remove</button>
+      </form>
+      <br>   
+      <br>  
     <%});%>
   </body>
 </html>
