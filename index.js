@@ -31,8 +31,11 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  //connectionString:'postgres://postgres:cmpt276@localhost/postgres' //- for Jieung
+  // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+  // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
+  // connectionString: "postgres://postgres:@localhost/postgres"
   connectionString: process.env.DATABASE_URL,
+
 })
 
 //login session access
@@ -43,6 +46,8 @@ app.use(
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
       conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
+      // conString: "postgres://postgres:khoakhung@localhost/postgres",
+      // conString: "postgres://postgres:@localhost/postgres", //kai
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
@@ -84,6 +89,8 @@ app.get("/mainpage", (req, res) => {
 app.get("/signUp", (req, res) => {
   res.render("pages/signUp")
 })
+
+
 
 //path to find pw page
 app.get("/find_pw", (req, res) => {
@@ -139,7 +146,7 @@ app.post("/admin_deletePost", (req, res) => {
   var bookname = req.body.bookname
   var coursename = req.body.coursename
   var values = [uid, bookname]
-
+  var postid = req.body.postid
   /*For Testing admin deleting user's post
   var admin = req.body.admin;
   var query1 = '...';
@@ -158,13 +165,17 @@ app.post("/admin_deletePost", (req, res) => {
   if (uid && bookname) {
     //Delete the post that has this user id and bookname from the img database.
     pool.query(
-      `DELETE FROM img WHERE uid=$1 AND bookname=$2`,
-      values,
-      (error, result) => {
-        if (error) res.end(error)
+      `DELETE FROM img WHERE postid=$1`,[postid], (error, result) => {
+        if (error)
+        { res.end(error) }
         //After deleting, redirects user to the most recent course section from buying page.
-        var redirect_to = "post/"
-        res.redirect(redirect_to + coursename)
+        pool.query(`DELETE FROM cart WHERE postid=$1`,[postid],(error, result) => {
+          if (error){
+            res.end(error)
+          }
+          var redirect_to = "post/"
+          res.redirect(redirect_to + coursename)
+        })
       }
     )
   }
@@ -898,10 +909,12 @@ app.post("/upload", function (req, res) { // async function here
         })
       } else {
 
-        geocoder.geocode(req.body.location, function (err, data){
+        geocoder.geocode(req.body.location, (err, data) => {
           if (err || !data.length) {
-            req.flash('error', 'Invalid address');
-            return res.redirect('back')
+            return res.render("pages/imageUpload", {
+              // if no file was selected
+              msg: "Error: Invalid address",
+            })
           }
 
         var path = req.file.location
@@ -915,6 +928,15 @@ app.post("/upload", function (req, res) { // async function here
         var location = data[0].formattedAddress;  // location
         var lat = data[0].latitude;
         var lng = data[0].longitude;
+        /// Get time
+        var date_ob = new Date();
+        var date = ("0" + date_ob.getDate()).slice(-2);
+        var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+        var year = date_ob.getFullYear();
+        var hours = date_ob.getHours();
+        var minutes = date_ob.getMinutes();
+        var seconds = date_ob.getSeconds();
+        var timestamp = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
 
         //Checks if user wanting to post already have the post with the same title
         //Different user can post with same title, but same user cannot post the same title
@@ -923,10 +945,7 @@ app.post("/upload", function (req, res) { // async function here
           checking,
           (error, result) => {
             if (error) {
-              res.render("pages/imageUpload", {
-                // if the file is not an image
-                msg: err,
-              })
+              res.end(error)
             }
             if (result && result.rows[0]) {
               res.render("pages/imageUpload", {
@@ -935,7 +954,7 @@ app.post("/upload", function (req, res) { // async function here
               })
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
-              var getImageQuery = `INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+              var getImageQuery = `INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng, timepost) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`
               // khoa comment out for testing
               // var getImageQuery =
               //   "INSERT INTO img (course, path, bookname, uid, cost, condition, description, location, lat, lng) VALUES('" +
@@ -958,7 +977,7 @@ app.post("/upload", function (req, res) { // async function here
 
                 ////////////////
 
-              pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng], (error, result) => {
+              pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng, timestamp], (error, result) => {
                 if (error) {
                   res.end(error)
                 } else {
@@ -1174,7 +1193,7 @@ app.get("/buy", (req, res) => {
 app.get("/post/:id", (req, res) => {
   // This will lead to books with specific course
   var cname = req.params.id // Get data from course name
-  pool.query(`SELECT * FROM img WHERE course=$1`, [cname], (error, result) => {
+  pool.query(`SELECT * FROM img WHERE course=$1 ORDER BY postid DESC`, [cname], (error, result) => {
     if (error) {
       res.end(error)
     }
@@ -1228,9 +1247,15 @@ app.post("/chat", (req, res)=> {
             res.redirect("/mainpage");
         }
         else{
-            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
+            pool.query(`SELECT * FROM chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1) ORDER BY num ASC`,[receiver, req.session.ID], (error,result)=>{ //find previous chatting logs
                 if(error){
                     res.end(error);
+                }
+                if (req.session.ID.trim() == "admin") {
+                    admin=true;
+                }
+                else{
+                    admin=false;
                 }
 
                 if (!result || !result.rows[0]) {
@@ -1316,18 +1341,19 @@ io.sockets.on("connection", function (socket) {
     })
     socket.on("chat_message", function(message){
         io.in(socket.room).emit("chat_message", "<strong>" + socket.username + "</strong>: " + message);
-        pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID) VALUES ($1, $2, $3, $4)`,[socket.receiver,socket.sender, message, socket.username], (error, result)=>{ //saves chatting log
-            if(error){
-                throw(error);
+        pool.query(`Select * from chatlist WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)`,[socket.receiver,socket.sender], (error2, result2)=>{ //saves chatting log
+            if(error2){
+                throw(error2);
             }
-        })
-        pool.query(`UPDATE chatlist SET new='t' WHERE (sender=$2 AND receiver=$1)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
-            if(error){
-                throw(error);
-            }
+            var len=result2.rows.length;
+            pool.query(`INSERT INTO chatlist (receiver, sender, texts, senderID, new, num) VALUES ($1, $2, $3, $4, 't', $5)`,[socket.receiver,socket.sender, message, socket.username, len], (error, result)=>{ //saves chatting log
+                if(error){
+                    throw(error);
+                }
+            })
         })
     })
-    socket.on("disconnect", function(username){
+    socket.on("disconnect", function(){
         pool.query(`UPDATE chatlist SET new='f' WHERE (sender=$1 AND receiver=$2)`,[socket.receiver,socket.sender], (error, result)=>{ //saves chatting log
             if(error){
                 throw(error);
@@ -1395,7 +1421,7 @@ app.get('/search', function(req, res) {
   }
 })
 
-
+erro = ""
 app.get("/updatepost/:id", (req, res) => {
 
   /*Testing for chatting
@@ -1421,7 +1447,7 @@ app.get("/updatepost/:id", (req, res) => {
               res.end(error)
             else {
               //Sends the data to imageUpdate.ejs
-              var results = { rows: result.rows, field: img_result.rows }
+              var results = { rows: result.rows, field: img_result.rows, msg:erro}
               res.render("pages/imageUpdate", results)
             }
         })
@@ -1460,15 +1486,17 @@ app.post("/updatepost", function (req, res) { // async function here
   image_update(req, res, function (err) {
     var postid = req.body.postid
     if (err) {
+      erro = err
       res.redirect(`/updatepost/${postid}?`)
         // if the file is not an image
         //msg: err,
-
     } else {
       if (req.file == undefined) {
+        erro = "Error: No File Selected!"
         res.redirect(`/updatepost/${postid}?`)
           // if no file was selected
           //msg: "Error: No File Selected!",
+          
 
       } else {
 
@@ -1497,33 +1525,29 @@ app.post("/updatepost", function (req, res) { // async function here
           checking,
           (error, result) => {
             if (error) {
-              res.redirect(`/updatepost/${postid}?`)
-                // if the file is not an image
-                //msg: err,
-
+              res.end(error)
             }
             if (result && result.rows[0]) {
-              res.redirect(`/updatepost/${postid}?`)
                 //If same title exist for this user, return to selling page
                 //msg: "Error: User Already Posted Item with Same Title",
-            console.log(postid)
+                erro = "Error: User Already Posted Item with Same Title"
+                res.redirect(`/updatepost/${postid}?`)
+            
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery = `UPDATE img SET course=$1, path=$2, bookname=$3, uid=$4, cost=$5, condition=$6, description=$7, location=$8, lat=$9, lng=$10 WHERE postid=$11`
-              console.log(postid)
+
               pool.query(getImageQuery, [course, path, bookName, uid, cost, condition, description, location, lat, lng, postid], (error, result) => {
                 if (error) {
                   res.end(error)
                 } else {
                   var updatefts = `UPDATE img SET fts=to_tsvector('english', coalesce(course,'') || ' ' || coalesce(bookname,''));`
                   pool.query(updatefts, (error, result) => {
-                    console.log(postid)
                     if (error) {
                       res.end(error)
                     }
                   })
-                  console.log(postid)
-                  res.redirect(`/updatepost/${postid}?`)
+                  res.redirect(`/select_page/${postid}?`)
                     //msg: "File Updated!", // Sending the path to the database and the image to AWS Storage
 
                 }
@@ -1556,10 +1580,115 @@ app.post("/seller_sold", (req, res) => {
       `DELETE FROM img WHERE postid=$1`,
       [postid],
       (error, result) => {
-        if (error) res.end(error)
-        res.redirect("/mypage")
+        if (error){
+          res.end(error)
+        } 
+        pool.query(`DELETE FROM cart WHERE postid=$1`,[postid],(error, result) => {
+            if (error){
+              res.end(error)
+            }
+            res.redirect("/mypage")
+          })
       }
     )
+  }
+})
+
+
+app.get("/cart", (req,res) => {
+  pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
+    if (error) {
+      res.end(error)
+    }
+    var results = result.rows
+    if (isLogedin(req, res)) {
+    // This is login and logout function
+    if (req.session.ID.trim() == "admin") {
+      res.render("pages/cart", {
+        results,
+        uname: req.session.displayName,
+        admin: true,
+      })
+
+    } else {
+      res.render("pages/cart", {
+        results,
+        uname: req.session.displayName,
+        admin: false,
+      })
+    }
+  } else {
+    res.render("pages/cart", { results, uname: false, admin: false })
+  }
+  })
+})
+
+app.post("/add_to_cart", (req,res) => {
+  var postid = req.body.postid
+  var bookname = req.body.bookname
+  var cost = req.body.cost
+  var image = req.body.image
+  var condition = req.body.condition
+  if(isLogedin){
+    var uid = req.session.ID
+    if(postid){
+      pool.query (`SELECT * FROM cart WHERE postid = $1 and uid = $2`, [postid, uid], (error, result) =>{
+        if (error) {
+          res.end (error)
+        }
+        else if (result && result.rows[0]) {
+          pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
+            if (error) {
+              res.end(error)
+            }
+            var results = result.rows
+          if (req.session.ID.trim() == "admin") {
+            res.render("pages/cart", {
+              results,
+              uname: req.session.displayName,
+              admin: true,
+              msg: "Item is already in the cart",
+            })
+          } else {
+            res.render("pages/cart", {
+              results,
+              uname: req.session.displayName,
+              admin: false,
+              msg: "Item is already in the cart",
+            })
+          }
+        })
+        }
+        else {
+          pool.query(`INSERT INTO cart (uid, postid) VALUES ($1, $2)`, [uid, postid], (error, result) => {
+            if(error){
+              res.end(error);
+              }
+            res.redirect("/cart");
+          })
+        }
+      })
+    }
+  }
+  else{
+    res.redirect("/login");
+  }
+})
+
+app.post("/delete_cart", (req, res) => {
+  var postid=req.body.postid;
+  if(isLogedin){
+      if(postid){
+          pool.query(`DELETE FROM cart WHERE postid=$1 AND uid=$2`,[postid, req.session.ID], (error, result) => {
+              if(error){
+                  res.end(error);
+              }
+              res.redirect("/cart");
+          })
+      }
+  }
+  else{
+      res.redirect("/login");
   }
 })
 

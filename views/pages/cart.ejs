@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Main Page</title>
+
     <!-- BOOTSTRAP -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -55,8 +56,6 @@
           <%if( uname !=false){%>
             <a href="/auth/logout">logout</a>
             <a href="/mypage"><%= uname %></a>
-            <a href="/chatlist">message</a>
-            <a href="/cart">Cart</a>
         <%}%>
           <%if( admin == true){%>
           <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
@@ -64,50 +63,31 @@
         </nav>
       </form>
 
-      <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
+      <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
       <p class="logo-font">sfu-backpack</p>
     </div>
+    <h1>CART</h1>
+    <div class="warning" style="color: red;">
+      <%= typeof msg != 'undefined' ? msg: '' %>
+    </div>
+    <% results.forEach(function(r) { %>
+      <u2 class="div-display-bookname-bookimage">
+        <img width="200px" src="<%= r.path %>" alt="image">
+        <ul class="book-name-buyingpage">
+          <ul><span>Bookname: </span><%= r.bookname %></ul>
+          <ul><span>Seller: </span> <%= r.uid %></ul>
+          <ul><span>Price: </span> <%= r.cost %></ul>
+          <ul><span>Condition: </span> <%= r.condition %></ul>
+        </ul>
+      </u2> 
+      <form>
+        <button type="submit" class="select-btn-buyingpage" formaction="/select_page/<%= r.postid %>" formmethod="GET">Select</button>
 
-    <%if( admin == true){%>
-      <div class="all_user">
-        <h1> List of Users </h1>
-          <div class="users">
-            <% all_user.forEach(function(attr) { %>
-              <form>
-                <input type="text" name="uid" value="<%= attr.uid %>" style="display: none"> </input>
-                <button type="submit" id="reviewButton" formaction="/getSelectedReview" formmethod="post"><%= attr.uid %></button>
-                <br><br>
-              </form>
-            <%});%>
-          </div>
-      </div>
-
-      <div class="noReviewYet">
-        <%if( none == true){%>
-          <h1> No Reviews Written By <%= uid %> Yet! </h1>
-        <%}%>
-      </div>
-
-      <% var i = 1; %>
-      <div class="selecetedReview">
-        <% select_Review.forEach(function(r) { %>
-          <% if ( i == 1) {%>
-            <h1> Reviews Written By <%= r.written_user %> </h1>
-            <% i = 0; %>
-          <%};%>
-
-          <div class="myReview">
-            Date Written: <%= r.date %> <br>
-            Review by: <%= r.written_user %> <br> </p>
-            <%= r.description %>
-          </div>
-          <form>
-            <input type="text" name="date" value="<%= r.date %>" style="display: none"> </input>
-            <input type="text" name="written_user" value="<%= r.written_user %>" style="display: none"> </input>
-            <button type="submit" id="deleteReview" formaction="/deleteReview" formmethod="post">Delete</button>
-          </form>
-        <%});%>
-      </div>
-    <%}%>
+        <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
+        <button type="submit" class="select-btn-buyingpage" formaction="/delete_cart" formmethod="POST">Remove</button>
+      </form>
+      <br>   
+      <br>  
+    <%});%>
   </body>
 </html>

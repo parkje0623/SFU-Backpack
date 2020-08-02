@@ -1,7 +1,7 @@
 body {
   color: #fff;
   background: #f1e3cb;
-  font-family: 'Roboto', sans-serif;
+  /* font-family: 'Roboto', sans-serif; */
 }
 .form-control {
   min-height: 41px;
@@ -32,7 +32,7 @@ body {
   padding: 30px;
 }
 .login-form .btn {        
-  font-size: 16px;
+  font-size: 25px;
   font-weight: bold;
   background: #179b81;
   border: none;
@@ -54,7 +54,7 @@ body {
 }
 .logo-font {
   position: relative;
-  font-family: "MuseoModerno", cursive;
+  /* font-family: "MuseoModerno", cursive; */
   margin-top: 0;
   left: 20px;
   color:black;

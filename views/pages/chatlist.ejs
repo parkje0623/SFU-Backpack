@@ -62,6 +62,8 @@
           <%if( uname !=false){%>
             <a href="/auth/logout">logout</a>
             <a href="/mypage"><%= uname %></a>
+            <a href="/chatlist">message</a>
+            <a href="/cart">Cart</a>
         <%}%>
           <%if( admin == true){%>
           <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
@@ -75,46 +77,84 @@
     <span>
       <%if(db===true){%>
         <%var users=[];%>
+        <%var newUsers=[];%>
         <%var check=true;%>
+
         <% results.forEach(function(r) { %>
+
           <%check=true;%>
-          <%if(uid.trim()===r.receiver.trim()){%>
-            <% users.forEach(function(u) { %>
-              <%if(u===r.sender){%>
-                <%check=false;%>
-              <%}%>
-            <%})%>
-            <%if(check===true){%>
-              <form method = "post" action="/chat">
-                <input type = "hidden" name=receiver value=<%= r.sender %>><br>
-                <input type = "submit" value=<%= r.sender %>>
-                <%console.log(r.new);%>
-                <%if(r.new===true){%>
-                  <i class="fa fa-bell"></i>
-                <%}%>
-                <br>
-              </form>
-              <%users.push(r.sender);%>
+
+          <% newUsers.forEach(function(n) { %>
+            <%if(n==r.sender){%>
+              <%check=false;%>
             <%}%>
+          <%})%>
+
+          <%if(uid.trim()===r.receiver.trim() && r.new===true && check===true){%>
+            <%newUsers.push(r.sender);%>
           <%}%>
+        
         <%})%>
+
         <% results.forEach(function(r) { %>
+
           <%check=true;%>
-          <%if(uid.trim()===r.sender.trim()){%>
-            <% users.forEach(function(u) { %>
-              <%if(u===r.receiver){%>
-                <%check=false;%>
-              <%}%>
-            <%})%>
-            <%if(check===true){%>
-              <form method = "post" action="/chat">
-                <input type = "hidden" name=receiver value=<%= r.receiver %>><br>
-                <input type = "submit" value=<%= r.receiver %>><br>
-              </form>
-              <%users.push(r.receiver);%>
+
+          <% newUsers.forEach(function(n) { %>
+            <%if(n==r.sender){%>
+              <%check=false;%>
             <%}%>
+          <%})%>
+
+          <% users.forEach(function(u) { %>
+            <%if(u==r.sender){%>
+              <%check=false;%>
+            <%}%>
+          <%})%>
+
+          <%if(uid.trim()===r.receiver.trim() && check===true){%>
+            <%users.push(r.sender);%>
           <%}%>
+
         <%})%>
+        
+        <% results.forEach(function(r) { %>
+
+          <%check=true;%>
+
+          <% newUsers.forEach(function(n) { %>
+            <%if(n==r.receiver){%>
+              <%check=false;%>
+            <%}%>
+          <%})%>
+
+          <% users.forEach(function(u) { %>
+            <%if(u==r.receiver){%>
+              <%check=false;%>
+            <%}%>
+          <%})%>
+
+          <%if(uid.trim()===r.sender.trim() && check===true){%>
+            <%users.push(r.receiver);%>
+          <%}%>
+
+        <%})%>
+        
+        <% newUsers.forEach(function(n) { %>
+          <form method = "post" action="/chat">
+                <input type = "hidden" name=receiver value=<%= n %>><br>
+                <input type = "submit" value=<%= n %>>
+                <i class="fa fa-bell"></i>
+          </form>
+        <%})%>
+
+        <% users.forEach(function(u) { %>
+          <form method = "post" action="/chat">
+                <input type = "hidden" name=receiver value=<%= u %>><br>
+                <input type = "submit" value=<%= u %>>
+          </form>
+        <%})%>
+        
       <%}%>
     </span>
 </body>

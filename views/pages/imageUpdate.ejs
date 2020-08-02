@@ -9,7 +9,7 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     />
-    <link rel="stylesheet" href="./stylesheets/imageUpload.css"/>
+    <link rel="stylesheet" href="../stylesheets/imageUpload.css"/>
     <link
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
@@ -20,9 +20,10 @@
     <nav class="username">
       <a href="/auth/logout">logout</a>
       <a href="/mypage"><%= r.uname %></a>
-      <a href="/chatlist">chat list</a>
+      <a href="/chatlist">message</a>
+      <a href="/cart">Cart</a>
     </nav>
-    <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
+    <img id="logo" src="../logo.png" alt="logo" onclick="location.href='/mainpage'"/>
     <p class="logo-font">sfu-backpack</p><br><br><br>
     <% }); %>
    <% field.forEach(function(f) { %>
@@ -31,10 +32,11 @@
     <div class="login-form">
       <form action="/updatepost" method="POST" enctype="multipart/form-data">
         <h2 class="text-center">File Upload</h2>
-        <%= typeof msg != 'undefined' ? msg : '' %>
-        <br/>
+        <div class="warning">
+          <%= typeof msg != 'undefined' ? msg : '' %>
+        </div>
         <input type="text" name="postid" value="<%= f.postid %>" style="display: none"> </input><br>
-        <input type="text" class="form-control" name="title" value="" placeholder="<%= f.bookname %>" maxlength="50"/><br/>
+        <input type="text" class="form-control" name="title" value= "<%= f.bookname %>" maxlength="50"/><br/>
         <select type="text" class="form-control" name="course" required>
           <option value="" disabled selected hidden>Choose a Course</option>
           <option> ACMA </option>
@@ -189,9 +191,9 @@
           </span> </a
         ><br/><br/>
 
-        <input type="number" class="form-control" name="cost" value="" placeholder="<%= f.cost %>" maxlength="20"/><br/>
-        <input type="text" class="form-control" name="location" value="" placeholder="<%= f.location %>" maxlength="100"/><br/>
-        <textarea class="form-control" name="description" rows="4" cols="200" placeholder="<%= f.description %>" maxlength="300"></textarea><br/>
+        <input type="text" class="form-control" name="cost" value="<%= f.cost %>" maxlength="20"/><br/>
+        <input type="text" class="form-control" name="location" value="<%= f.location %>" maxlength="100"/><br/>
+        <textarea type="text" class="form-control" name="description" rows="4" cols="200" placeholder="<%= f.description %>" maxlength="300"></textarea><br/>
         <p> Current Image: <img width="200px" src="<%= f.path %>" alt="image"></p><br>
         <input name="myImage" class="form-control" id="file-input" type="file"/><br/>
         <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
