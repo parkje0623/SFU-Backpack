@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
-    />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="./stylesheets/imageUpload.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
-      rel="stylesheet"
-    />
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="./stylesheets/imageUpload.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap" rel="stylesheet"/>
     <title>Image Upload</title>
-    <nav class="username">
+
+
+
+<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
+    <!-- Third party plugin CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="./stylesheets/mainpage_styles.css" rel="stylesheet" />    <!-- Font Awesome icons (free version)-->
+    
+    <!-- <nav class="username">
       <a href="/auth/logout">logout</a>
     </nav>
     <img
@@ -33,9 +31,25 @@
     <ul>
       <li><a class="link" href="/mypage">Back to My Page</a></li>
       <li><a class="link" href="/buy"> Go to Buy</a></li>
-    </ul>
+    </ul> -->
   </head>
   <body>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+      <div class="container">
+        <img id="logo" src="logo.png" alt="logo" honclick="location.href='/mainpage'" />
+        <p class="logo-font" onclick="location.href='/mainpage'">sfu-backpack</p>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto my-2 my-lg-0">
+            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/auth/logout">LOGOUT</a></li>
+            <li><a class="link" href="/buy"> GO to Buy</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+
     <div class="login-form">
       <form action="/uploadfortest" method="POST" enctype="multipart/form-data">
         <h2 class="text-center">File Upload</h2>
