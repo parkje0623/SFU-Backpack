@@ -775,12 +775,11 @@ app.post("/upload", function (req, res) { // async function here
         })
       } else {
 
-        geocoder.geocode(req.body.location, (status, data) => {
-          if (status !== google.maps.GeocoderStatus.OK && data.length <= 0) {
-          // if (err || !data.length) {
-            res.render("pages/imageUpload", {
-              // location is incorrect
-              msg: "Error: Invalid location!",
+        geocoder.geocode(req.body.location, (err, data) => {
+          if (err || !data.length) {
+            return res.render("pages/imageUpload", {
+              // if no file was selected
+              msg: "Error: Invalid address",
             })
           }
 
