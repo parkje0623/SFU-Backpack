@@ -291,6 +291,22 @@ app.post('/getSelectedReview', (req, res) => {
     var uid = req.body.uid;
     var value = [uid];
 
+    /* For getting review testing
+    var written_user = req.body.written_user;
+    var data = req.body.data;
+    var query1 = '...';
+    pool.query(query1, (error, results)=>{
+      if (data === 'exist') {
+        var exist = 'Get Data';
+      } else if (data === 'non-exist') {
+        var exist = 'No Reviews Yet';
+      }
+      us = [];
+      ob = {'written_user':written_user, 'date':'2020:07:31 10:44:44', 'description':'this works', 'data':data, 'msg':exist};
+      us.push(ob);
+      res.json(us);
+    }); */
+
     //get all data from backpack (used to list all users in SFU-Backpack)
     pool.query(`SELECT * FROM backpack`, (error, result) => {
       if (error)
@@ -321,6 +337,15 @@ app.post('/deleteReview', (req, res) => {
   var written_user = req.body.written_user;
   var date = req.body.date;
   var values = [date, written_user];
+
+  /* For deleting review testing
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'written_user':written_user, 'date':date};
+    us.push(ob);
+    res.json(us);
+  }); */
 
   //Deletes selected review from the user
   pool.query(`DELETE FROM review WHERE date=$1 AND written_user=$2`, values, (error, result) => {
@@ -389,6 +414,21 @@ app.post("/auth/login", (req, res) => {
   var uid = req.body.uid
   var upassword = req.body.upassword
   var values = [uid, upassword]
+
+  /* For login testing
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    if (uid === '123' && upassword === '321') {
+      var login = 'success';
+    } else {
+      var login = 'failure';
+    }
+    us = [];
+    ob = {'uid':uid, 'upassword':upassword, 'login':login};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   //find database if there is a user who matches with the given information
   if (uid && upassword) {
     pool.query(
@@ -440,6 +480,22 @@ app.post("/adduser", (req, res) => {
   var upasswordcon = req.body.upasswordcon
   var checking = [uid, uemail]
   var values = [uid, uname, uemail, upassword]
+
+  /* For sign-up testing
+  var alreadyExist = req.body.exist;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    if (alreadyExist === 'no') {
+      var duplicate = 'No';
+    } else {
+      var duplicate = 'Yes';
+    }
+    us = [];
+    ob = {'uid':uid, 'upassword':upassword, 'upasswordcon':upasswordcon, 'uname':uname, 'uemail':uemail, 'duplicate':duplicate};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   if (upassword === upasswordcon) {
     //check given password and password for confirmation are match
 
@@ -485,6 +541,17 @@ app.post("/deleteuser", (req, res) => {
   var uid = req.body.uid //Requests values that are being modified from profile.ejs
   //var upassword = req.body.upassword;
   var checking = [uid]
+
+  /* For sign-up testing
+  var confirmation = req.body.confirmation;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'uid':uid, 'confirmation':confirmation};
+    us.push(ob);
+    res.json(us);
+  });  */
+
   if (uid) {
     //If user id and password are given, find the user in the database table backpack
     pool.query(
@@ -525,6 +592,15 @@ app.post("/edituser", (req, res) => {
   var values = [uid, uname, uemail, upassword]
   var uidOnly = [uid]
 
+  /* For sign-up testing
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'uid':uid, 'uname':uname, 'uemail':uemail, 'upassword':upassword, 'confirm_pwd':confirm_pwd};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   if (uname && uemail && upassword && confirm_pwd) {
     if (confirm_pwd === upassword) {
       //Checks if user provided password matches the confirm password section
@@ -549,6 +625,22 @@ app.post("/showpassword", (req, res) => {
   var uname = req.body.uname
   var uemail = req.body.uemail
   var values = [uid, uname, uemail]
+
+  /* For finding password testing
+  var confirm = req.body.correct;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    if (confirm === 'yes') {
+      var password = '321';
+    } else {
+      var password = '';
+    }
+    us = [];
+    ob = {'uid':uid, 'uname':uname, 'uemail':uemail, 'password':password};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   if (uid && uname && uemail) {
     pool.query(
       `SELECT * from backpack where uid=$1 AND uname=$2 AND uemail=$3`,
@@ -614,6 +706,7 @@ app.get("/mypage", (req, res) => {
 
   var uid = req.session.ID //Grabs an ID of the user signed-in
   var values = [uid]
+
   if (uid) {
     //If user id is given, take all data of user that matches the given ID
     pool.query(
@@ -644,6 +737,17 @@ app.post("/changeImage", (req, res) => {
   var uid = req.body.uid
   var values = [uimage, uid]
   var uidOnly = [uid]
+
+  /* For changing img testing
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'uid':uid, 'uimage':uimage};
+    us.push(ob);
+    res.json(us);
+  });  */
+
+
   if (uimage && uid) {
     //Modifies database: uimage field is replaced with new image's filename and its type.
     pool.query(
@@ -663,6 +767,7 @@ app.post("/showid", (req, res) => {
   var uname = req.body.uname
   var uemail = req.body.uemail
   var values = [uname, uemail]
+
   if (uname && uemail) {
     pool.query(
       `SELECT * from backpack where uemail=$1 AND uname=$2`,
@@ -754,6 +859,31 @@ app.get("/upload", (req, res) => {
 
 const image_upload = upload.single("myImage")
 app.post("/upload", function (req, res) { // async function here
+
+  /* For Upload testing
+  var path = req.body.path
+  var course = req.body.course
+  var bookName = req.body.bookName
+  var uid = req.body.uid
+  var cost = req.body.cost
+  var condition = req.body.condition
+  var description = req.body.description
+  var location = req.body.location
+  var duplicate = req.body.duplicate
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (duplicate != 'yes') {
+      ob = {'path':path, 'course':course, 'bookName':bookName, 'uid':uid, 'cost':cost, 'condition':condition, 'description':description, 'location':location};
+      us.push(ob);
+    }
+    if (duplicate === 'no') {
+      db = {'path':path, 'course':course, 'bookName':bookName, 'uid':uid, 'cost':cost, 'condition':condition, 'description':description, 'location':location};
+      us.push(db);
+    }
+    res.json(us);
+  });  */
+
   image_upload(req, res, function (err) {
     if (err) {
       res.render("pages/imageUpload", {
@@ -939,6 +1069,22 @@ app.get("/find_id", (req, res) => {
 app.post("/sendEmail", (req, res) => {
   //get the email of the user from form
   var email = req.body.uemail
+
+  /* For finding id testing
+  var confirm = req.body.correct;
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    if (confirm === 'yes') {
+      var findID = '123';
+    } else {
+      var findID = '';
+    }
+    us = [];
+    ob = {'findID':findID, 'uemail':email};
+    us.push(ob);
+    res.json(us);
+  });  */
+
   if (email) {
     var getEmailQuery = "SELECT * FROM backpack WHERE uemail='" + email + "'" // find the email in db
     pool.query(getEmailQuery, (error, result) => {
@@ -1110,13 +1256,22 @@ app.post("/chat", (req, res)=> {
 //move to chatting list page. Users can see the every chatting rooms of user involved
 app.get("/chatlist", (req, res)=>{
     /*Testing for chatting
+    var receiver = req.body.receiver
+    var sender = req.body.sender
+    var sendingID = req.body.sendingID
+    var receivingID = req.body.receivingID
+    var related = req.body.unrelated_user
     var query1 = `...`;
     pool.query(query1, (error, results)=>{
-        us = [];
-        ob = {'r':receiver};
-        us.push(ob);
-        res.json(us);
-    });*/
+      us = [];
+      ob = {'sender':sender, 'receiver':receiver, 'sendingID':sendingID, 'receivingID':receivingID};
+      us.push(ob);
+      if (related === 'admin') {
+        db = {'sender':related, 'other_receivingID':'not 321'}
+        us.push(db);
+      }
+      res.json(us);
+    }); */
     var admin;
     if(isLogedin(req, res)) {
         pool.query(`SELECT * FROM chatlist WHERE (receiver=$1 OR sender=$1)`,[req.session.ID], (error,result)=>{//find chatting logs which the user involved
@@ -1196,6 +1351,22 @@ function search(search_string, func) {
   );
 }
 app.get('/search', function(req, res) {
+
+  /*Testing for chatting
+  var itemSearched = req.body.itemSearched
+  var listOfItems = ['cmpt', 'Intro to cmpt', 'MACM', 'MATH', 'cmpt master']
+  var query1 = `...`;
+  pool.query(query1, (error, results)=>{
+    us = [];
+    for (let i = 0; i < listOfItems.length; i++) {
+      if (listOfItems[i].includes(itemSearched) && itemSearched != '') {
+        ob = {'itemSearched':listOfItems[i]};
+        us.push(ob);
+      }
+    }
+    res.json(us);
+  })  */
+
   if (typeof req.query.text !== 'undefined') {
       search(req.query.text, function(data_items) {
         var results = data_items
@@ -1226,6 +1397,18 @@ app.get('/search', function(req, res) {
 
 
 app.get("/updatepost/:id", (req, res) => {
+
+  /*Testing for chatting
+  var postid = req.body.postid
+  var uid = req.body.uid
+  var query1 = `...`;
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'postid':postid, 'uid':uid};
+    us.push(ob);
+    res.json(us);
+  })  */
+
   var postid = parseInt(req.params.id)
   var uid = req.session.ID //Grabs an ID of the user signed-in
   if (uid && postid){
@@ -1249,6 +1432,31 @@ app.get("/updatepost/:id", (req, res) => {
 
 const image_update = upload.single("myImage")
 app.post("/updatepost", function (req, res) { // async function here
+
+  /* For Upload testing
+  var path = req.body.path
+  var course = req.body.course
+  var bookName = req.body.bookName
+  var uid = req.body.uid
+  var cost = req.body.cost
+  var condition = req.body.condition
+  var description = req.body.description
+  var location = req.body.location
+  var duplicate = req.body.duplicate
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    if (duplicate != 'yes') {
+      ob = {'path':path, 'course':course, 'bookName':bookName, 'uid':uid, 'cost':cost, 'condition':condition, 'description':description, 'location':location};
+      us.push(ob);
+    }
+    if (duplicate === 'no') {
+      db = {'path':path, 'course':course, 'bookName':bookName, 'uid':uid, 'cost':cost, 'condition':condition, 'description':description, 'location':location};
+      us.push(db);
+    }
+    res.json(us);
+  }); */
+
   image_update(req, res, function (err) {
     var postid = req.body.postid
     if (err) {
@@ -1332,6 +1540,17 @@ app.post("/updatepost", function (req, res) { // async function here
 // Sold button
 app.post("/seller_sold", (req, res) => {
   var postid = req.body.postid
+
+  /* For Upload testing
+  var query1 = '...';
+  var databaseID = '1';
+  pool.query(query1, (error, results)=>{
+    if (databaseID === postid) {
+      us = [];
+      res.json(us);
+    }
+  }); */
+
   if (postid) {
     pool.query(
       `DELETE FROM img WHERE postid=$1`,
