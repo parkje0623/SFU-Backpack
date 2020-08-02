@@ -775,8 +775,9 @@ app.post("/upload", function (req, res) { // async function here
         })
       } else {
 
-        geocoder.geocode(req.body.location, (error, data) => {
-          if (error || !data.length) {
+        geocoder.geocode(req.body.location, (status, data) => {
+          if (status !== google.maps.GeocoderStatus.OK && data.length <= 0) {
+          // if (err || !data.length) {
             res.render("pages/imageUpload", {
               // location is incorrect
               msg: "Error: Invalid location!",
