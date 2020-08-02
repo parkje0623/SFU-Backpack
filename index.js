@@ -773,8 +773,10 @@ app.post("/upload", function (req, res) { // async function here
 
         geocoder.geocode(req.body.location, function (err, data){
           if (err || !data.length) {
-            req.flash('error', 'Invalid address');
-            return res.redirect('back')
+            res.render("pages/imageUpload", {
+              // location is incorrect
+              msg: "Error: Invalid location!",
+            })
           }
 
         var path = req.file.location
