@@ -164,12 +164,26 @@ body {
   text-transform: uppercase;
 }
 
+#map_buyingpage { 
+  height: 500px;
+  width :80%; 
+  margin-top: 20px;
+  margin-left:auto; 
+  margin-right:auto;
+}
+
 .button-sold-selectpage {    /* Select page */
   position: relative;
   left: 10px;
   margin-top: 10px;
   display: block;
   text-transform: uppercase;
+}
+
+#map_selectpage { 
+  margin-top: 20px;
+  height: 300px;
+  width: 30%
 }
 .delete-btn-buyingpage {
   position: relative;
