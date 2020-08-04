@@ -533,6 +533,7 @@ app.post("/adduser", (req, res) => {
             })
           } else {
             bcrypt.hash(upassword, saltRounds, (err, hash) => {
+              console.log(hash)
               if (err) res.end(err)
               var values = [uid, uname, uemail, hash]
               pool.query(
