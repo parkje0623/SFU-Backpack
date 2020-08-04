@@ -8,9 +8,12 @@ const multerS3 = require("multer-s3")
 const nodemailer = require("nodemailer")
 const fs = require("fs")
 const AWS = require("aws-sdk")
+const bcrypt = require('bcrypt')
+const Crypto = require('crypto')
 const AWS_ID = process.env.AWS_ACCESS_KEY_ID
 const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY
 const EMAIL_ACCESS = process.env.EMAIL_PASS
+const saltRounds = 10;
 const PORT = process.env.PORT || 5000
 const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
@@ -56,6 +59,14 @@ app.use(
   })
 )
 
+// generating random password for forgot password and forgot id
+function randomString(size = 15) {  
+  return Crypto
+    .randomBytes(size)
+    .toString('base64')
+    .slice(0, size)
+}
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json())
 app.use("/", cors())
@@ -89,7 +100,6 @@ app.get("/mainpage", (req, res) => {
 app.get("/signUp", (req, res) => {
   res.render("pages/signUp")
 })
-
 
 
 //path to find pw page
@@ -426,7 +436,7 @@ app.get("/login", (req, res) => {
 app.post("/auth/login", (req, res) => {
   var uid = req.body.uid
   var upassword = req.body.upassword
-  var values = [uid, upassword]
+  var values = [uid]
 
   /* For login testing
   var query1 = '...';
@@ -444,27 +454,38 @@ app.post("/auth/login", (req, res) => {
 
   //find database if there is a user who matches with the given information
   if (uid && upassword) {
-    pool.query(
-      "SELECT * FROM backpack WHERE uid=$1 AND upassword=$2",
-      values,
-      (error, result) => {
+    console.log("point 2")
+    pool.query("SELECT * FROM backpack WHERE uid=$1",values,(error, result) => {
           if (error) res.end(error)
-          else if (!result || !result.rows[0]) {
-          res.render("pages/login", {
-            // if wrong password or ID
-            msg: "Error: Wrong USER ID or PASSWORD!",
-          })
-        } else {
-          //user information which was done log-in in a machine is saved
-          req.session.displayName = result.rows[0].uname
-          req.session.is_logined = true
-          req.session.ID = result.rows[0].uid
-          req.session.save(function () {
-            res.redirect("/mainpage")
-          })
-        }
-      }
-    )
+          else{
+            // comparing
+            console.log("point 1")
+            //bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
+              if (!result || !result.rows[0]){
+                res.render("pages/login", {
+                  // if wrong password or ID
+                  msg: "Error: Wrong USER ID!",
+                })
+              }
+              else {
+                bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
+                  if(flag){
+                    //user information which was done log-in in a machine is saved
+                    req.session.displayName = result.rows[0].uname
+                    req.session.is_logined = true
+                    req.session.ID = result.rows[0].uid
+                    req.session.save(function () {
+                      res.redirect("/mainpage")})
+                  }
+                  else{
+                    res.render("pages/login", {
+                      // if wrong password or ID
+                      msg: "Error: Wrong PASSWORD!",})
+                  }
+                })
+              }  
+          }
+    })
   }
 })
 
@@ -492,7 +513,7 @@ app.post("/adduser", (req, res) => {
   var upassword = req.body.upassword
   var upasswordcon = req.body.upasswordcon
   var checking = [uid, uemail]
-  var values = [uid, uname, uemail, upassword]
+  
 
   /* For sign-up testing
   var alreadyExist = req.body.exist;
@@ -526,18 +547,22 @@ app.post("/adduser", (req, res) => {
               msg: "Error: USER ID or EMAIL is already taken!",
             })
           } else {
-            pool.query(
-              `INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,
-              values,
-              (error, result) => {
-                /*Edit Jieung*/
-                if (error) res.end(error)
-                else {
-                  res.redirect("/login")
+            bcrypt.hash(upassword, saltRounds, (err, hash) => {
+              if (err) res.end(err)
+              var values = [uid, uname, uemail, hash]
+              pool.query(
+                `INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,
+                values,
+                (error, result) => {
+                  /*Edit Jieung*/
+                  if (error) res.end(error)
+                  else {
+                    res.redirect("/login")
+                  }
                 }
-              }
-            )
-          }
+              )
+            })
+          } 
         }
       )
     }
@@ -602,7 +627,6 @@ app.post("/edituser", (req, res) => {
   var uemail = req.body.uemail
   var upassword = req.body.upassword
   var confirm_pwd = req.body.confirm
-  var values = [uid, uname, uemail, upassword]
   var uidOnly = [uid]
 
   /* For sign-up testing
@@ -618,15 +642,19 @@ app.post("/edituser", (req, res) => {
     if (confirm_pwd === upassword) {
       //Checks if user provided password matches the confirm password section
       //If do match, modifies the requested fields of the table with given values
-      pool.query(
-        `UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`,
-        values,
-        (error, result) => {
-          if (error) res.end(error)
-          //Directs user back to the profile page.
-          res.redirect("/mypage")
-        }
-      )
+      bcrypt.hash(upassword, saltRounds, (err, hash) => {
+        if (err) res.end(err)
+        var values = [uid, uname, uemail, hash]
+        pool.query(
+          `UPDATE backpack SET uname=$2, uemail=$3, upassword=$4 WHERE uid=$1`,
+          values,
+          (error, result) => {
+            if (error) res.end(error)
+            //Directs user back to the profile page.
+            res.redirect("/mypage")
+          }
+        )
+      })
     }
   }
   //Error handling such as mismatch password or blank input given is handled in Javascript from profile.ejs
@@ -666,42 +694,53 @@ app.post("/showpassword", (req, res) => {
             msg: "INFORMATION is not correct!",
           })
         } else {
-          // the email content showing the password
-          const output = `
-              <p>Dear User</p>
-              <p>You have a lost Password request from backpack</p>
-              <ul>
-                <li> User Password: ${result.rows[0].upassword} </li>
-              </ul>
-            `
+            var lock = randomString()
+            bcrypt.hash(lock, saltRounds, (err, hash) => {
+              if (err) res.end(err)
+              var value = [hash,uid]
+              pool.query(
+                `UPDATE backpack SET upassword=$1 WHERE uid=$2`,value,(error, result) => {
+                  if (error) res.end(error)
+                  // the email content showing the password
+                  const output = `
+                      <p>Dear User</p>
+                      <p>You have a lost Password request from backpack</p>
+                      <ul>
+                        <li> User temporary Password: ${lock} </li>
+                      </ul>
+                      <p> After logging in, please change your temporary password by going to my page: https://sfu-backpack.herokuapp.com/mypage </p>
+                      <br>
+                      <p>best,</p>
+                      <p> Backpack Team </p>
+                    `
+                  // nodemail gmail transporter
+                  var transporter = nodemailer.createTransport({
+                    service: "gmail",
+                    auth: {
+                      user: "cmpt276backpack@gmail.com",
+                      pass: EMAIL_ACCESS,
+                    },
+                  })
 
-          // nodemail gmail transporter
-          var transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-              user: "cmpt276backpack@gmail.com",
-              pass: EMAIL_ACCESS,
-            },
-          })
+                  // setup email data with unicode symbols
+                  let mailOptions = {
+                    from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+                    to: uemail, // list of receivers
+                    subject: "PASSWORD Request", // Subject line
+                    html: output, // html body
+                  }
 
-          // setup email data with unicode symbols
-          let mailOptions = {
-            from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
-            to: uemail, // list of receivers
-            subject: "PASSWORD Request", // Subject line
-            html: output, // html body
+                  // send mail with defined transport object
+                  transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                      return console.log(error)
+                    }
+                    res.render("pages/find_pw", { msg: "Email has been sent" })
+                  })
+                })
+              })
           }
-
-          // send mail with defined transport object
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              return console.log(error)
-            }
-            res.render("pages/find_pw", { msg: "Email has been sent" })
-          })
-        }
-      }
-    )
+        })
   } else { // if one of the inputs are left empty
     res.render("pages/find_pw", {
       msg: "Entre your ID, Name and Email Address Please!",
@@ -1014,7 +1053,6 @@ app.get("/reportUser", (req, res) => {
   }
 })
 
-///////////////////////////////////////////////////////////////////
 
 app.post("/report", (req, res) => {
   //getting the reporting user id and reported user id
@@ -1083,7 +1121,6 @@ app.post("/report", (req, res) => {
     })
 });
 
-
 app.get("/find_id", (req, res) => {
   res.render("pages/find_id") //find id page
 })
@@ -1118,41 +1155,51 @@ app.post("/sendEmail", (req, res) => {
           msg: "INFORMATION is not correct!",
         })
       } else {
-        // the email content
-        const output = `
-            <p>Dear User</p>
-            <p>You have a lost ID and Password request from backpack</p>
-            <ul>
-              <li> User ID: ${result.rows[0].uid} </li>
-              <li> User Password: ${result.rows[0].upassword} </li>
-            </ul>
-          `
+        var lock = randomString()
+        bcrypt.hash(lock, saltRounds, (err, hash) => {
+          if (err) res.end(err)
+          var values = [hash,result.rows[0].uid]
+          var uid = result.rows[0].uid
+          pool.query(`UPDATE backpack SET upassword=$1 WHERE uid=$2`,values,(error, result) => {
+              if (error) res.end(error)
+              // content of the email being send
+              const output = `
+                <p>Dear User</p>
+                <p>You have a lost ID and Password request from backpack</p>
+                <ul>
+                  <li> User ID: ${uid} </li>
+                  <li> new temporary Password: ${lock} </li>
+                </ul>
+                <p> After logging in, please change your temporary password by going to my page: https://sfu-backpack.herokuapp.com/mypage </p>
+                <br>
+                <p>best,</p>
+                <p> Backpack Team </p>
+              `
+            // nodemail gmail transporter
+            var transporter = nodemailer.createTransport({
+              service: "gmail",
+              auth: {
+                user: "cmpt276backpack@gmail.com",
+                pass: EMAIL_ACCESS,
+              },
+            })
 
-        // nodemail gmail transporter
-        var transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: "cmpt276backpack@gmail.com",
-            pass: EMAIL_ACCESS,
-          },
-        })
+            // setup email data with unicode symbols
+            let mailOptions = {
+              from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
+              to: email, // list of receivers
+              subject: "ID and PASSWORD Request", // Subject line
+              html: output, // html body
+            }
 
-        // setup email data with unicode symbols
-        let mailOptions = {
-          from: '"backpack Website" <cmpt276backpack@gmail.com>', // sender address
-          to: email, // list of receivers
-          subject: "ID and PASSWORD Request", // Subject line
-          html: output, // html body
-        }
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            return console.log(error)
-          }
-          console.log("Message sent")
-
-          res.render("pages/find_id", { msg: "Email has been sent" })
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                return console.log(error)
+              }
+              res.render("pages/find_id", { msg: "Email has been sent" })
+            })
+          })
         })
       }
     })
@@ -1503,10 +1550,10 @@ app.post("/updatepost", function (req, res) { // async function here
 
       } else {
 
-        geocoder.geocode(req.body.location, function (err, data){
+        geocoder.geocode(req.body.location, (err, data) => {
           if (err || !data.length) {
-            req.flash('error', 'Invalid address');
-            return res.redirect('back')
+            erro = "Error: Invalid address"
+            res.redirect(`/updatepost/${postid}?`)
           }
 
         var path = req.file.location
