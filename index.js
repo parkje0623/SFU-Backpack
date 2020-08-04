@@ -459,6 +459,7 @@ app.post("/auth/login", (req, res) => {
       (error, result) => {
           if (error) res.end(error)
           else{
+            // comparing
             bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
               if (!result || !result.rows[0] || !flag){
                 res.render("pages/login", {
