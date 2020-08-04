@@ -454,33 +454,37 @@ app.post("/auth/login", (req, res) => {
   //find database if there is a user who matches with the given information
   if (uid && upassword) {
     console.log("point 2")
-    pool.query(
-      "SELECT * FROM backpack WHERE uid=$1",
-      values,
-      (error, result) => {
+    pool.query("SELECT * FROM backpack WHERE uid=$1",values,(error, result) => {
           if (error) res.end(error)
           else{
             // comparing
             console.log("point 1")
-            bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
-              if (!result || !result.rows[0] || !flag){
+            //bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
+              if (!result || !result.rows[0]){
                 res.render("pages/login", {
                   // if wrong password or ID
-                  msg: "Error: Wrong USER ID or PASSWORD!",
+                  msg: "Error: Wrong USER ID!",
                 })
               }
               else {
-              //user information which was done log-in in a machine is saved
-              req.session.displayName = result.rows[0].uname
-              req.session.is_logined = true
-              req.session.ID = result.rows[0].uid
-              req.session.save(function () {
-                res.redirect("/mainpage")})
-              }
-            })
+                bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
+                  if(flag){
+                    //user information which was done log-in in a machine is saved
+                    req.session.displayName = result.rows[0].uname
+                    req.session.is_logined = true
+                    req.session.ID = result.rows[0].uid
+                    req.session.save(function () {
+                      res.redirect("/mainpage")})
+                  }
+                  else{
+                    res.render("pages/login", {
+                      // if wrong password or ID
+                      msg: "Error: Wrong PASSWORD!",})
+                  }
+                })
+              }  
           }
-      }
-    )
+    })
   }
 })
 
