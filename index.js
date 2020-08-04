@@ -456,6 +456,8 @@ app.post("/auth/login", (req, res) => {
               console.log(flag)
               console.log(result.rows[0].upassword)
               console.log(upassword)
+              console.log(!result.rows[0])
+              console.log(!result)
               if (!result || !result.rows[0] || flag){
                 res.render("pages/login", {
                   // if wrong password or ID
