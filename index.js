@@ -1148,16 +1148,16 @@ app.post("/sendEmail", (req, res) => {
         // the email content
         bcrypt.hash(lock, saltRounds, (err, hash) => {
           if (err) res.end(err)
-          var values = [hash,result.rows[0].uid ]
-          pool.query(
-            `UPDATE backpack SET upassword=$1 WHERE uid=$2`,values,(error, result) => {
+          var values = [hash,result.rows[0].uid]
+          var uid = result.rows[0].uid
+          pool.query(`UPDATE backpack SET upassword=$1 WHERE uid=$2`,values,(error, result) => {
               if (error) res.end(error)
 
               const output = `
                 <p>Dear User</p>
                 <p>You have a lost ID and Password request from backpack</p>
                 <ul>
-                  <li> User ID: ${result.rows[0].uid} </li>
+                  <li> User ID: ${uid} </li>
                   <li> new temporary Password: ${lock} </li>
                 </ul>
                 <p> Please change your temporary password</p>
