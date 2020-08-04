@@ -31,6 +31,7 @@
     <!-- <base href="/"> -->
 
     <link rel="stylesheet" href="/./stylesheets/styles.css" />
+    <link rel="stylesheet" href="/./stylesheets/starability-basic.min.css">
     <link
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
@@ -333,16 +334,31 @@
         <p class="boldReview">Date Written: <%= attr.date %> <br>
         Review by: <%= attr.written_user %> <br> </p>
         <%= attr.description %>
+        Rating: <%= attr.rating %>
       </div>
     <%});%>
 
     <form id="write_review">
-      Write Review Here: <br>
+      <legend> Write Review Here:</legend>
       <textarea id="reviewing" type="text" name="review" placeholder="Write Your Review Here" maxlength="1000"> </textarea>
       <br>
       <input type="text" id="buyer" value="<%= userID %>" style="display: none">
       <input type="text" id="seller" name="sellerID" value="<%= r.uid %>" style="display: none">
       <input type="text" name="postID" value="<%= r.postid %>" style="display: none">
+      <fieldset class="starability-basic">
+        <legend>Rating:</legend>
+        <input type="radio" id="rate0" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+        <input type="radio" id="rate1" name="rating" value="1" />
+        <label for="rate1" title="Terrible">1 star</label>
+        <input type="radio" id="rate2" name="rating" value="2" />
+        <label for="rate2" title="Not good">2 stars</label>
+        <input type="radio" id="rate3" name="rating" value="3" />
+        <label for="rate3" title="Average">3 stars</label>
+        <input type="radio" id="rate4" name="rating" value="4" />
+        <label for="rate4" title="Very good">4 stars</label>
+        <input type="radio" id="rate5" name="rating" value="5" />
+        <label for="rate5" title="Amazing">5 stars</label>
+      </fieldset>
       <button id="submit_review" type="submit" formaction="/post_review" formmethod="post">Submit</button>
     </form>
   <% }); %>
