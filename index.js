@@ -451,21 +451,24 @@ app.post("/auth/login", (req, res) => {
       values,
       (error, result) => {
           if (error) res.end(error)
-          var flag = bcrypt.compareSync(upassword,result.rows[0].upassword)
-          else if (!result || !result.rows[0] || !flag) {
-          res.render("pages/login", {
-            // if wrong password or ID
-            msg: "Error: Wrong USER ID or PASSWORD!",
-          })
-        } else {
-          //user information which was done log-in in a machine is saved
-          req.session.displayName = result.rows[0].uname
-          req.session.is_logined = true
-          req.session.ID = result.rows[0].uid
-          req.session.save(function () {
-            res.redirect("/mainpage")
-          })
-        }
+          else{
+            bcrypt.compare(upassword, result.rows[0].upassword, function(err, flag){
+              if (!result || !result.rows[0] || !flag){
+                res.render("pages/login", {
+                  // if wrong password or ID
+                  msg: "Error: Wrong USER ID or PASSWORD!",
+                })
+              }
+              else {
+              //user information which was done log-in in a machine is saved
+              req.session.displayName = result.rows[0].uname
+              req.session.is_logined = true
+              req.session.ID = result.rows[0].uid
+              req.session.save(function () {
+                res.redirect("/mainpage")})
+              }
+            })
+          }
       }
     )
   }
