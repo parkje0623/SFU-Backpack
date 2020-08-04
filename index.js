@@ -453,12 +453,12 @@ app.post("/auth/login", (req, res) => {
           if (error) res.end(error)
           else{
             bcrypt.compare(upassword, result.rows[0].upassword, function(err, flag){
-              console.log(flag)
+              console.log(!flag)
               console.log(result.rows[0].upassword)
               console.log(upassword)
               console.log(!result.rows[0])
               console.log(!result)
-              if (!result || !result.rows[0] || flag){
+              if (!result || !result.rows[0] || !flag){
                 res.render("pages/login", {
                   // if wrong password or ID
                   msg: "Error: Wrong USER ID or PASSWORD!",
