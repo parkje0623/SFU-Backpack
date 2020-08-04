@@ -8,12 +8,12 @@ const multerS3 = require("multer-s3")
 const nodemailer = require("nodemailer")
 const fs = require("fs")
 const AWS = require("aws-sdk")
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt')
+const Crypto = require('crypto')
 const AWS_ID = process.env.AWS_ACCESS_KEY_ID
 const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY
 const EMAIL_ACCESS = process.env.EMAIL_PASS
 const saltRounds = 10;
-const lock = "www"
 const PORT = process.env.PORT || 5000
 const Psession = require("connect-pg-simple")(session)
 const { Pool } = require("pg")
@@ -58,6 +58,14 @@ app.use(
     saveUninitialized: true,
   })
 )
+
+// generating random password for forgot password and forgot id
+function randomString(size = 15) {  
+  return Crypto
+    .randomBytes(size)
+    .toString('base64')
+    .slice(0, size)
+}
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json())
@@ -678,6 +686,7 @@ app.post("/showpassword", (req, res) => {
             msg: "INFORMATION is not correct!",
           })
         } else {
+            var lock = randomString()
             bcrypt.hash(lock, saltRounds, (err, hash) => {
               if (err) res.end(err)
               var value = [hash,uid]
@@ -1138,7 +1147,7 @@ app.post("/sendEmail", (req, res) => {
           msg: "INFORMATION is not correct!",
         })
       } else {
-        // the email content
+        var lock = randomString()
         bcrypt.hash(lock, saltRounds, (err, hash) => {
           if (err) res.end(err)
           var values = [hash,result.rows[0].uid]
