@@ -456,7 +456,7 @@ app.post("/auth/login", (req, res) => {
               console.log(flag)
               console.log(result.rows[0].upassword)
               console.log(upassword)
-              if (!result || !result.rows[0] || !flag){
+              if (!result || !result.rows[0] || flag){
                 res.render("pages/login", {
                   // if wrong password or ID
                   msg: "Error: Wrong USER ID or PASSWORD!",
