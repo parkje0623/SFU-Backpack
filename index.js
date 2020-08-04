@@ -452,7 +452,7 @@ app.post("/auth/login", (req, res) => {
       (error, result) => {
           if (error) res.end(error)
           else{
-            bcrypt.compare(upassword, result.rows[0].upassword, function(err, flag){
+            bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){
               console.log(!flag)
               console.log(result.rows[0].upassword)
               console.log(upassword)
