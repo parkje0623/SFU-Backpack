@@ -35,9 +35,9 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
-  connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
+  // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
   // connectionString: "postgres://postgres:@localhost/postgres"
-  // connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
 
 })
 
@@ -47,9 +47,9 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      // conString: process.env.DATABASE_URL,
+      conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
-      conString: "postgres://postgres:khoakhung@localhost/postgres",
+      // conString: "postgres://postgres:khoakhung@localhost/postgres",
       // conString: "postgres://postgres:@localhost/postgres", //kai
     }),
     secret: "!@SDF$@#SDF",
@@ -275,7 +275,7 @@ app.post("/post_review", (req, res) => {
   var sellerID = req.body.sellerID;
   var review = req.body.review;
   var postID = req.body.postID;
-  //var rating = req.body.rating
+  var rating = req.body.rating
   // current date + time
   var date_ob = new Date();
   var date = ("0" + date_ob.getDate()).slice(-2);
@@ -287,7 +287,7 @@ app.post("/post_review", (req, res) => {
   var seconds = date_ob.getSeconds();
   var timestamp = year + "-" + month + "-" + date + " " + vancouver_time + ":" + minutes + ":" + seconds;
 
-  var values = [timestamp, uid, sellerID, review];
+  var values = [timestamp, uid, sellerID, review, rating];
 
   /* For Testing the posting reveiw
   var query1 = '...';
@@ -300,7 +300,7 @@ app.post("/post_review", (req, res) => {
 
   if (uid && sellerID && review) {
     //Inserting the review written to the database
-    pool.query(`INSERT INTO review (date, written_user, about_user, description) VALUES ($1, $2, $3, $4)`, values, (error, result)=>{
+    pool.query(`INSERT INTO review (date, written_user, about_user, description, rating) VALUES ($1, $2, $3, $4, $5)`, values, (error, result)=>{
       if (error)
         res.end(error)
       var backTo = "/select_page/" + postID;
