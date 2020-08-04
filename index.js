@@ -536,11 +536,13 @@ app.post("/adduser", (req, res) => {
               console.log(hash)
               if (err) res.end(err)
               var values = [uid, uname, uemail, hash]
+            console.log("done")
               pool.query(
                 `INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,
                 values,
                 (error, result) => {
                   /*Edit Jieung*/
+                  console.log("done")
                   if (error) res.end(error)
                   else {
                     res.redirect("/login")
