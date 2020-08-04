@@ -87,13 +87,12 @@ app.get("/mainpage", (req, res) => {
     res.render("pages/mainpage", { uname: false, admin: false })
   }
 })
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //path to sign-up page
 app.get("/signUp", (req, res) => {
   res.render("pages/signUp")
 })
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //path to find pw page
 app.get("/find_pw", (req, res) => {
@@ -420,11 +419,11 @@ app.get('/reviewpage', (req, res) => {
         res.redirect("/login")
       }
 })
-//////////////////////////////////////////////////////////////////////////////////////////////
+
 app.get("/login", (req, res) => {
   res.render("pages/login", {})
 })
-///////////////////////////////////////////////////////////////////////////////////////////////
+
 app.post("/auth/login", (req, res) => {
   var uid = req.body.uid
   var upassword = req.body.upassword
@@ -452,12 +451,7 @@ app.post("/auth/login", (req, res) => {
       (error, result) => {
           if (error) res.end(error)
           else{
-            bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){
-              console.log(!flag)
-              console.log(result.rows[0].upassword)
-              console.log(upassword)
-              console.log(!result.rows[0])
-              console.log(!result)
+            bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
               if (!result || !result.rows[0] || !flag){
                 res.render("pages/login", {
                   // if wrong password or ID
@@ -494,7 +488,7 @@ function isLogedin(req, res) {
     return false
   }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //add user to database with given information
 app.post("/adduser", (req, res) => {
   var uid = req.body.uid
@@ -538,16 +532,13 @@ app.post("/adduser", (req, res) => {
             })
           } else {
             bcrypt.hash(upassword, saltRounds, (err, hash) => {
-              console.log(hash)
               if (err) res.end(err)
               var values = [uid, uname, uemail, hash]
-            console.log("done")
               pool.query(
                 `INSERT INTO backpack (uid, uname, uemail, upassword) VALUES ($1,$2,$3,$4)`,
                 values,
                 (error, result) => {
                   /*Edit Jieung*/
-                  console.log("done")
                   if (error) res.end(error)
                   else {
                     res.redirect("/login")
@@ -607,7 +598,7 @@ app.post("/deleteuser", (req, res) => {
     )
   }
 })
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Edit user's profile to requested values from the user.
 app.post("/edituser", (req, res) => {
   if (!isLogedin(req, res)) {
@@ -652,7 +643,7 @@ app.post("/edituser", (req, res) => {
   }
   //Error handling such as mismatch password or blank input given is handled in Javascript from profile.ejs
 })
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //function for who forgot his/her password. Shows password to user if given information is correct
 app.post("/showpassword", (req, res) => {
   var uid = req.body.uid
@@ -700,8 +691,11 @@ app.post("/showpassword", (req, res) => {
                       <ul>
                         <li> User temporary Password: ${lock} </li>
                       </ul>
+                      <p> After logging in, please change your temporary password by going to my page: https://sfu-backpack.herokuapp.com/mypage </p>
+                      <br>
+                      <p>best,</p>
+                      <p> Backpack Team </p>
                     `
-
                   // nodemail gmail transporter
                   var transporter = nodemailer.createTransport({
                     service: "gmail",
@@ -1110,11 +1104,10 @@ app.post("/report", (req, res) => {
     })
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/find_id", (req, res) => {
   res.render("pages/find_id") //find id page
 })
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 app.post("/sendEmail", (req, res) => {
   //get the email of the user from form
   var email = req.body.uemail
@@ -1152,7 +1145,7 @@ app.post("/sendEmail", (req, res) => {
           var uid = result.rows[0].uid
           pool.query(`UPDATE backpack SET upassword=$1 WHERE uid=$2`,values,(error, result) => {
               if (error) res.end(error)
-
+              // content of the email being send
               const output = `
                 <p>Dear User</p>
                 <p>You have a lost ID and Password request from backpack</p>
@@ -1160,9 +1153,11 @@ app.post("/sendEmail", (req, res) => {
                   <li> User ID: ${uid} </li>
                   <li> new temporary Password: ${lock} </li>
                 </ul>
-                <p> Please change your temporary password</p>
+                <p> After logging in, please change your temporary password by going to my page: https://sfu-backpack.herokuapp.com/mypage </p>
+                <br>
+                <p>best,</p>
+                <p> Backpack Team </p>
               `
-
             // nodemail gmail transporter
             var transporter = nodemailer.createTransport({
               service: "gmail",
@@ -1185,7 +1180,6 @@ app.post("/sendEmail", (req, res) => {
               if (error) {
                 return console.log(error)
               }
-
               res.render("pages/find_id", { msg: "Email has been sent" })
             })
           })
