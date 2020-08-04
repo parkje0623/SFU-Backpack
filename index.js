@@ -453,6 +453,7 @@ app.post("/auth/login", (req, res) => {
 
   //find database if there is a user who matches with the given information
   if (uid && upassword) {
+    console.log("point 2")
     pool.query(
       "SELECT * FROM backpack WHERE uid=$1",
       values,
@@ -460,6 +461,7 @@ app.post("/auth/login", (req, res) => {
           if (error) res.end(error)
           else{
             // comparing
+            console.log("point 1")
             bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
               if (!result || !result.rows[0] || !flag){
                 res.render("pages/login", {
