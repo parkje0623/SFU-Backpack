@@ -33,7 +33,6 @@
     <link rel="stylesheet" href="/./stylesheets/styles.css" />
     <link rel="stylesheet" href="/./stylesheets/starability-basic.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-
     <link
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
@@ -42,6 +41,16 @@
       .star-rating {
         margin-left: 20px;
       }
+      .averageRating-user {
+        margin-left: 20px;
+        font-size: 20px;
+        color:grey;
+      }
+      .review-about-user {
+        font-size: 20px;
+        color:grey;
+      }
+    
     </style>
   <body>
     <div class="top-container">
@@ -337,20 +346,22 @@
 
 
     <h2> REVIEW </h2> <br>
-    <%= values[1]%>
+     <span class="averageRating-user"><%= values[1]%></span>
     <% for(let i = 0; i < 5; i++) { %>
       <% if(i < values[0]) { %>
       <!-- display a full star -->
-      <i class="fas fa-star" style="color:orange"></i>
+      <i class="fas fa-star" style="font-size:20px;color:orange"></i>
       <% } else if((values[1] - i) > 0 && (values[1] - i) < 1) { %>
       <!-- display a half star -->
-      <i class="fas fa-star-half-alt" style="color:orange"></i>
+      <!-- <i class="fas fa-star-half-alt" style="color:orange"></i> -->
+      <i class="fas fa-star-half-alt" style="font-size:20px;color:orange"></i>
+
       <% } else { %>
       <!-- display an empty star -->
-      <i class="fas fa-star" style="color:grey"></i>
+      <i class="far fa-star" style="font-size:20px;color:orange"></i>
       <% } %>
     <% } %>
-    <span><%= values[2] %> Reviews about this user</span>
+    <span class="review-about-user"><%= values[2] %> Reviews about this user</span>
 
     <% reviews.forEach(function(attr) { %>
       <div id="reviews">

@@ -187,12 +187,12 @@ function starAveragerating (reviews) {
 	if(reviews.length) {
 		reviews.forEach(review => {
 			ratingsTotal += review.rating;
-		});
-		avgRating = Math.round((ratingsTotal / reviews.length) * 10) / 10;
+    });
+    avgRating = Math.round((ratingsTotal / reviews.length) * 10) / 10;
 	} else {
 		avgRating = ratingsTotal;
 	}
-  const floorRating = Math.floor(this.avgRating);
+  const floorRating = Math.floor(avgRating);
   if (floorRating) {
     var values = [floorRating, avgRating, reviews.length];
     return values;
@@ -256,7 +256,6 @@ app.get("/select_page/:id", (req, res) => {
           }
           var reviews = result.rows;
           var values = starAveragerating(reviews);
-          console.log(values);
         if (isLogedin(req, res)) {
           // This is login and logout function
           if (req.session.ID.trim() == "admin") {
