@@ -10,20 +10,25 @@
     rel="stylesheet"
   />
   <body>
-    
+
+    <nav class="logo">
+      <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
+      <p class="logo-font">sfu-backpack</p> <br><br><br>
+    </nav>
+
+    <% rows.forEach(function(attr) { %>
+    <div class="top">
+      <nav class="username">
+          <a href="/auth/logout">logout</a>
+          <a href="/mypage"><%= attr.uname %></a>
+          <a href="/chatlist">message</a>
+          <a href="/cart">Cart</a>
+      </nav>
+    </div>
+    <% }); %>
+
     <form>
       <% rows.forEach(function(attr) { %>
-      <div class="top">
-        <nav class="username">
-            <a href="/auth/logout">logout</a>
-            <a href="/mypage"><%= attr.uname %></a>
-            <a href="/chatlist">message</a>
-            <a href="/cart">Cart</a>
-        </nav>
-        <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-        <p class="logo-font">sfu-backpack</p> <br><br><br>
-      </div>
-
         <label for="prof_pic" id="list_pics"> Choose an Image: </label>
         <select name="prof_picture" id="pics">
           <option value="logo.png">Backpack</option>
