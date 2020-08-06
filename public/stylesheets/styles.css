@@ -17,7 +17,7 @@ body {
   position: relative;
   left: 20px;
   bottom: 10px;
-  
+
   width: 5%;
 }
 #logo:hover {
@@ -52,7 +52,7 @@ body {
   margin-top: 20px;
   font-size: x-large;
   font-family: sans-serif;
-  
+
 }
 .login-btn {
   height: 30px;
@@ -73,7 +73,7 @@ body {
   width: 100%;
   position: relative;
   background-color: #343a40;
-  
+
 }
 
 .navigationDesktop {
@@ -85,7 +85,7 @@ body {
   text-align: center;
   text-transform: uppercase;
   position: relative;
-  
+
 }
 
 .nav-buying-dropdown-menu a {
@@ -176,11 +176,11 @@ body {
   text-transform: uppercase;
 }
 
-#map_buyingpage { 
+#map_buyingpage {
   height: 500px;
-  width :80%; 
+  width :80%;
   margin-top: 20px;
-  margin-left:auto; 
+  margin-left:auto;
   margin-right:auto;
 }
 
@@ -192,7 +192,7 @@ body {
   text-transform: uppercase;
 }
 
-#map_selectpage { 
+#map_selectpage {
   margin-top: 20px;
   height: 300px;
   width: 30%
@@ -218,6 +218,7 @@ body {
   position: absolute;
   left: 150px;
   width: 170px;
+  top: 250px;
 }
 .info {
   font-size: 24px;
