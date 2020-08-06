@@ -52,7 +52,6 @@ body {
   margin-top: 20px;
   font-size: x-large;
   font-family: sans-serif;
-
 }
 .login-btn {
   height: 30px;
@@ -218,7 +217,7 @@ body {
   position: absolute;
   left: 150px;
   width: 170px;
-  top: 250px;
+  top: 220px;
 }
 .info {
   font-size: 24px;

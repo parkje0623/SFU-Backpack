@@ -140,14 +140,28 @@ app.post("/admin_deleteUser", (req, res) => {
   }); */
 
   // delete this user id from the backpack database
-  var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id + "'"
-  pool.query(getUsersQuery, (error, result) => {
+  var insertUsersQuery = `DELETE FROM backpack WHERE uid=$1`
+  pool.query(insertUsersQuery, checking, (error, result) => {
     if (error) res.end(error)
+    pool.query(`DELETE FROM review WHERE written_user=$1 OR about_user=$1`, checking, (error, result) => {
+      if (error) res.end(error)
+      pool.query(`DELETE FROM cart WHERE uid=$1`, checking, (error, result) => {
+        if (error) res.end(error)
+        pool.query(`DELETE FROM chatlist WHERE receiver=$1 OR SENDER=$1`, checking, (error, result)=> {
+          if (error) res.end(error)
+          pool.query(`DELETE FROM img WHERE uid=$1`, checking, (error, result) => {
+            if (error) res.end(error)
+            else {
+              //If succesfully deleted, the user is logged-out, deleted account then taken back to the mainpage
+              res.redirect(
+                "/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu"
+              )
+            }
+          })
+        })
+      })
+    })
   })
-  // go to the admin main page with the updated table (without the deleted user)
-  res.redirect(
-    "/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu"
-  )
 })
 
 //Allows admin to delete improper posts
@@ -625,12 +639,24 @@ app.post("/deleteuser", (req, res) => {
           var insertUsersQuery = `DELETE FROM backpack WHERE uid=$1`
           pool.query(insertUsersQuery, checking, (error, result) => {
             if (error) res.end(error)
-            else {
-              //If succesfully deleted, the user is logged-out, deleted account then taken back to the mainpage
-              req.session.destroy(function (err) {
-                res.redirect("/mainpage")
+            pool.query(`DELETE FROM review WHERE written_user=$1 OR about_user=$1`, checking, (error, result) => {
+              if (error) res.end(error)
+              pool.query(`DELETE FROM cart WHERE uid=$1`, checking, (error, result) => {
+                if (error) res.end(error)
+                pool.query(`DELETE FROM chatlist WHERE receiver=$1 OR SENDER=$1`, checking, (error, result)=> {
+                  if (error) res.end(error)
+                  pool.query(`DELETE FROM img WHERE uid=$1`, checking, (error, result) => {
+                    if (error) res.end(error)
+                    else {
+                      //If succesfully deleted, the user is logged-out, deleted account then taken back to the mainpage
+                      req.session.destroy(function (err) {
+                        res.redirect("/mainpage")
+                      })
+                    }
+                  })
+                })
               })
-            }
+            })
           })
         }
       }
