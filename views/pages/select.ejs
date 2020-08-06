@@ -72,20 +72,23 @@
           <%if( uname ===false){%>
           <a href="/login">login</a>
         <%}%>
+        <%if( uname !=false){%>
+          <a href="/mypage">MYPAGE</a>
+          <%}%>
           <%if( uname !=false){%>
-            <a href="/auth/logout">logout</a>
-            <a href="/mypage"><%= uname %></a>
-            <a href="/chatlist">message</a>
-            <a href="/cart">Cart</a>
-        <%}%>
+            <a href="/chatlist">MESSAGE</a>
+            <%}%>
+            <%if( uname !=false){%>
+              <a href="/cart">CART</a>
+              <%}%>
           <%if( admin == true){%>
           <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
         <%}%>
         </nav>
       </form>
 
-      <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-              <p class="logo-font">sfu-backpack</p>
+      <!-- <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/> -->
+      <p class="logo-font" onclick="location.href='/mainpage'" >sfu-backpack</p>
     </div>
 
                 <!-- Drop-down menu -->

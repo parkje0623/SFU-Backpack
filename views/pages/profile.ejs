@@ -38,13 +38,14 @@
       <% rows.forEach(function(attr) { %>
       <div class="top-container">
         <nav class="login-bar">
-            <a href="/auth/logout">logout</a>
-            <a href="/mypage"><%= attr.uname %></a>
-            <a href="/chatlist">message</a>
-            <a href="/cart">Cart</a>
+            <a href="/auth/logout">LOGOUT</a>
+            <a href="/mypage">MYACCOUNT</a>
+            <a href="/chatlist">MESSAGE</a>
+            <a href="/cart">CART</a>
         </nav>
-        <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-        <p class="logo-font">sfu-backpack</p> <br><br><br>
+        
+        <!-- <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/> -->
+        <p class="logo-font" onclick="location.href='/mainpage'" >sfu-backpack</p> <br><br><br>
       </div>
         <label for="prof_pic" id="list_pics"> Choose an Image: </label>
         <select name="prof_picture" id="pics">
