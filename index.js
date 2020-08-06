@@ -33,11 +33,11 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 
 //user database access
 pool = new Pool({
-  //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
+  connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
   // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
   // connectionString: "postgres://postgres:@localhost/postgres"
-  connectionString: process.env.DATABASE_URL,
+  //connectionString: process.env.DATABASE_URL,
 
 })
 
@@ -46,8 +46,8 @@ var app = express()
 app.use(
   session({
     store: new Psession({
-      //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      conString: process.env.DATABASE_URL,
+      conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
+      //conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
       // conString: "postgres://postgres:khoakhung@localhost/postgres",
       // conString: "postgres://postgres:@localhost/postgres", //kai
@@ -456,7 +456,7 @@ app.get("/login", (req, res) => {
   res.render("pages/login", {})
 })
 
-app.post("/auth/login", (req, res) => {
+app.post("/login", (req, res) => {
   var uid = req.body.uid
   var upassword = req.body.upassword
   var values = [uid]
