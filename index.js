@@ -36,8 +36,8 @@ pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
   // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
-   connectionString: "postgres://postgres:cmpt276@localhost/postgres"
-  //connectionString: process.env.DATABASE_URL,
+   //connectionString: "postgres://postgres:cmpt276@localhost/postgres"
+  connectionString: process.env.DATABASE_URL,
 
 })
 
@@ -47,8 +47,8 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      //conString: process.env.DATABASE_URL,
-      conString:'postgres://postgres:cmpt276@localhost/postgres'
+      conString: process.env.DATABASE_URL,
+      //conString:'postgres://postgres:cmpt276@localhost/postgres'
       // conString: "postgres://postgres:khoakhung@localhost/postgres",
       // conString: "postgres://postgres:@localhost/postgres", //kai
     }),
@@ -60,7 +60,7 @@ app.use(
 )
 
 // generating random password for forgot password and forgot id
-function randomString(size = 15) {  
+function randomString(size = 15) {
   return Crypto
     .randomBytes(size)
     .toString('base64')
@@ -483,7 +483,7 @@ app.post("/auth/login", (req, res) => {
           else{
             // comparing
             console.log("point 1")
-            //bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
+            //bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){
               if (!result || !result.rows[0]){
                 res.render("pages/login", {
                   // if wrong password or ID
@@ -491,7 +491,7 @@ app.post("/auth/login", (req, res) => {
                 })
               }
               else {
-                bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
+                bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){
                   if(flag){
                     //user information which was done log-in in a machine is saved
                     req.session.displayName = result.rows[0].uname
@@ -506,7 +506,7 @@ app.post("/auth/login", (req, res) => {
                       msg: "Error: Wrong PASSWORD!",})
                   }
                 })
-              }  
+              }
           }
     })
   }
@@ -536,7 +536,7 @@ app.post("/adduser", (req, res) => {
   var upassword = req.body.upassword
   var upasswordcon = req.body.upasswordcon
   var checking = [uid, uemail]
-  
+
 
   /* For sign-up testing
   var alreadyExist = req.body.exist;
@@ -585,7 +585,7 @@ app.post("/adduser", (req, res) => {
                 }
               )
             })
-          } 
+          }
         }
       )
     }
