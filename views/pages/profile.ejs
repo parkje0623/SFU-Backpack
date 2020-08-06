@@ -33,7 +33,7 @@
 <!-- BOOTSTRAP -->
 <!-- <base href="/"> -->
   <body>
-    
+
     <form>
       <% rows.forEach(function(attr) { %>
       <div class="top-container">
@@ -46,7 +46,6 @@
         <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
         <p class="logo-font">sfu-backpack</p> <br><br><br>
       </div>
-
         <label for="prof_pic" id="list_pics"> Choose an Image: </label>
         <select name="prof_picture" id="pics">
           <option value="logo.png">Backpack</option>
@@ -57,16 +56,13 @@
         <input type="text" id="image" name="uimage" value="" style="display: none"> </input>
         <button type="submit" id="imageButton" onclick="getImage(event);" formaction="/changeImage" formmethod="post">Change</button>
         <img id="profile_pic" src="<%= attr.uimage %>" alt="logo"/>
-
       <div class="info">
         <h1> <%= attr.uname %> <br></h1>
         ID: <%= attr.uid %> <br>
         <p> Email: <%= attr.uemail %> <br></p>
       </div>
-
       <button id="delete_btn" formaction="/deleteuser" formmethod="post" type="submit" class="delete"> Permanently Delete </button>
       <br><br><br>
-
       <div class="account">
         <h1> Account <br></h1>
         <p> ID:       <input id="profid" type="text" name="uid" value="<%= attr.uid %>" readonly="readonly" maxLength="10" size="40"></input><br></p>

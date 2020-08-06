@@ -669,3 +669,55 @@ describe('Sold Features', function () {
       done();
     })
 });
+
+describe('Cart Features', function () {
+    tests associated with cart system
+    it('should allow users to view their items they have added in cart feature in /cart', function (done) {
+      chai.request(server).get('/cart').send({'uid':'123'})
+        .end(function(error,res){
+          res.should.have.status(200);
+          res.body[0].uid.should.equal('123');
+          res.body.length.should.equal(1);
+      })
+      done();
+    })
+
+    it('should allow users to add selected item to be added to the cart in /add_to_cart', function (done) {
+      chai.request(server).post('/add_to_cart').send({'uid':'123', 'postid':'1', 'bookname':'Intro CMPT', 'cost':'250', 'image':'book', 'condition':'new', 'duplicate':'no'})
+        .end(function(error,res){
+          res.should.have.status(200);
+          res.body[0].uid.should.equal('123');
+          res.body[0].postid.should.equal('1');
+          res.body[0].bookname.should.equal('Intro CMPT');
+          res.body[0].cost.should.equal('250');
+          res.body[0].image.should.equal('book');
+          res.body[0].condition.should.equal('new');
+          res.body[0].duplicate.should.equal('no');
+          res.body.length.should.equal(1);
+      })
+      done();
+    });
+
+    it('should fail users to add selected item to be added to the cart if the user already has same item in the cart in /add_to_cart', function (done) {
+      chai.request(server).post('/add_to_cart').send({'uid':'123', 'postid':'1', 'bookname':'Intro CMPT', 'cost':'250', 'image':'book', 'condition':'new', 'duplicate':'yes'})
+        .end(function(error,res){
+          res.should.have.status(200);
+          res.body[0].uid.should.equal('123');
+          res.body[0].postid.should.equal('1');
+          res.body[0].bookname.should.equal('Intro CMPT');
+          res.body[0].cost.should.equal('250');
+          res.body[0].image.should.equal('book');
+          res.body[0].condition.should.equal('new');
+          res.body[0].duplicate.should.equal('no');
+      })
+    })
+
+    it('should allow users to remove their items they have added in cart feature in /delete_cart', function (done) {
+      chai.request(server).post('/delete_cart').send({'postid':'1'})
+        .end(function(error,res){
+          res.should.have.status(200);
+          res.body.length.should.equal(0);
+      })
+      done();
+    })
+});

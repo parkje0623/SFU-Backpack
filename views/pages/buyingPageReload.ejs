@@ -55,13 +55,13 @@
             <a href="/login">LOGIN</a>
           <%}%>
             <%if( uname !=false){%>
-              <a href="/auth/logout">LOGOUT</a>
-              <a href="/mypage">ACCOUNT</a>
-              <a href="/chatlist">MESSAGE</a>
-              <a href="/cart">CART</a>
+              <a class="LOGOUT" href="/auth/logout">LOGOUT</a>
+              <a class="ACCOUNT" href="/mypage">ACCOUNT</a>
+              <a class="MESSAGE" href="/chatlist">MESSAGE</a>
+              <a class="CART" href="/cart">CART</a>
           <%}%>
             <%if( admin == true){%>
-            <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+            <a class="DB" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
           <%}%>
           </nav>
         </form>
@@ -138,7 +138,7 @@
                       <li><a href="/post/fren">FREN</a></li>
                     </ul>
                   </li>
-      
+
                   <li>
                     <a href="/buy">G</a>
                     <ul>
@@ -291,7 +291,6 @@
               <ul><span>Description: </span><%= r.description %></ul>
               <ul><span>Location: </span><%= r.location %></ul>
               <ul><span>Posted at: </span><%= r.timepost %></ul>
-
             </ul>
             <form>
               <button type="submit" class="select-btn-buyingpage" formaction="/select_page/<%= r.postid %>" formmethod="GET">Select</button>
