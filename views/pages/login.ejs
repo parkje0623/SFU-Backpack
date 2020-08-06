@@ -111,7 +111,7 @@
 							<input type="text" class="form-control" name="uid" placeholder="ID" required="required">
 						</div>
 						<div class="form-group">
-							<input type="password" class="form-control" name="upassword" placeholder="Password" required="required">
+							<input id="pass" type="password" class="form-control" name="upassword" placeholder="Password" required="required">
 							<span id="eye"><i class="fa fa-eye fa-lg"></i></span>
 						</div>        
 						<div class="form-group">
@@ -133,10 +133,10 @@
         $('input').toggleClass('active');
         if($('input').hasClass('active')){
             $(this).children().attr('class',"fa fa-eye-slash fa-lg")
-            $('input').attr('type','text');
+            $('#pass').attr('type','text');
         }else{
             $(this).children().attr('class',"fa fa-eye fa-lg")
-            $('input').attr('type','password');
+            $('#pass').attr('type','password');
         }
     });
 });
