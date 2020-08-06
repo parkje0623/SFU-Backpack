@@ -299,17 +299,16 @@
               <ul><span>Condition: </span> <%= r.condition %></ul>
               <ul><span>Description: </span><%= r.description %></ul>
               <ul><span>Location: </span><%= r.location %></ul>
-              <ul><span>Lat: </span><%= r.lat %></ul>
-              <ul><span>Lng: </span><%= r.lng %></ul>
 
             </ul>
             <form>
-              <input type="text" name="coursename" value="<%= r.course %>" style="display: none"></input>
-              <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"></input>
-              <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
-              <button type="submit" class="select-btn-buyingpage" formaction="/select_page" formmethod="post">Select</button>
+              <button type="submit" class="select-btn-buyingpage" formaction="/select_page/<%= r.postid %>" formmethod="GET">Select</button>
 
               <%if( admin == true){%>
+                <input type="text" name="coursename" value="<%= r.course %>" style="display: none"></input>
+                <input type="text" name="bookname" value="<%= r.bookname %>" style="display: none"></input>
+                <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
+                <input type="text" name="postid" value="<%= r.postid %>" style="display: none"> </input>
                 <button type="submit" class="delete-btn-buyingpage" formaction="/admin_deletePost" formmethod="post">Delete</button>
               <%}%>
             </form>
