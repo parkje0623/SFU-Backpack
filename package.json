@@ -11,8 +11,8 @@
     "test": "node test.js"
   },
   "dependencies": {
-    
     "@popperjs/core": "^2.4.4",
+    "@sindresorhus/is": "^3.1.0",
     "aws-sdk": "^2.727.1",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
