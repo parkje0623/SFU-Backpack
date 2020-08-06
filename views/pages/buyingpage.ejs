@@ -303,78 +303,79 @@
       </div>
     <body>
       <script type="text/javascript">
-      // Getting the database and convert it to Json type
-        var post = <%- JSON.stringify(results) %>;
-        var i = 0;
-        var arraylng = [ ];   // store all longitude in an array
-        var arraylat = [ ];   // store all latitude in an array
-        var arraytitle = [ ];  //store all bookname
-        var arrayID = [ ];      //store postid 
-        var min = .999999;
-        var max = 1.000001;
-        Object.keys(post).forEach(function (key){
-          arraylat[i] = parseFloat(post[key].lat);
-          arraylng[i] = parseFloat(post[key].lng);
-          arraytitle[i] = post[key].bookname;
-          arrayID[i] = post[key].postid;
-          i++;
-        });
-       
-        /// Change lat and lng little bit if they are overlap
-        for (i=0; i < arraylng.length - 1; i++) {
-          var curlat = arraylat[i];
-          var curlng = arraylng[i];
-          // if there are post at the same lat and lng, move one of them a little bit
-          for (var k = i + 1; k < arraylat.length; k++) {
-            if (curlat == arraylat[k] && curlng == arraylng[k]) {
-              arraylat[i] = curlat * (Math.random() * (max - min) + min);
-              arraylng[i] = curlng * (Math.random() * (max - min) + min);
+        // Getting the database and convert it to Json type
+          var post = <%- JSON.stringify(results) %>;
+          var i = 0;
+          var arraylng = [ ];   // store all longitude in an array
+          var arraylat = [ ];   // store all latitude in an array
+          var arraytitle = [ ];  //store all bookname
+          var arrayID = [ ];      //store postid 
+          var min = .999999;
+          var max = 1.000001;
+          Object.keys(post).forEach(function (key){
+            arraylat[i] = parseFloat(post[key].lat);
+            arraylng[i] = parseFloat(post[key].lng);
+            arraytitle[i] = post[key].bookname;
+            arrayID[i] = post[key].postid;
+            i++;
+          });
+         
+          /// Change lat and lng little bit if they are overlap
+          for (i=0; i < arraylng.length - 1; i++) {
+            var curlat = arraylat[i];
+            var curlng = arraylng[i];
+            // if there are post at the same lat and lng, move one of them a little bit
+            for (var k = i + 1; k < arraylat.length; k++) {
+              if (curlat == arraylat[k] && curlng == arraylng[k]) {
+                arraylat[i] = curlat * (Math.random() * (max - min) + min);
+                arraylng[i] = curlng * (Math.random() * (max - min) + min);
+              }
             }
           }
-        }
-        // Initialize map
-        function initMap(){
-          // map otions
-          var options = {
-            zoom: 12,
-            center: {lat: 49.274897, lng: -122.993188}
-          }
-            //new map
-          var map = new google.maps.Map(document.getElementById('map'), options);
-          var j;
-          var markers = [ ];
-          for (j = 0; j < arraylat.length; j++) {
-            markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arrayID[j]);
-          };
-          
-          // marker cluster
-          var markerCluster = new MarkerClusterer(map, markers,
-            {imagePath: '/images/'});
-          // add marker function
-          function addmarker(lat, lng, title, postID){
-            var link = '<a href="/select_page/' + postID + '">';                   
-            var marker = new google.maps.Marker({
-              position:{lat: lat, lng: lng},
-              map:map,
-            });
-            // Check content
-            if(title){
-              var infoWindow = new google.maps.InfoWindow({
-                content: link + title
+          // Initialize map
+          function initMap(){
+            // map otions
+            var options = {
+              zoom: 12,
+              center: {lat: 49.274897, lng: -122.993188}
+            }
+              //new map
+            var map = new google.maps.Map(document.getElementById('map'), options);
+            var j;
+            var markers = [ ];
+            for (j = 0; j < arraylat.length; j++) {
+              markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arrayID[j]);
+            };
+            
+            // marker cluster
+            var markerCluster = new MarkerClusterer(map, markers,
+              {imagePath: '/images/'});
+            // add marker function
+            function addmarker(lat, lng, title, postID){
+              var link = '<a href="/select_page/' + postID + '">';                   
+              var marker = new google.maps.Marker({
+                position:{lat: lat, lng: lng},
+                map:map,
               });
-              marker.addListener('click', function(){
-                infoWindow.open(map, marker);
-              });
+              // Check content
+              if(title){
+                var infoWindow = new google.maps.InfoWindow({
+                  content: link + title
+                });
+                marker.addListener('click', function(){
+                  infoWindow.open(map, marker);
+                });
+                return marker;
+              }
               return marker;
             }
-            return marker;
           }
-        }
-    </script>
+        </script>
       <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
-
-      <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
-    </script>
+      <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+    
+          <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
+        </script>
   </html>
 </html>
