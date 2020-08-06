@@ -31,10 +31,27 @@
     <!-- <base href="/"> -->
 
     <link rel="stylesheet" href="/./stylesheets/styles.css" />
+    <link rel="stylesheet" href="/./stylesheets/starability-basic.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
+    <style>
+      .star-rating {
+        margin-left: 20px;
+      }
+      .averageRating-user {
+        margin-left: 20px;
+        font-size: 20px;
+        color:grey;
+      }
+      .review-about-user {
+        font-size: 20px;
+        color:grey;
+      }
+    
+    </style>
   <body>
     <div class="top-container">
       <nav class="search-bar">
@@ -320,29 +337,71 @@
     </form>
     <div id="map_selectpage"> </div>
 
-
     <h2> CONTACT SELLER </h2><br>
     <form method = "post" action="/chat">
       <input type = "hidden" name=receiver value=<%= r.uid %>><br>
       <input type = "submit" value="Contact"><br>
     </form>
+  
+
 
     <h2> REVIEW </h2> <br>
+     <span class="averageRating-user"><%= values[1]%></span>
+    <% for(let i = 0; i < 5; i++) { %>
+      <% if(i < values[0]) { %>
+      <!-- display a full star -->
+      <i class="fas fa-star" style="font-size:20px;color:orange"></i>
+      <% } else if((values[1] - i) > 0 && (values[1] - i) < 1) { %>
+      <!-- display a half star -->
+      <!-- <i class="fas fa-star-half-alt" style="color:orange"></i> -->
+      <i class="fas fa-star-half-alt" style="font-size:20px;color:orange"></i>
+
+      <% } else { %>
+      <!-- display an empty star -->
+      <i class="far fa-star" style="font-size:20px;color:orange"></i>
+      <% } %>
+    <% } %>
+    <span class="review-about-user"><%= values[2] %> Reviews about this user</span>
+
     <% reviews.forEach(function(attr) { %>
       <div id="reviews">
-        <p class="boldReview">Date Written: <%= attr.date %> <br>
-        Review by: <%= attr.written_user %> <br> </p>
+        <span class="boldReview">Date Written: <%= attr.date %> <br>
+        Review by: <%= attr.written_user %> <br> </span>
+        <% for(let i = 0; i < 5; i++) { %>
+          <% if(i < attr.rating) { %>
+          <!-- display a full star -->
+          <i class="fas fa-star" style="color:orange"></i>
+          <% } else { %>
+          <!-- display an empty star -->
+          <i class="fas fa-star" style="color:grey"></i>
+          <% } %>
+        <% } %>
+        <br>
         <%= attr.description %>
       </div>
     <%});%>
 
     <form id="write_review">
-      Write Review Here: <br>
+      <legend> Write Review Here:</legend>
       <textarea id="reviewing" type="text" name="review" placeholder="Write Your Review Here" maxlength="1000"> </textarea>
       <br>
       <input type="text" id="buyer" value="<%= userID %>" style="display: none">
       <input type="text" id="seller" name="sellerID" value="<%= r.uid %>" style="display: none">
       <input type="text" name="postID" value="<%= r.postid %>" style="display: none">
+      <fieldset class="starability-basic star-rating">
+        <h5>Rating:</h5>
+        <input type="radio" id="rate0" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+        <input type="radio" id="rate1" name="rating" value="1" />
+        <label for="rate1" title="Terrible">1 star</label>
+        <input type="radio" id="rate2" name="rating" value="2" />
+        <label for="rate2" title="Not good">2 stars</label>
+        <input type="radio" id="rate3" name="rating" value="3" />
+        <label for="rate3" title="Average">3 stars</label>
+        <input type="radio" id="rate4" name="rating" value="4" />
+        <label for="rate4" title="Very good">4 stars</label>
+        <input type="radio" id="rate5" name="rating" value="5" />
+        <label for="rate5" title="Amazing">5 stars</label>
+      </fieldset>
       <button id="submit_review" type="submit" formaction="/post_review" formmethod="post">Submit</button>
     </form>
   <% }); %>

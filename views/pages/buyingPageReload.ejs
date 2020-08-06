@@ -52,13 +52,13 @@
         <form>
           <nav class="login-bar">
             <%if( uname ===false){%>
-            <a href="/login">login</a>
+            <a href="/login">LOGIN</a>
           <%}%>
             <%if( uname !=false){%>
-              <a href="/auth/logout">logout</a>
-              <a href="/mypage"><%= uname %></a>
-              <a href="/chatlist">message</a>
-              <a href="/cart">Cart</a>
+              <a href="/auth/logout">LOGOUT</a>
+              <a href="/mypage">ACCOUNT</a>
+              <a href="/chatlist">MESSAGE</a>
+              <a href="/cart">CART</a>
           <%}%>
             <%if( admin == true){%>
             <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
@@ -69,210 +69,203 @@
         <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
                 <p class="logo-font">sfu-backpack</p>
       </div>
-
-                  <!-- Drop-down menu -->
-      <div class="buying-menu">
-        <div class="navigationDesktop">
-          <nav class="nav-buying-dropdown-menu">
-            <ul class="ul-buying-dropdown-menu">
-              <li class="li-buying-dropdown-menu">
-                <a href="/buy">A</a>
-                <ul>
-                  <li><a href="/post/acma">ACMA</a></li>
-                  <li><a href="/post/als">ALS</a></li>
-                  <li><a href="/post/apma">APMA</a></li>
-                  <li><a href="/post/arab">ARAB</a></li>
-                  <li><a href="/post/arch">ARCH</a></li>
+           <!-- Drop-down menu -->
+           <div class="buying-menu">
+            <div class="navigationDesktop">
+              <nav class="nav-buying-dropdown-menu">
+                <ul class="ul-buying-dropdown-menu">
+                  <li class="li-buying-dropdown-menu">
+                    <a href="/buy">A</a>
+                    <ul>
+                      <li><a href="/post/acma">ACMA</a></li>
+                      <li><a href="/post/als">ALS</a></li>
+                      <li><a href="/post/apma">APMA</a></li>
+                      <li><a href="/post/arab">ARAB</a></li>
+                      <li><a href="/post/arch">ARCH</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">B</a>
+                    <ul>
+                      <li><a href="/post/bisc">BISC</a></li>
+                      <li><a href="/post/bpk">BPK</a></li>
+                      <li><a href="/post/bus">BUS</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">C</a>
+                    <ul>
+                      <li><a href="/post/chem">CHEM</a></li>
+                      <li><a href="/post/chin">CHIN</a></li>
+                      <li><a href="/post/cogs">COGS</a></li>
+                      <li><a href="/post/cmns">CMNS</a></li>
+                      <li><a href="/post/cmpt">CMPT</a></li>
+                      <li><a href="/post/ca">CA</a></li>
+                      <li><a href="/post/crim">CRIM</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">D</a>
+                    <ul>
+                      <li><a href="/post/data">DATA</a></li>
+                      <li><a href="/post/dial">DIAL</a></li>
+                      <li><a href="/post/dmed">DMED</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">E</a>
+                    <ul>
+                      <li><a href="/post/easc">EASC</a></li>
+                      <li><a href="/post/eco">ECO</a></li>
+                      <li><a href="/post/econ">ECON</a></li>
+                      <li><a href="/post/educ">EDUC</a></li>
+                      <li><a href="/post/edpr">EDPR</a></li>
+                      <li><a href="/post/etec">ETEC</a></li>
+                      <li><a href="/post/encs">ENCS</a></li>
+                      <li><a href="/post/engl">ENGL</a></li>
+                      <li><a href="/post/eas">EAS</a></li>
+                      <li><a href="/post/env">ENV</a></li>
+                      <li><a href="/post/evcs">EVCS</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">F</a>
+                    <ul>
+                      <li><a href="/post/fass">FASS</a></li>
+                      <li><a href="/post/fnlg">FNLG</a></li>
+                      <li><a href="/post/fal">FAL</a></li>
+                      <li><a href="/post/fan">FAN</a></li>
+                      <li><a href="/post/fren">FREN</a></li>
+                    </ul>
+                  </li>
+      
+                  <li>
+                    <a href="/buy">G</a>
+                    <ul>
+                      <li><a href="/post/gsws">GSWS</a></li>
+                      <li><a href="/post/gs">GS</a></li>
+                      <li><a href="/post/geog">GEOG</a></li>
+                      <li><a href="/post/germ">GERM</a></li>
+                      <li><a href="/post/ga">GA</a></li>
+                      <li><a href="grk">GRK</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">H</a>
+                    <ul>
+                      <li><a href="/post/hsci">HSCI</a></li>
+                      <li><a href="/post/hs">HS</a></li>
+                      <li><a href="/post/hist">HIST</a></li>
+                      <li><a href="/post/hum">HUM</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">I</a>
+                    <ul>
+                      <li><a href="/post/indg">INDG</a></li>
+                      <li><a href="/post/ins">INS</a></li>
+                      <li><a href="/post/iat">IAT</a></li>
+                      <li><a href="/post/is">IS</a></li>
+                      <li><a href="/post/ispo">ISPO</a></li>
+                      <li><a href="/post/ital">ITAL</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">J</a>
+                    <ul>
+                      <li><a href="/post/japn">JAPN</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">L</a>
+                    <ul>
+                      <li><a href="/post/lbst">LBST</a></li>
+                      <li><a href="/post/lang">LANG</a></li>
+                      <li><a href="/post/las">LAS</a></li>
+                      <li><a href="/post/lbrl">LBRL</a></li>
+                      <li><a href="/post/ls">LS</a></li>
+                      <li><a href="/post/ling">LING</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">M</a>
+                    <ul>
+                      <li><a href="/post/mtec">MTEC</a></li>
+                      <li><a href="/post/masc">MASC</a></li>
+                      <li><a href="/post/math">MATH</a></li>
+                      <li><a href="/post/macm">MACM</a></li>
+                      <li><a href="/post/mse">MSE</a></li>
+                      <li><a href="/post/mbb">MBB</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">N</a>
+                    <ul>
+                      <li><a href="/post/neur">NEUR</a></li>
+                      <li><a href="/post/nusc">NUSC</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">O</a>
+                    <ul>
+                      <li><a href="/post/onc">ONC</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">P</a>
+                    <ul>
+                      <li><a href="/post/pers">PERS</a></li>
+                      <li><a href="/post/phil">PHIL</a></li>
+                      <li><a href="/post/phys">PHYS</a></li>
+                      <li><a href="/post/plan">PLAN</a></li>
+                      <li><a href="/post/pol">POL</a></li>
+                      <li><a href="/post/psyc">PSYC</a></li>
+                      <li><a href="/post/plcy">PLCY</a></li>
+                      <li><a href="/post/pub">PUB</a></li>
+                      <li><a href="/post/punj">PUNJ</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">R</a>
+                    <ul>
+                      <li><a href="/post/rem">REM</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">S</a>
+                    <ul>
+                      <li><a href="/post/sci">SCI</a></li>
+                      <li><a href="/post/sda">SDA</a></li>
+                      <li><a href="/post/sa">SA</a></li>
+                      <li><a href="/post/span">SPAN</a></li>
+                      <li><a href="/post/stat">STAT</a></li>
+                      <li><a href="/post/sd">SD</a></li>
+                      <li><a href="/post/see">SEE</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">T</a>
+                    <ul>
+                      <li><a href="/post/tekx">TEKX</a></li>
+                      <li><a href="/post/trss">TRSS</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">U</a>
+                    <ul>
+                      <li><a href="/post/urb">URB</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/buy">W</a>
+                    <ul>
+                      <li><a href="/post/wl">WL</a></li>
+                    </ul>
+                  </li>
                 </ul>
-              </li>
-              <li>
-                <a href="/buy">B</a>
-                <ul>
-                  <li><a href="/post/bisc">BISC</a></li>
-                  <li><a href="/post/bpk">BPK</a></li>
-                  <li><a href="/post/bus">BUS</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">C</a>
-                <ul>
-                  <li><a href="/post/chem">CHEM</a></li>
-                  <li><a href="/post/chin">CHIN</a></li>
-                  <li><a href="/post/cogs">COGS</a></li>
-                  <li><a href="/post/cmns">CMNS</a></li>
-                  <li><a href="/post/cmpt">CMPT</a></li>
-                  <li><a href="/post/ca">CA</a></li>
-                  <li><a href="/post/crim">CRIM</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">D</a>
-                <ul>
-                  <li><a href="/post/data">DATA</a></li>
-                  <li><a href="/post/dial">DIAL</a></li>
-                  <li><a href="/post/dmed">DMED</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">E</a>
-                <ul>
-                  <li><a href="/post/easc">EASC</a></li>
-                  <li><a href="/post/eco">ECO</a></li>
-                  <li><a href="/post/econ">ECON</a></li>
-                  <li><a href="/post/educ">EDUC</a></li>
-                  <li><a href="/post/edpr">EDPR</a></li>
-                  <li><a href="/post/etec">ETEC</a></li>
-                  <li><a href="/post/encs">ENCS</a></li>
-                  <li><a href="/post/engl">ENGL</a></li>
-                  <li><a href="/post/eas">EAS</a></li>
-                  <li><a href="/post/env">ENV</a></li>
-                  <li><a href="/post/evcs">EVCS</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">F</a>
-                <ul>
-                  <li><a href="/post/fass">FASS</a></li>
-                  <li><a href="/post/fnlg">FNLG</a></li>
-                  <li><a href="/post/fal">FAL</a></li>
-                  <li><a href="/post/fan">FAN</a></li>
-                  <li><a href="/post/fren">FREN</a></li>
-                </ul>
-              </li>
-
-              <li>
-                <a href="/buy">G</a>
-                <ul>
-                  <li><a href="/post/gsws">GSWS</a></li>
-                  <li><a href="/post/gs">GS</a></li>
-                  <li><a href="/post/geog">GEOG</a></li>
-                  <li><a href="/post/germ">GERM</a></li>
-                  <li><a href="/post/ga">GA</a></li>
-                  <li><a href="grk">GRK</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">H</a>
-                <ul>
-                  <li><a href="/post/hsci">HSCI</a></li>
-                  <li><a href="/post/hs">HS</a></li>
-                  <li><a href="/post/hist">HIST</a></li>
-                  <li><a href="/post/hum">HUM</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">I</a>
-                <ul>
-                  <li><a href="/post/indg">INDG</a></li>
-                  <li><a href="/post/ins">INS</a></li>
-                  <li><a href="/post/iat">IAT</a></li>
-                  <li><a href="/post/is">IS</a></li>
-                  <li><a href="/post/ispo">ISPO</a></li>
-                  <li><a href="/post/ital">ITAL</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">J</a>
-                <ul>
-                  <li><a href="/post/japn">JAPN</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">L</a>
-                <ul>
-                  <li><a href="/post/lbst">LBST</a></li>
-                  <li><a href="/post/lang">LANG</a></li>
-                  <li><a href="/post/las">LAS</a></li>
-                  <li><a href="/post/lbrl">LBRL</a></li>
-                  <li><a href="/post/ls">LS</a></li>
-                  <li><a href="/post/ling">LING</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">M</a>
-                <ul>
-                  <li><a href="/post/mtec">MTEC</a></li>
-                  <li><a href="/post/masc">MASC</a></li>
-                  <li><a href="/post/math">MATH</a></li>
-                  <li><a href="/post/macm">MACM</a></li>
-                  <li><a href="/post/mse">MSE</a></li>
-                  <li><a href="/post/mbb">MBB</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">N</a>
-                <ul>
-                  <li><a href="/post/neur">NEUR</a></li>
-                  <li><a href="/post/nusc">NUSC</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">O</a>
-                <ul>
-                  <li><a href="/post/onc">ONC</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">P</a>
-                <ul>
-                  <li><a href="/post/pers">PERS</a></li>
-                  <li><a href="/post/phil">PHIL</a></li>
-                  <li><a href="/post/phys">PHYS</a></li>
-                  <li><a href="/post/plan">PLAN</a></li>
-                  <li><a href="/post/pol">POL</a></li>
-                  <li><a href="/post/psyc">PSYC</a></li>
-                  <li><a href="/post/plcy">PLCY</a></li>
-                  <li><a href="/post/pub">PUB</a></li>
-                  <li><a href="/post/punj">PUNJ</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">R</a>
-                <ul>
-                  <li><a href="/post/rem">REM</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">S</a>
-                <ul>
-                  <li><a href="/post/sci">SCI</a></li>
-                  <li><a href="/post/sda">SDA</a></li>
-                  <li><a href="/post/sa">SA</a></li>
-                  <li><a href="/post/span">SPAN</a></li>
-                  <li><a href="/post/stat">STAT</a></li>
-                  <li><a href="/post/sd">SD</a></li>
-                  <li><a href="/post/see">SEE</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">T</a>
-                <ul>
-                  <li><a href="/post/tekx">TEKX</a></li>
-                  <li><a href="/post/trss">TRSS</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">U</a>
-                <ul>
-                  <li><a href="/post/urb">URB</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">W</a>
-                <ul>
-                  <li><a href="/post/wl">WL</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/buy">OTHERS</a>
-                <ul>
-                  <li><a href="/post/others">OTHERS</a></li>
-                </ul>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
+              </nav>
+            </div>
+          </div>
 
       <!-- Create a condition to print the course name only one time -->
       <% var i = 1; %>
