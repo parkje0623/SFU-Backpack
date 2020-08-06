@@ -35,9 +35,9 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
-  connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
-  // connectionString: "postgres://postgres:@localhost/postgres"
-  // connectionString: process.env.DATABASE_URL,
+  // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
+  //connectionString: "postgres://postgres:cmpt276@localhost/postgres"
+  connectionString: process.env.DATABASE_URL,
 
 })
 
@@ -47,9 +47,9 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      // conString: process.env.DATABASE_URL,
+      conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
-      conString: "postgres://postgres:khoakhung@localhost/postgres",
+      // conString: "postgres://postgres:khoakhung@localhost/postgres",
       // conString: "postgres://postgres:@localhost/postgres", //kai
     }),
     secret: "!@SDF$@#SDF",
@@ -60,7 +60,7 @@ app.use(
 )
 
 // generating random password for forgot password and forgot id
-function randomString(size = 15) {  
+function randomString(size = 15) {
   return Crypto
     .randomBytes(size)
     .toString('base64')
@@ -123,7 +123,7 @@ app.get(
 //allowing the Admin to delete a user from backpack database
 app.post("/admin_deleteUser", (req, res) => {
   var id = req.body.uid
-
+  var checking = [id];
   /*For Testing admin deleting user's account
   var admin = req.body.admin;
   var query1 = '...';
@@ -140,14 +140,28 @@ app.post("/admin_deleteUser", (req, res) => {
   }); */
 
   // delete this user id from the backpack database
-  var getUsersQuery = "DELETE FROM backpack WHERE uid = '" + id + "'"
-  pool.query(getUsersQuery, (error, result) => {
+  var insertUsersQuery = `DELETE FROM backpack WHERE uid=$1`
+  pool.query(insertUsersQuery, checking, (error, result) => {
     if (error) res.end(error)
+    pool.query(`DELETE FROM review WHERE written_user=$1 OR about_user=$1`, checking, (error, result) => {
+      if (error) res.end(error)
+      pool.query(`DELETE FROM cart WHERE uid=$1`, checking, (error, result) => {
+        if (error) res.end(error)
+        pool.query(`DELETE FROM chatlist WHERE receiver=$1 OR SENDER=$1`, checking, (error, result)=> {
+          if (error) res.end(error)
+          pool.query(`DELETE FROM img WHERE uid=$1`, checking, (error, result) => {
+            if (error) res.end(error)
+            else {
+              //If succesfully deleted, the user is logged-out, deleted account then taken back to the mainpage
+              res.redirect(
+                "/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu"
+              )
+            }
+          })
+        })
+      })
+    })
   })
-  // go to the admin main page with the updated table (without the deleted user)
-  res.redirect(
-    "/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu"
-  )
 })
 
 //Allows admin to delete improper posts
@@ -483,7 +497,7 @@ app.post("/auth/login", (req, res) => {
           else{
             // comparing
             console.log("point 1")
-            //bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
+            //bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){
               if (!result || !result.rows[0]){
                 res.render("pages/login", {
                   // if wrong password or ID
@@ -491,7 +505,7 @@ app.post("/auth/login", (req, res) => {
                 })
               }
               else {
-                bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){ 
+                bcrypt.compare(upassword, result.rows[0].upassword.trim(), function(err, flag){
                   if(flag){
                     //user information which was done log-in in a machine is saved
                     req.session.displayName = result.rows[0].uname
@@ -506,7 +520,7 @@ app.post("/auth/login", (req, res) => {
                       msg: "Error: Wrong PASSWORD!",})
                   }
                 })
-              }  
+              }
           }
     })
   }
@@ -536,7 +550,7 @@ app.post("/adduser", (req, res) => {
   var upassword = req.body.upassword
   var upasswordcon = req.body.upasswordcon
   var checking = [uid, uemail]
-  
+
 
   /* For sign-up testing
   var alreadyExist = req.body.exist;
@@ -585,7 +599,7 @@ app.post("/adduser", (req, res) => {
                 }
               )
             })
-          } 
+          }
         }
       )
     }
@@ -625,12 +639,24 @@ app.post("/deleteuser", (req, res) => {
           var insertUsersQuery = `DELETE FROM backpack WHERE uid=$1`
           pool.query(insertUsersQuery, checking, (error, result) => {
             if (error) res.end(error)
-            else {
-              //If succesfully deleted, the user is logged-out, deleted account then taken back to the mainpage
-              req.session.destroy(function (err) {
-                res.redirect("/mainpage")
+            pool.query(`DELETE FROM review WHERE written_user=$1 OR about_user=$1`, checking, (error, result) => {
+              if (error) res.end(error)
+              pool.query(`DELETE FROM cart WHERE uid=$1`, checking, (error, result) => {
+                if (error) res.end(error)
+                pool.query(`DELETE FROM chatlist WHERE receiver=$1 OR SENDER=$1`, checking, (error, result)=> {
+                  if (error) res.end(error)
+                  pool.query(`DELETE FROM img WHERE uid=$1`, checking, (error, result) => {
+                    if (error) res.end(error)
+                    else {
+                      //If succesfully deleted, the user is logged-out, deleted account then taken back to the mainpage
+                      req.session.destroy(function (err) {
+                        res.redirect("/mainpage")
+                      })
+                    }
+                  })
+                })
               })
-            }
+            })
           })
         }
       }
@@ -1497,7 +1523,7 @@ app.get('/search', function(req, res) {
 erro = ""
 app.get("/updatepost/:id", (req, res) => {
 
-  /*Testing for chatting
+  /*Testing for update post
   var postid = req.body.postid
   var uid = req.body.uid
   var query1 = `...`;
@@ -1532,7 +1558,7 @@ app.get("/updatepost/:id", (req, res) => {
 const image_update = upload.single("myImage")
 app.post("/updatepost", function (req, res) { // async function here
 
-  /* For Upload testing
+  /* For updating post testing
   var path = req.body.path
   var course = req.body.course
   var bookName = req.body.bookName
@@ -1569,7 +1595,7 @@ app.post("/updatepost", function (req, res) { // async function here
         res.redirect(`/updatepost/${postid}?`)
           // if no file was selected
           //msg: "Error: No File Selected!",
-          
+
 
       } else {
 
@@ -1605,7 +1631,7 @@ app.post("/updatepost", function (req, res) { // async function here
                 //msg: "Error: User Already Posted Item with Same Title",
                 erro = "Error: User Already Posted Item with Same Title"
                 res.redirect(`/updatepost/${postid}?`)
-            
+
             } else {
               // insert the user info into the img database (the image in AWS and the path of image in img database)
               var getImageQuery = `UPDATE img SET course=$1, path=$2, bookname=$3, uid=$4, cost=$5, condition=$6, description=$7, location=$8, lat=$9, lng=$10 WHERE postid=$11`
@@ -1638,7 +1664,7 @@ app.post("/updatepost", function (req, res) { // async function here
 app.post("/seller_sold", (req, res) => {
   var postid = req.body.postid
 
-  /* For Upload testing
+  /* For sold testing
   var query1 = '...';
   var databaseID = '1';
   pool.query(query1, (error, results)=>{
@@ -1655,7 +1681,7 @@ app.post("/seller_sold", (req, res) => {
       (error, result) => {
         if (error){
           res.end(error)
-        } 
+        }
         pool.query(`DELETE FROM cart WHERE postid=$1`,[postid],(error, result) => {
             if (error){
               res.end(error)
@@ -1669,6 +1695,17 @@ app.post("/seller_sold", (req, res) => {
 
 
 app.get("/cart", (req,res) => {
+
+  /* For cart testing
+  var uid = req.body.uid
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'uid':uid};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
     if (error) {
       res.end(error)
@@ -1702,6 +1739,18 @@ app.post("/add_to_cart", (req,res) => {
   var cost = req.body.cost
   var image = req.body.image
   var condition = req.body.condition
+
+  /* For adding to cart testing
+  var uid = req.body.uid
+  var duplicate = req.body.duplicate
+  var query1 = '...';
+  pool.query(query1, (error, results)=>{
+    us = [];
+    ob = {'uid':uid, 'postid':postid, 'bookname':bookname, 'cost':cost, 'image':image, 'condition':condition, 'duplicate':duplicate};
+    us.push(ob);
+    res.json(us);
+  }); */
+
   if(isLogedin){
     var uid = req.session.ID
     if(postid){
@@ -1749,7 +1798,18 @@ app.post("/add_to_cart", (req,res) => {
 })
 
 app.post("/delete_cart", (req, res) => {
-  var postid=req.body.postid;
+  var postid = req.body.postid;
+
+  /* For delete from cart testing
+  var query1 = '...';
+  var postid_From_DB = '1';
+  pool.query(query1, (error, results)=>{
+    if (postid === postid_From_DB) {
+      us = [];
+      res.json(us);
+    }
+  }); */
+
   if(isLogedin){
       if(postid){
           pool.query(`DELETE FROM cart WHERE postid=$1 AND uid=$2`,[postid, req.session.ID], (error, result) => {
