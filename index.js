@@ -36,8 +36,8 @@ pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
   // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
   // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
-   connectionString: "postgres://postgres:@localhost/postgres"
-  // connectionString: process.env.DATABASE_URL,
+  //  connectionString: "postgres://postgres:@localhost/postgres"
+  connectionString: process.env.DATABASE_URL,
   //connectionString: "postgres://postgres:cmpt276@localhost/postgres"
 
 })
@@ -51,7 +51,7 @@ app.use(
       conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
       // conString: "postgres://postgres:khoakhung@localhost/postgres",
-      conString: "postgres://postgres:@localhost/postgres", //kai
+      // conString: "postgres://postgres:@localhost/postgres", //kai
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
