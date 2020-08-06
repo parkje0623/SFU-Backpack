@@ -34,7 +34,7 @@ body {
 .search-bar {
   text-align: center;
   position: absolute;
-  width: 100%;
+  width: 500px;
   margin-top: 20px;
 }
 
@@ -47,11 +47,11 @@ body {
 }
 
 .login-bar {
-  position: absolute;
-  right: 100px;
   margin-top: 20px;
   font-size: x-large;
   font-family: sans-serif;
+  position: absolute;
+  right: 50px;
 }
 .login-btn {
   height: 30px;
