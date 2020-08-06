@@ -123,7 +123,7 @@ app.get(
 //allowing the Admin to delete a user from backpack database
 app.post("/admin_deleteUser", (req, res) => {
   var id = req.body.uid
-
+  var checking = [id];
   /*For Testing admin deleting user's account
   var admin = req.body.admin;
   var query1 = '...';
