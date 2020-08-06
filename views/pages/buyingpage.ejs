@@ -16,7 +16,6 @@
   <!-- Custom styles for this template -->
   <link href="./stylesheets/shop-homepage.css" rel="stylesheet">
 <style>
-
 /* .sidebar-nav {
     position: absolute;
     top: 0;
@@ -25,14 +24,12 @@
     padding: 0;
     list-style: none;
 }
-
 .sidebar-nav li {
     position: relative; 
     line-height: 20px;
     display: inline-block;
     width: 100%;
 } */
-
 .sidebar-nav li:before {
     content: '';
     position: absolute;
@@ -46,7 +43,6 @@
       -moz-transition:  width .2s ease-in;
        -ms-transition:  width .2s ease-in;
             transition: width .2s ease-in;
-
 }
 .sidebar-nav li:first-child a {
     color: #fff;
@@ -83,16 +79,13 @@
       -moz-transition:  width .2s ease-in;
        -ms-transition:  width .2s ease-in;
             transition: width .2s ease-in;
-
 }
-
 .sidebar-nav li a {
     display: block;
     color: #ddd;
     text-decoration: none;
     padding: 10px 15px 10px 30px;    
 }
-
 .sidebar-nav li a:hover,
 .sidebar-nav li a:active,
 .sidebar-nav li a:focus,
@@ -103,7 +96,6 @@
     text-decoration: none;
     background-color: transparent;
 }
-
 .sidebar-nav > .sidebar-brand {
     height: 65px;
     font-size: 20px;
@@ -119,7 +111,6 @@
     background-color: #222;
     box-shadow: none;
 }
-
 </style>
 <style media="screen">
   #map { 
@@ -465,9 +456,7 @@
             <span class="sr-only">Next</span>
           </a>
         </div>
-
         <div class="row">
-
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
@@ -483,7 +472,6 @@
               </div>
             </div>
           </div>
-
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
@@ -499,7 +487,6 @@
               </div>
             </div>
           </div>
-
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
@@ -515,7 +502,6 @@
               </div>
             </div>
           </div>
-
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
@@ -531,7 +517,6 @@
               </div>
             </div>
           </div>
-
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
@@ -547,7 +532,6 @@
               </div>
             </div>
           </div>
-
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
@@ -563,7 +547,6 @@
               </div>
             </div>
           </div>
-
         </div> -->
         <!-- /.row -->
 
@@ -594,13 +577,10 @@
 var trigger = $('.hamburger'),
     overlay = $('.overlay'),
    isClosed = false;
-
   trigger.click(function () {
     hamburger_cross();      
   });
-
   function hamburger_cross() {
-
     if (isClosed == true) {          
       overlay.hide();
       trigger.removeClass('is-open');
@@ -613,7 +593,6 @@ var trigger = $('.hamburger'),
       isClosed = true;
     }
 }
-
 $('[data-toggle="offcanvas"]').click(function () {
       $('#wrapper').toggleClass('toggled');
 });  
