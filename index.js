@@ -470,7 +470,7 @@ app.get("/login", (req, res) => {
   res.render("pages/login", {})
 })
 
-app.post("/auth/login", (req, res) => {
+app.post("/login", (req, res) => {
   var uid = req.body.uid
   var upassword = req.body.upassword
   var values = [uid]

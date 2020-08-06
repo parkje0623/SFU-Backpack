@@ -53,22 +53,28 @@
         <form >
           <nav class="login-bar">
             <%if( uname ===false){%>
-            <a href="/login">login</a>
+            <a href="/login">LOGIN</a>
           <%}%>
             <%if( uname !=false){%>
-              <a href="/auth/logout">logout</a>
-              <a href="/mypage"><%= uname %></a>
-              <a href="/chatlist">message</a>
-              <a href="/cart">Cart</a>
+              <a href="/auth/logout">LOGOUT</a>
           <%}%>
+          <%if( uname !=false){%>
+            <a href="/mypage">MYPAGE</a>
+            <%}%>
+            <%if( uname !=false){%>
+              <a href="/chatlist">MESSAGE</a>
+              <%}%>
+              <%if( uname !=false){%>
+                <a href="/cart">CART</a>
+                <%}%>
             <%if( admin == true){%>
             <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
           <%}%>
           </nav>
         </form>
 
-        <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-                <p class="logo-font">sfu-backpack</p>
+        
+        <p class="logo-font" onclick="location.href='/mainpage'" >sfu-backpack</p>
       </div>
 
                   <!-- Drop-down menu -->
@@ -317,5 +323,11 @@
             </u2>
           <% }); %>
       </ul>
+      <div class="footer">
+        <div class="container">
+          <p class="m-0 text-center text-white">Copyright &copy; sfu-backpack 2020</p>
+        </div>
+        <!-- /.container -->
+      </div>
     <body>
 </html>
