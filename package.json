@@ -11,7 +11,7 @@
     "test": "node test.js"
   },
   "dependencies": {
-    "@mapbox/mapbox-sdk": "^0.11.0",
+    
     "@popperjs/core": "^2.4.4",
     "aws-sdk": "^2.727.1",
     "axios": "^0.19.2",

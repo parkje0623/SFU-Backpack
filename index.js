@@ -38,7 +38,7 @@ pool = new Pool({
   // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
   //  connectionString: "postgres://postgres:@localhost/postgres"
   connectionString: process.env.DATABASE_URL,
-  //connectionString: "postgres://postgres:cmpt276@localhost/postgres"
+  // connectionString: "postgres://postgres:cmpt276@localhost/postgres"
 
 })
 
