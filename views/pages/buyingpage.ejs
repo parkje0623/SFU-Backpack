@@ -1,262 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Buy Page</title>
 
-<head>
+    <!-- BOOTSTRAP -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+    <!-- BOOTSTRAP -->
+    <!-- <base href="/"> -->
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>buypage</title>
-
-  <!-- Bootstrap core CSS -->
-  <link href="./vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
-  <link href="./stylesheets/shop-homepage.css" rel="stylesheet">
-<style>
-/* .sidebar-nav {
-    position: absolute;
-    top: 0;
-    width: 120px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-.sidebar-nav li {
-    position: relative; 
-    line-height: 20px;
-    display: inline-block;
-    width: 100%;
-} */
-.sidebar-nav li:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    height: 100%;
-    width: 3px;
-    background-color: #1c1c1c;
-    -webkit-transition: width .2s ease-in;
-      -moz-transition:  width .2s ease-in;
-       -ms-transition:  width .2s ease-in;
-            transition: width .2s ease-in;
-}
-.sidebar-nav li:first-child a {
-    color: #fff;
-    background-color: #1a1a1a;
-}
-.sidebar-nav li:nth-child(2):before {
-    background-color: #ec1b5a;   
-}
-.sidebar-nav li:nth-child(3):before {
-    background-color: #79aefe;   
-}
-.sidebar-nav li:nth-child(4):before {
-    background-color: #314190;   
-}
-.sidebar-nav li:nth-child(5):before {
-    background-color: #279636;   
-}
-.sidebar-nav li:nth-child(6):before {
-    background-color: #7d5d81;   
-}
-.sidebar-nav li:nth-child(7):before {
-    background-color: #ead24c;   
-}
-.sidebar-nav li:nth-child(8):before {
-    background-color: #2d2366;   
-}
-.sidebar-nav li:nth-child(9):before {
-    background-color: #35acdf;   
-}
-.sidebar-nav li:hover:before,
-.sidebar-nav li.open:hover:before {
-    width: 100%;
-    -webkit-transition: width .2s ease-in;
-      -moz-transition:  width .2s ease-in;
-       -ms-transition:  width .2s ease-in;
-            transition: width .2s ease-in;
-}
-.sidebar-nav li a {
-    display: block;
-    color: #ddd;
-    text-decoration: none;
-    padding: 10px 15px 10px 30px;    
-}
-.sidebar-nav li a:hover,
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus,
-.sidebar-nav li.open a:hover,
-.sidebar-nav li.open a:active,
-.sidebar-nav li.open a:focus{
-    color: #fff;
-    text-decoration: none;
-    background-color: transparent;
-}
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
-    font-size: 20px;
-    line-height: 44px;
-}
-.sidebar-nav .dropdown-menu {
-    position: relative;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    border-radius: 0;
-    border: none;
-    background-color: #222;
-    box-shadow: none;
-}
-</style>
-<style media="screen">
-  #map { 
-    height: 600px;
-    width :80%; 
-    margin-top: 20px;
-    margin-left:auto; 
-    margin-right:auto;
-  }
-  </style>
-</head>
-
-<body>
-
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <p class="logo-font" onclick="location.href='/mainpage'">sfu-backpack</>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            
-            <!-- <a class="nav-link" href="#">Home
-              <span class="sr-only">(current)</span>
-            </a> -->
-            <nav class="search-bar">
-              <form>
-                <input
-                  class="search-input"
-                  type="text"
-                  name='text'
-                  placeholder="Insert course or bookname"
-                  aria-label="Search.."
-                />
-                <button class="search-btn" formaction="/search" type="submit">Search</button>
-              </form>
-            </nav>
-          </li>
-          <!-- <nav class="search-bar">
-            <form>
-              <input
-                class="search-input"
-                type="text"
-                name='text'
-                placeholder="Insert course or bookname"
-                aria-label="Search.."
-              />
-              <button class="search-btn" formaction="/search" type="submit">Search</button>
-            </form>
-          </nav> -->
-
-
-         
-
-          <li class="nav-item">
-            <a class="nav-link" href="/reportUser">REPORT</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/reviewpage">REVIEW</a>
-          </li>
-          <li class="nav-item">
-            <%if( uname ===false){%>
-              <a class="nav-link" href="/login">login</a>
-            <%}%>
-              <%if( uname !=false){%>
-                <a class="nav-link" href="/auth/logout">LOGOUT</a>
-                
-            <%}%>
-              <%if( admin == true){%>
-              <a class="nav-link" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
-            <%}%>
-          </li>
-          <li class="nav-item">
-            <%if( uname !=false){%>
-              <a class="nav-link" href="/mypage">MYPAGE</a>
-            <%}%>
-          </li>
-          
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Page Content -->
-  <div class="container">
-
-    <div class="row">
-
-      <div class="col-lg-3">
-
-        <h1 class="my-4">COURSE</h1>
+    <link rel="stylesheet" href="/./stylesheets/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style media="screen">
+      #map { 
+        height: 500px;
+        width :80%; 
+        margin-top: 20px;
+        margin-left:auto; 
+        margin-right:auto;
+      }
+      </style>
+    <body>
+      <div class="top-container">
         
-        <div class="list-group">
-          <ul class="nav sidebar-nav">
-            <li class="dropdown">
-              <a href="/buy" class="list-group-item" data-toggle="dropdown">A</a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li class="dropdown-header">Dropdown heading</li>
-                    <li><a href="/post/acma">ACMA</a></li>
-                    <li><a href="/post/als">ALS</a></li>
-                    <li><a href="/post/apma">APMA</a></li>
-                    <li><a href="/post/arab">ARAB</a></li>
-                    <li><a href="/post/arch">ARCH</a></li>
-                  </ul>
-              </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">B</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/bisc">BISC</a></li>
-                      <li><a href="/post/bpk">BPK</a></li>
-                      <li><a href="/post/bus">BUS</a></li>
-                    </ul>
-              </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">C</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/chem">CHEM</a></li>
-                      <li><a href="/post/chin">CHIN</a></li>
-                      <li><a href="/post/cogs">COGS</a></li>
-                      <li><a href="/post/cmns">CMNS</a></li>
-                      <li><a href="/post/cmpt">CMPT</a></li>
-                      <li><a href="/post/ca">CA</a></li>
-                      <li><a href="/post/crim">CRIM</a></li>
-                    </ul>
-              </li>
+        <nav class="search-bar">
+          <form>
+            <input
+              class="search-input"
+              type="text"
+              name='text'
+              placeholder="Insert course or bookname"
+              aria-label="Search.."
+            />
+            <button class="search-btn" formaction="/search" type="submit">Search</button>
+          </form>
+        </nav>
+        <form>
+          <!-- LOGIN FEATURE -->
+          <nav class="login-bar">
+            <%if( uname ===false){%>
+            <a href="/login">login</a>
+          <%}%>
+            <%if( uname !=false){%>
+              <a href="/auth/logout">LOGOUT</a>
+              <!-- <a href="/mypage"><%= uname %></a> -->
+              <!-- <a href="/chatlist">message</a>
+              <a href="/cart">Cart</a> -->
+          <%}%>
+          <%if( uname !=false){%>
+            <a href="/mypage">MYPAGE</a>
+            <%}%>
+            <%if( uname !=false){%>
+              <a href="/chatlist">MESSAGE</a>
+              <%}%>
+              <%if( uname !=false){%>
+                <a href="/cart">CART</a>
+                <%}%>
+            <%if( admin == true){%>
+            <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+          <%}%>
+          </nav>
+        </form>
 
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">D</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/data">DATA</a></li>
-                      <li><a href="/post/dial">DIAL</a></li>
-                      <li><a href="/post/dmed">DMED</a></li>
-                    </ul>
-              </li>
+        <!-- <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/> -->
+        <p class="logo-font" onclick="location.href='/mainpage'" >sfu-backpack</p>
+      </div>
 
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">E</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/easc">EASC</a></li>
+
+      <!-- Drop-down menu -->
+      <div class="buying-menu">
+        <div class="navigationDesktop">
+          <nav class="nav-buying-dropdown-menu">
+            <ul class="ul-buying-dropdown-menu">
+              <li class="li-buying-dropdown-menu">
+                <a href="/buy">A</a>
+                <ul>
+                  <li><a href="/post/acma">ACMA</a></li>
+                  <li><a href="/post/als">ALS</a></li>
+                  <li><a href="/post/apma">APMA</a></li>
+                  <li><a href="/post/arab">ARAB</a></li>
+                  <li><a href="/post/arch">ARCH</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/buy">B</a>
+                <ul>
+                  <li><a href="/post/bisc">BISC</a></li>
+                  <li><a href="/post/bpk">BPK</a></li>
+                  <li><a href="/post/bus">BUS</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/buy">C</a>
+                <ul>
+                  <li><a href="/post/chem">CHEM</a></li>
+                  <li><a href="/post/chin">CHIN</a></li>
+                  <li><a href="/post/cogs">COGS</a></li>
+                  <li><a href="/post/cmns">CMNS</a></li>
+                  <li><a href="/post/cmpt">CMPT</a></li>
+                  <li><a href="/post/ca">CA</a></li>
+                  <li><a href="/post/crim">CRIM</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/buy">D</a>
+                <ul>
+                  <li><a href="/post/data">DATA</a></li>
+                  <li><a href="/post/dial">DIAL</a></li>
+                  <li><a href="/post/dmed">DMED</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/buy">E</a>
+                <ul>
+                  <li><a href="/post/easc">EASC</a></li>
                   <li><a href="/post/eco">ECO</a></li>
                   <li><a href="/post/econ">ECON</a></li>
                   <li><a href="/post/educ">EDUC</a></li>
@@ -267,107 +147,95 @@
                   <li><a href="/post/eas">EAS</a></li>
                   <li><a href="/post/env">ENV</a></li>
                   <li><a href="/post/evcs">EVCS</a></li>
-                    </ul>
+                </ul>
               </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">F</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/fass">FASS</a></li>
+              <li>
+                <a href="/buy">F</a>
+                <ul>
+                  <li><a href="/post/fass">FASS</a></li>
                   <li><a href="/post/fnlg">FNLG</a></li>
                   <li><a href="/post/fal">FAL</a></li>
                   <li><a href="/post/fan">FAN</a></li>
                   <li><a href="/post/fren">FREN</a></li>
-                    </ul>
+                </ul>
               </li>
 
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">G</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/gsws">GSWS</a></li>
-                      <li><a href="/post/gs">GS</a></li>
-                      <li><a href="/post/geog">GEOG</a></li>
-                      <li><a href="/post/germ">GERM</a></li>
-                      <li><a href="/post/ga">GA</a></li>
-                      <li><a href="grk">GRK</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">G</a>
+                <ul>
+                  <li><a href="/post/gsws">GSWS</a></li>
+                  <li><a href="/post/gs">GS</a></li>
+                  <li><a href="/post/geog">GEOG</a></li>
+                  <li><a href="/post/germ">GERM</a></li>
+                  <li><a href="/post/ga">GA</a></li>
+                  <li><a href="grk">GRK</a></li>
+                </ul>
               </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">H</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/hsci">HSCI</a></li>
-                      <li><a href="/post/hs">HS</a></li>
-                      <li><a href="/post/hist">HIST</a></li>
-                      <li><a href="/post/hum">HUM</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">H</a>
+                <ul>
+                  <li><a href="/post/hsci">HSCI</a></li>
+                  <li><a href="/post/hs">HS</a></li>
+                  <li><a href="/post/hist">HIST</a></li>
+                  <li><a href="/post/hum">HUM</a></li>
+                </ul>
               </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">I</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/indg">INDG</a></li>
-                      <li><a href="/post/ins">INS</a></li>
-                      <li><a href="/post/iat">IAT</a></li>
-                      <li><a href="/post/is">IS</a></li>
-                      <li><a href="/post/ispo">ISPO</a></li>
-                      <li><a href="/post/ital">ITAL</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">I</a>
+                <ul>
+                  <li><a href="/post/indg">INDG</a></li>
+                  <li><a href="/post/ins">INS</a></li>
+                  <li><a href="/post/iat">IAT</a></li>
+                  <li><a href="/post/is">IS</a></li>
+                  <li><a href="/post/ispo">ISPO</a></li>
+                  <li><a href="/post/ital">ITAL</a></li>
+                </ul>
               </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">J</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/japn">JAPN</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">J</a>
+                <ul>
+                  <li><a href="/post/japn">JAPN</a></li>
+                </ul>
               </li>
-
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">L</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/lbst">LBST</a></li>
+              <li>
+                <a href="/buy">L</a>
+                <ul>
+                  <li><a href="/post/lbst">LBST</a></li>
                   <li><a href="/post/lang">LANG</a></li>
                   <li><a href="/post/las">LAS</a></li>
                   <li><a href="/post/lbrl">LBRL</a></li>
                   <li><a href="/post/ls">LS</a></li>
                   <li><a href="/post/ling">LING</a></li>
-                    </ul>
+                </ul>
               </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">M</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li><a href="/post/mtec">MTEC</a></li>
-                      <li><a href="/post/masc">MASC</a></li>
-                      <li><a href="/post/math">MATH</a></li>
-                      <li><a href="/post/macm">MACM</a></li>
-                      <li><a href="/post/mse">MSE</a></li>
-                      <li><a href="/post/mbb">MBB</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">M</a>
+                <ul>
+                  <li><a href="/post/mtec">MTEC</a></li>
+                  <li><a href="/post/masc">MASC</a></li>
+                  <li><a href="/post/math">MATH</a></li>
+                  <li><a href="/post/macm">MACM</a></li>
+                  <li><a href="/post/mse">MSE</a></li>
+                  <li><a href="/post/mbb">MBB</a></li>
+                </ul>
               </li>
-
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">N</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/neur">NEUR</a></li>
-                      <li><a href="/post/nusc">NUSC</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">N</a>
+                <ul>
+                  <li><a href="/post/neur">NEUR</a></li>
+                  <li><a href="/post/nusc">NUSC</a></li>
+                </ul>
               </li>
-
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">O</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/onc">ONC</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">O</a>
+                <ul>
+                  <li><a href="/post/onc">ONC</a></li>
+                </ul>
               </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">P</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/pers">PERS</a></li>
+              <li>
+                <a href="/buy">P</a>
+                <ul>
+                  <li><a href="/post/pers">PERS</a></li>
                   <li><a href="/post/phil">PHIL</a></li>
                   <li><a href="/post/phys">PHYS</a></li>
                   <li><a href="/post/plan">PLAN</a></li>
@@ -376,301 +244,137 @@
                   <li><a href="/post/plcy">PLCY</a></li>
                   <li><a href="/post/pub">PUB</a></li>
                   <li><a href="/post/punj">PUNJ</a></li>
-                    </ul>
+                </ul>
               </li>
-
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">R</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/rem">REM</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">R</a>
+                <ul>
+                  <li><a href="/post/rem">REM</a></li>
+                </ul>
               </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">T</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/sci">SCI</a></li>
-                      <li><a href="/post/tekx">TEKX</a></li>
-                      <li><a href="/post/trss">TRSS</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">S</a>
+                <ul>
+                  <li><a href="/post/sci">SCI</a></li>
+                  <li><a href="/post/sda">SDA</a></li>
+                  <li><a href="/post/sa">SA</a></li>
+                  <li><a href="/post/span">SPAN</a></li>
+                  <li><a href="/post/stat">STAT</a></li>
+                  <li><a href="/post/sd">SD</a></li>
+                  <li><a href="/post/see">SEE</a></li>
+                </ul>
               </li>
-
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">U</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/urb">URB</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">T</a>
+                <ul>
+                  <li><a href="/post/tekx">TEKX</a></li>
+                  <li><a href="/post/trss">TRSS</a></li>
+                </ul>
               </li>
-
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">W</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/wl">WL</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">U</a>
+                <ul>
+                  <li><a href="/post/urb">URB</a></li>
+                </ul>
               </li>
-              <li class="dropdown">
-                <a href="/buy" class="list-group-item" data-toggle="dropdown">others</a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">Dropdown heading</li>
-                      <li><a href="/post/others">OTHERS</a></li>
-                    </ul>
+              <li>
+                <a href="/buy">W</a>
+                <ul>
+                  <li><a href="/post/wl">WL</a></li>
+                </ul>
               </li>
-          </ul>
-          
-          <!-- <a href="#" class="list-group-item">Category 1</a>
-          <a href="#" class="list-group-item">Category 2</a>
-          <a href="#" class="list-group-item">Category 3</a> -->
+              <li>
+                <a href="/buy">OTHERS</a>
+                <ul>
+                  <li><a href="/post/others">OTHERS</a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
         </div>
-
       </div>
-      <!-- /.col-lg-3 -->
+      <div id="map"></div>
 
-      <div class="col-lg-9">
-        <div id="map"></div>
-        <!-- <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
-          <ol class="carousel-indicators">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-          </ol>
-          <div class="carousel-inner" role="listbox">
-            <div class="carousel-item active">
-              <img class="d-block img-fluid" src="http://placehold.it/900x350" alt="First slide">
-            </div>
-            <div class="carousel-item">
-              <img class="d-block img-fluid" src="http://placehold.it/900x350" alt="Second slide">
-            </div>
-            <div class="carousel-item">
-              <img class="d-block img-fluid" src="http://placehold.it/900x350" alt="Third slide">
-            </div>
-          </div>
-          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-          </a>
+      <div class="footer">
+        <div class="container">
+          <p class="m-0 text-center text-white">Copyright &copy; sfu-backpack 2020</p>
         </div>
-        <div class="row">
-          <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="#">Item One</a>
-                </h4>
-                <h5>$24.99</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="#">Item Two</a>
-                </h4>
-                <h5>$24.99</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="#">Item Three</a>
-                </h4>
-                <h5>$24.99</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="#">Item Four</a>
-                </h4>
-                <h5>$24.99</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="#">Item Five</a>
-                </h4>
-                <h5>$24.99</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="#">Item Six</a>
-                </h4>
-                <h5>$24.99</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-              </div>
-              <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-              </div>
-            </div>
-          </div>
-        </div> -->
-        <!-- /.row -->
-
+        <!-- /.container -->
       </div>
-      <!-- /.col-lg-9 -->
-
-    </div>
-    <!-- /.row -->
-
-  </div>
-  <!-- /.container -->
-
-  <!-- Footer -->
-  <footer class="py-5 bg-dark">
-    <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; sfu-backpack 2020</p>
-    </div>
-    <!-- /.container -->
-  </footer>
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-</body>
-<script>
-  $(document).ready(function () {
-var trigger = $('.hamburger'),
-    overlay = $('.overlay'),
-   isClosed = false;
-  trigger.click(function () {
-    hamburger_cross();      
-  });
-  function hamburger_cross() {
-    if (isClosed == true) {          
-      overlay.hide();
-      trigger.removeClass('is-open');
-      trigger.addClass('is-closed');
-      isClosed = false;
-    } else {   
-      overlay.show();
-      trigger.removeClass('is-closed');
-      trigger.addClass('is-open');
-      isClosed = true;
-    }
-}
-$('[data-toggle="offcanvas"]').click(function () {
-      $('#wrapper').toggleClass('toggled');
-});  
-});
-</script>
-<script type="text/javascript">
-  // Getting the database and convert it to Json type
-    var post = <%- JSON.stringify(results) %>;
-    var i = 0;
-    var arraylng = [ ];   // store all longitude in an array
-    var arraylat = [ ];   // store all latitude in an array
-    var arraytitle = [ ];  //store all bookname
-    var arrayID = [ ];      //store postid 
-    var min = .999999;
-    var max = 1.000001;
-    Object.keys(post).forEach(function (key){
-      arraylat[i] = parseFloat(post[key].lat);
-      arraylng[i] = parseFloat(post[key].lng);
-      arraytitle[i] = post[key].bookname;
-      arrayID[i] = post[key].postid;
-      i++;
-    });
-   
-    /// Change lat and lng little bit if they are overlap
-    for (i=0; i < arraylng.length - 1; i++) {
-      var curlat = arraylat[i];
-      var curlng = arraylng[i];
-      // if there are post at the same lat and lng, move one of them a little bit
-      for (var k = i + 1; k < arraylat.length; k++) {
-        if (curlat == arraylat[k] && curlng == arraylng[k]) {
-          arraylat[i] = curlat * (Math.random() * (max - min) + min);
-          arraylng[i] = curlng * (Math.random() * (max - min) + min);
-        }
-      }
-    }
-    // Initialize map
-    function initMap(){
-      // map otions
-      var options = {
-        zoom: 12,
-        center: {lat: 49.274897, lng: -122.993188}
-      }
-        //new map
-      var map = new google.maps.Map(document.getElementById('map'), options);
-      var j;
-      var markers = [ ];
-      for (j = 0; j < arraylat.length; j++) {
-        markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arrayID[j]);
-      };
-      
-      // marker cluster
-      var markerCluster = new MarkerClusterer(map, markers,
-        {imagePath: '/images/'});
-      // add marker function
-      function addmarker(lat, lng, title, postID){
-        var link = '<a href="/select_page/' + postID + '">';                   
-        var marker = new google.maps.Marker({
-          position:{lat: lat, lng: lng},
-          map:map,
+    <body>
+      <script type="text/javascript">
+      // Getting the database and convert it to Json type
+        var post = <%- JSON.stringify(results) %>;
+        var i = 0;
+        var arraylng = [ ];   // store all longitude in an array
+        var arraylat = [ ];   // store all latitude in an array
+        var arraytitle = [ ];  //store all bookname
+        var arrayID = [ ];      //store postid 
+        var min = .999999;
+        var max = 1.000001;
+        Object.keys(post).forEach(function (key){
+          arraylat[i] = parseFloat(post[key].lat);
+          arraylng[i] = parseFloat(post[key].lng);
+          arraytitle[i] = post[key].bookname;
+          arrayID[i] = post[key].postid;
+          i++;
         });
-        // Check content
-        if(title){
-          var infoWindow = new google.maps.InfoWindow({
-            content: link + title
-          });
-          marker.addListener('click', function(){
-            infoWindow.open(map, marker);
-          });
-          return marker;
+       
+        /// Change lat and lng little bit if they are overlap
+        for (i=0; i < arraylng.length - 1; i++) {
+          var curlat = arraylat[i];
+          var curlng = arraylng[i];
+          // if there are post at the same lat and lng, move one of them a little bit
+          for (var k = i + 1; k < arraylat.length; k++) {
+            if (curlat == arraylat[k] && curlng == arraylng[k]) {
+              arraylat[i] = curlat * (Math.random() * (max - min) + min);
+              arraylng[i] = curlng * (Math.random() * (max - min) + min);
+            }
+          }
         }
-        return marker;
-      }
-    }
-</script>
-  <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
-  <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+        // Initialize map
+        function initMap(){
+          // map otions
+          var options = {
+            zoom: 12,
+            center: {lat: 49.274897, lng: -122.993188}
+          }
+            //new map
+          var map = new google.maps.Map(document.getElementById('map'), options);
+          var j;
+          var markers = [ ];
+          for (j = 0; j < arraylat.length; j++) {
+            markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arrayID[j]);
+          };
+          
+          // marker cluster
+          var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: '/images/'});
+          // add marker function
+          function addmarker(lat, lng, title, postID){
+            var link = '<a href="/select_page/' + postID + '">';                   
+            var marker = new google.maps.Marker({
+              position:{lat: lat, lng: lng},
+              map:map,
+            });
+            // Check content
+            if(title){
+              var infoWindow = new google.maps.InfoWindow({
+                content: link + title
+              });
+              marker.addListener('click', function(){
+                infoWindow.open(map, marker);
+              });
+              return marker;
+            }
+            return marker;
+          }
+        }
+    </script>
+      <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
 
       <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
     </script>
+  </html>
 </html>
