@@ -405,3 +405,17 @@ input[id=profid], [id=profname], [id=profpwd], [id=profconfirm], [id=profemail] 
   text-align: center;
 
 }
+.star-rating {
+  margin-left: 20px;
+}
+      
+.averageRating-user {
+  margin-left: 20px;
+  font-size: 20px;
+  color:grey;
+}
+
+.review-about-user {
+  font-size: 20px;
+  color:grey;
+}
