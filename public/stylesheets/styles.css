@@ -7,7 +7,12 @@ body {
   height: 100px;
   background-color: #343a40;;
 }
-
+.top-container-profile {
+  position: relative;
+  width: 1400px;
+  height: 100px;
+  background-color: #343a40;;
+}
 .middle-container {
   position: relative;
   height: 100px;
@@ -51,7 +56,6 @@ body {
   font-size: medium;
   font-family: sans-serif;
   position: absolute;
-  left: 1500px;
 }
 
 .logfeature {
@@ -60,20 +64,20 @@ body {
 }
 .mypage {
   position: absolute;
-  left: 1100px;
+  left: 1070px;
 }
 .chatlist {
   position: absolute;
-  left: 1280px;
+  left: 1180px;
 }
 .db {
   position: absolute;
-  left: 1280px;
+  left: 1180px;
   top: 35px;
 }
 .cart {
   position: absolute;
-  left: 1390px;
+  left: 1250px;
 }
 .login-btn {
   height: 30px;

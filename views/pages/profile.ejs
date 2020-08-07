@@ -36,14 +36,14 @@
 
     <form>
       <% rows.forEach(function(attr) { %>
-      <div class="top-container">
+      <div class="top-container-profile">
         <nav class="login-bar">
-            <a href="/auth/logout">LOGOUT</a>
-            <a href="/mypage">MYACCOUNT</a>
-            <a href="/chatlist">MESSAGE</a>
-            <a href="/cart">CART</a>
+          <a class="logfeature" href="/auth/logout">LOGOUT</a>
+          <a class="mypage" href="/mypage">MYACCOUNT</a>
+          <a class="chatlist" href="/chatlist">message</a>
+          <a class="cart" href="/cart">Cart</a>
         </nav>
-        
+
         <!-- <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/> -->
         <p class="logo-font" onclick="location.href='/mainpage'" >sfu-backpack</p> <br><br><br>
       </div>

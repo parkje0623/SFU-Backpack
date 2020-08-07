@@ -362,13 +362,14 @@ describe('Profile Feature', function() {
     done();
   })
 
-  it('Should fail user to delete their account if not confirmed by user in /deleteuser', function(done) {
+  it('Should pass user to not delete their account if not confirmed by user in /deleteuser', function(done) {
     chai.request(server).post('/deleteuser').send({'uid':'123', 'confirmation':'no'})
       .end(function(error, res) {
         res.should.have.status(200);
         res.body[0].uid.should.equal('123');
-        res.body[0].confirmation.should.equal('yes');
+        res.body[0].confirmation.should.equal('no');
     });
+    done();
   })
 
   it('Should allow user to edit their account if correct information given by user in /edituser', function(done) {

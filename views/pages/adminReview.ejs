@@ -52,19 +52,19 @@
           <%if( uname ===false){%>
           <a href="/login">login</a>
         <%}%>
-          <%if( uname !=false){%>
-            <a href="/auth/logout">logout</a>
-            <a href="/mypage"><%= uname %></a>
-            <a href="/chatlist">message</a>
-            <a href="/cart">Cart</a>
-        <%}%>
-          <%if( admin == true){%>
-          <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
-        <%}%>
+        <%if( uname !=false){%>
+          <a class="logfeature" href="/auth/logout">LOGOUT</a>
+          <a class="mypage" href="/mypage">MYACCOUNT</a>
+          <a class="chatlist" href="/chatlist">message</a>
+          <a class="cart" href="/cart">Cart</a>
+      <%}%>
+
+        <%if( admin == true){%>
+        <a class="db" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+      <%}%>
         </nav>
       </form>
 
-      <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'"/>
       <p class="logo-font">sfu-backpack</p>
     </div>
 

@@ -50,7 +50,7 @@
         font-size: 20px;
         color:grey;
       }
-    
+
     </style>
   <body>
     <div class="top-container">
@@ -69,20 +69,14 @@
       <!-- LOGIN FEATURE -->
       <form>
         <nav class="login-bar">
-          <%if( uname ===false){%>
-          <a href="/login">login</a>
-        <%}%>
-        <%if( uname !=false){%>
-          <a href="/mypage">MYPAGE</a>
-          <%}%>
           <%if( uname !=false){%>
-            <a href="/chatlist">MESSAGE</a>
-            <%}%>
-            <%if( uname !=false){%>
-              <a href="/cart">CART</a>
-              <%}%>
+            <a class="logfeature" href="/auth/logout">LOGOUT</a>
+            <a class="mypage" href="/mypage">MYACCOUNT</a>
+            <a class="chatlist" href="/chatlist">message</a>
+            <a class="cart" href="/cart">Cart</a>
+          <%}%>
           <%if( admin == true){%>
-          <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+          <a class="db" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
         <%}%>
         </nav>
       </form>
@@ -313,7 +307,7 @@
             <ul><span>Posted at: </span><%= r.timepost %></ul>
 
           </ul>
-        </u2>      
+        </u2>
     </ul>
 
     <form>
@@ -345,7 +339,7 @@
       <input type = "hidden" name=receiver value=<%= r.uid %>><br>
       <input type = "submit" value="Contact"><br>
     </form>
-  
+
 
 
     <h2> REVIEW </h2> <br>
