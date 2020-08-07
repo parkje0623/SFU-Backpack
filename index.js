@@ -34,10 +34,10 @@ var geocoder = NodeGeocoder(options); /// google map geocoding
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
-  connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
+  // connectionString:'postgres://postgres:@localhost/postgres' //- for Jieung
   // connectionString: "postgres://postgres:khoakhung@localhost/sfupb",
   //connectionString: "postgres://postgres:cmpt276@localhost/postgres"
-  // connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
 
 })
 
@@ -47,10 +47,10 @@ app.use(
   session({
     store: new Psession({
       //conString:'postgres://postgres:SFU716!!qusrlgus@localhost/postgres'
-      // conString: process.env.DATABASE_URL,
+      conString: process.env.DATABASE_URL,
       //conString:'postgres://postgres:cmpt276@localhost/postgres'
       // conString: "postgres://postgres:khoakhung@localhost/postgres",
-      conString: "postgres://postgres:@localhost/postgres", //kai
+      // conString: "postgres://postgres:@localhost/postgres", //kai
     }),
     secret: "!@SDF$@#SDF",
     resave: false,
