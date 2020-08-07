@@ -54,38 +54,20 @@
           <div class="collapse navbar-collapse" id="navbarTogglerDemo02" color="text-white">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
               <li class="nav-item active">
-                <%if( uname ===false){%>
-                <a class="nav-link" id="link" href="/login">LOGIN<span class="sr-only"></span></a>
-                <%}%>
-              </li>
-              <%if( uname !=false){%>
               <li class="nav-item">
                 <a class="nav-link" id="link" href="/auth/logout">LOGOUT</a>
               </li>
-              <%}%>
-              <%if( uname !=false){%>
                 <li class="nav-item">
                   <a class="nav-link" id="link" href="/mypage">MYPAGE</a>
                 </li>
-                <%}%>
-                <%if( uname !=false){%>
                   <li class="nav-item">
                     <a class="nav-link" id="link" href="/chat">MESSAGE</a>
                   </li>
-                  <%}%>
-                  <%if( uname !=false){%>
                     <li class="nav-item">
                       <a class="nav-link" id="link" href="/cart">CART</a>
                     </li>
-                    <%}%>
-                    <%if( admin == true){%>
-  
-              <li class="nav-item">
-                <a class="nav-link disabled"  id="link" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DATABASE</a>
-              </li>
-              <%}%>
             </ul>
-        
+        </li>
             <div class="mx-auto">
               <a onclick="location.href='/mainpage'" class="navbar-brand">SFU-backpack</a>
           </div>
