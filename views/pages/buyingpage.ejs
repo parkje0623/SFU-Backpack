@@ -35,17 +35,19 @@
       rel="stylesheet"
     />
     <style media="screen">
-      #map { 
+      #map {
         height: 500px;
-        width :80%; 
+        width :800px;;
         margin-top: 20px;
-        margin-left:auto; 
+        margin-left:auto;
         margin-right:auto;
+        position:relative;
+        top: 50px;
       }
       </style>
     <body>
       <div class="top-container">
-        
+
         <nav class="search-bar">
           <form>
             <input
@@ -65,22 +67,14 @@
             <a href="/login">login</a>
           <%}%>
             <%if( uname !=false){%>
-              <a href="/auth/logout">LOGOUT</a>
-              <!-- <a href="/mypage"><%= uname %></a> -->
-              <!-- <a href="/chatlist">message</a>
-              <a href="/cart">Cart</a> -->
+              <a class="logfeature" href="/auth/logout">LOGOUT</a>
+              <a class="mypage" href="/mypage"><%= uname %></a>
+              <a class="chatlist" href="/chatlist">message</a>
+              <a class="cart" href="/cart">Cart</a>
           <%}%>
-          <%if( uname !=false){%>
-            <a href="/mypage">MYPAGE</a>
-            <%}%>
-            <%if( uname !=false){%>
-              <a href="/chatlist">MESSAGE</a>
-              <%}%>
-              <%if( uname !=false){%>
-                <a href="/cart">CART</a>
-                <%}%>
+
             <%if( admin == true){%>
-            <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+            <a class="db" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
           <%}%>
           </nav>
         </form>
@@ -309,7 +303,7 @@
           var arraylng = [ ];   // store all longitude in an array
           var arraylat = [ ];   // store all latitude in an array
           var arraytitle = [ ];  //store all bookname
-          var arrayID = [ ];      //store postid 
+          var arrayID = [ ];      //store postid
           var min = .999999;
           var max = 1.000001;
           Object.keys(post).forEach(function (key){
@@ -319,7 +313,7 @@
             arrayID[i] = post[key].postid;
             i++;
           });
-         
+
           /// Change lat and lng little bit if they are overlap
           for (i=0; i < arraylng.length - 1; i++) {
             var curlat = arraylat[i];
@@ -346,13 +340,13 @@
             for (j = 0; j < arraylat.length; j++) {
               markers[j] = addmarker(arraylat[j], arraylng[j], arraytitle[j], arrayID[j]);
             };
-            
+
             // marker cluster
             var markerCluster = new MarkerClusterer(map, markers,
               {imagePath: '/images/'});
             // add marker function
             function addmarker(lat, lng, title, postID){
-              var link = '<a href="/select_page/' + postID + '">';                   
+              var link = '<a href="/select_page/' + postID + '">';
               var marker = new google.maps.Marker({
                 position:{lat: lat, lng: lng},
                 map:map,
@@ -373,7 +367,7 @@
         </script>
       <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
       <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
-    
+
           <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkStG0UegPlhzdG_PsiIb71Vxa_jmJyrA&callback=initMap">
         </script>
