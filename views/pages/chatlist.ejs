@@ -5,6 +5,13 @@
     <title>Chatting List</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- BOOTSTRAP -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+      #link { color: #ffffff; } /* CSS link color */
+    </style>   
+
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -52,34 +59,60 @@
     </style>
 
   <body>
-    <div class="top-container">
-      <!-- LOGIN FEATURE -->
-      <form>
-        <nav class="login-bar">
-          <%if( uname ===false){%>
-          <a href="/login">login</a>
-        <%}%>
-          <%if( uname !=false){%>
-            <a href="/auth/logout">LOGOUT</a>
-          
-        <%}%>
-        <%if( uname !=false){%>
-          <a href="/mypage">MYPAGE</a>
-          <%}%>
-          <%if( uname !=false){%>
-            <a href="/chatlist">MESSAGE</a>
+   <div class="container-fluid">
+	
+        <nav class="navbar navbar-expand-lg navbar-light ">
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02" color="text-white">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <%if( uname ===false){%>
+              <a class="nav-link" id="link" href="/login">LOGIN<span class="sr-only"></span></a>
+              <%}%>
+            </li>
+            <%if( uname !=false){%>
+            <li class="nav-item">
+              <a class="nav-link" id="link" href="/auth/logout">LOGOUT</a>
+            </li>
             <%}%>
             <%if( uname !=false){%>
-              <a href="/cart">CART</a>
+              <li class="nav-item">
+                <a class="nav-link" id="link" href="/mypage">MYPAGE</a>
+              </li>
               <%}%>
-          <%if( admin == true){%>
-          <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
-        <%}%>
-        </nav>
-      </form>
+              <%if( uname !=false){%>
+                <li class="nav-item">
+                  <a class="nav-link" id="link" href="/chat">MESSAGE</a>
+                </li>
+                <%}%>
+                <%if( uname !=false){%>
+                  <li class="nav-item">
+                    <a class="nav-link" id="link" href="/cart">CART</a>
+                  </li>
+                  <%}%>
+                  <%if( admin == true){%>
+
+            <li class="nav-item">
+              <a class="nav-link disabled"  id="link" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DATABASE</a>
+            </li>
+            <%}%>
+          </ul>
       
-      <p class="logo-font" onclick="location.href='/mainpage'" >sfu-backpack</p>
-    </div>
+          <div class="mx-auto">
+            <a onclick="location.href='/mainpage'" class="navbar-brand">SFU-backpack</a>
+        </div>
+          
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" name='text'aria-label="Search.." placeholder="Insert course or bookname">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" formaction="/search">Search</button>
+          </form>
+        </div>
+      </nav>
+      </div>
     <!--chatting list which user involved-->
     <span>
       <%if(db===true){%>

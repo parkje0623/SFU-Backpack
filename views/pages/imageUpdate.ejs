@@ -2,8 +2,8 @@
 <html>
   <head>
 <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700"/> -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-<link rel="stylesheet" type="text/css" href="./stylesheets/imageUpload.css"/>
+<link rel="stylesheet" type="text/css" href="../stylesheets/bootstrapCopy.css"/>
+<link rel="stylesheet" type="text/css" href="../stylesheets/imageUpload.css"/>
 <!-- <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap" rel="stylesheet"/> -->
 
 <!-- Google fonts-->
@@ -12,15 +12,13 @@
 <!-- Third party plugin CSS-->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
 <!-- Core theme CSS (includes Bootstrap)-->
-<link href="./stylesheets/mainpage_styles.css" rel="stylesheet" />    <!-- Font Awesome icons (free version)-->
+<link href="../stylesheets/mainpage_styles.css" rel="stylesheet" />    <!-- Font Awesome icons (free version)-->
 
-
-   <% field.forEach(function(f) { %>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
       <div class="container">
-        <img id="logo" src="logo.png" alt="logo" onclick="location.href='/mainpage'" />
+        <img id="logo" src="../logo.png" alt="logo" onclick="location.href='/mainpage'" />
         <p class="logo-font" onclick="location.href='/mainpage'">sfu-backpack</p>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -28,9 +26,6 @@
             <% rows.forEach(function(r) { %>
               <nav class="nav-item">
                 <a class="nav-link" href="/auth/logout">logout</a>
-                <a class="nav-link" href="/mypage"><%= r.uname %></a>
-                <a class="nav-link" href="/chatlist">message</a>
-                <a class="nav-link" href="/cart">Cart</a>
               </nav>
             <% }); %>
           </ul>
@@ -48,7 +43,7 @@
                   <%= typeof msg != 'undefined' ? msg : '' %>
                 </div>
                 <input type="text" name="postid" value="<%= f.postid %>" style="display: none"> </input><br>
-                <input type="text" class="form-control" name="title" value= "<%= f.bookname %>" maxlength="50"/><br/>
+                <input type="text" class="form-control" name="title" value= "<%= f.bookname.trim() %>" maxlength="50"/><br/>
                 <select type="text" class="form-control" name="course" required>
                   <option value="" disabled selected hidden>Choose a Course</option>
                   <option> ACMA </option>
@@ -139,6 +134,8 @@
                   <option> URB </option>
                   <option> WL </option>
                   <option> OTHERS </option> </select><br/>
+                <input type="text" class="form-control" name="cost" value="<%= f.cost.trim() %>" maxlength="20"/><br/>
+                <input type="text" class="form-control" name="location" value="<%= f.location.trim() %>" maxlength="100"/><br/>
                 <select type="text" class="form-control" name="condition" required>
                   <option value="" disabled selected hidden>Choose the Condition</option>
                   <option> Brand New </option>
@@ -202,10 +199,7 @@
                     </p>
                   </span> </a
                 ><br/><br/>
-        
-                <input type="text" class="form-control" name="cost" value="<%= f.cost %>" maxlength="20"/><br/>
-                <input type="text" class="form-control" name="location" value="<%= f.location %>" maxlength="100"/><br/>
-                <textarea type="text" class="form-control" name="description" rows="4" cols="200" placeholder="<%= f.description %>" maxlength="300"></textarea><br/>
+                <textarea type="text" class="form-control" name="description" rows="4" cols="200" placeholder="<%= f.description.trim() %>" maxlength="300"></textarea><br/>
                 <p> Current Image: <img width="200px" src="<%= f.path %>" alt="image"></p><br>
                 <input name="myImage" class="form-control" id="file-input" type="file"/><br/>
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>

@@ -24,26 +24,58 @@
     
   </head>
   <body>
-    <div class="top-container">
-      <!-- LOGIN FEATURE -->
-      <form>
-        <nav class="login-bar">
-          <%if( uname ===false){%>
-          <a href="/login">login</a>
-        <%}%>
+    <div class="container-fluid">
+	
+      <nav class="navbar navbar-expand-lg navbar-light ">
+      
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02" color="text-white">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+            <%if( uname ===false){%>
+            <a class="nav-link" id="link" href="/login">LOGIN<span class="sr-only"></span></a>
+            <%}%>
+          </li>
           <%if( uname !=false){%>
-            <a href="/auth/logout">logout</a>
-            <a href="/mypage"><%= uname %></a>
-            <a href="/cart">Cart</a>
-        <%}%>
-          <%if( admin == true){%>
-          <a href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
-        <%}%>
-        </nav>
-      </form>
-      <img id="logo" src="/logo.png" alt="logo" onclick="location.href='/mainpage'"/>
-              <p class="logo-font">sfu-backpack</p>
+          <li class="nav-item">
+            <a class="nav-link" id="link" href="/auth/logout">LOGOUT</a>
+          </li>
+          <%}%>
+          <%if( uname !=false){%>
+            <li class="nav-item">
+              <a class="nav-link" id="link" href="/mypage">MYPAGE</a>
+            </li>
+            <%}%>
+            <%if( uname !=false){%>
+              <li class="nav-item">
+                <a class="nav-link" id="link" href="/chat">MESSAGE</a>
+              </li>
+              <%}%>
+              <%if( uname !=false){%>
+                <li class="nav-item">
+                  <a class="nav-link" id="link" href="/cart">CART</a>
+                </li>
+                <%}%>
+                <%if( admin == true){%>
+
+          <li class="nav-item">
+            <a class="nav-link disabled"  id="link" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DATABASE</a>
+          </li>
+          <%}%>
+        </ul>
+    
+        <div class="mx-auto">
+          <a onclick="location.href='/mainpage'" class="navbar-brand">SFU-backpack</a>
+      </div>
+        
+       
+      </div>
+    </nav>
     </div>
+
     <ul id="messages">
       <%if(db===true){%>
         <% results.forEach(function(r) { %>

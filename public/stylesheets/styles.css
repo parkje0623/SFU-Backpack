@@ -3,11 +3,16 @@ body {
 }
 .top-container {
   position: relative;
-  width: 1600px;
+  width: 2400px;
   height: 100px;
   background-color: #343a40;;
 }
-
+.top-container-profile {
+  position: relative;
+  width: 1400px;
+  height: 100px;
+  background-color: #343a40;;
+}
 .middle-container {
   position: relative;
   height: 100px;
@@ -50,8 +55,12 @@ body {
   margin-top: 20px;
   font-size: medium;
   font-family: sans-serif;
-  position: absolute;
+<<<<<<< HEAD
+  position: relative;
   left: 1500px;
+=======
+  position: absolute;
+>>>>>>> 69e3e4d21ac5672d8bceb98ce275ab145ec033fd
 }
 
 .logfeature {
@@ -60,20 +69,20 @@ body {
 }
 .mypage {
   position: absolute;
-  left: 1100px;
+  left: 1070px;
 }
 .chatlist {
   position: absolute;
-  left: 1280px;
+  left: 1180px;
 }
 .db {
   position: absolute;
-  left: 1280px;
+  left: 1180px;
   top: 35px;
 }
 .cart {
   position: absolute;
-  left: 1390px;
+  left: 1250px;
 }
 .login-btn {
   height: 30px;
@@ -92,11 +101,21 @@ body {
 }
 .buying-menu {
   width: 100%;
-  position: absolute;
-  width: 1600px;
+  position: relative;
+  
   background-color: #343a40;
 
 }
+
+.container-fluid{
+  background-color: #343a40;
+  color: #20c997;
+}
+
+.navbar-nav .nav-item li a{
+  color: white;
+}
+
 
 .navigationDesktop {
   text-align: center;
@@ -400,4 +419,18 @@ input[id=profid], [id=profname], [id=profpwd], [id=profconfirm], [id=profemail] 
   color: white;
   text-align: center;
 
+}
+.star-rating {
+  margin-left: 20px;
+}
+      
+.averageRating-user {
+  margin-left: 20px;
+  font-size: 20px;
+  color:grey;
+}
+
+.review-about-user {
+  font-size: 20px;
+  color:grey;
 }
