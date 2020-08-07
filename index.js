@@ -1758,7 +1758,7 @@ app.post("/add_to_cart", (req,res) => {
         if (error) {
           res.end (error)
         }
-        else if (result && result.rows[0]) {
+        else if (result && result.rows[0]) { //check duplication of items
           pool.query(`SELECT postid, uid, bookname, cost, path, condition FROM img WHERE postid in (SELECT postid FROM cart WHERE uid = $1)`, [req.session.ID], (error, result) =>{
             if (error) {
               res.end(error)
@@ -1769,7 +1769,7 @@ app.post("/add_to_cart", (req,res) => {
               results,
               uname: req.session.displayName,
               admin: true,
-              msg: "Item is already in the cart",
+              msg: "Item is already in the cart", //page render with error message
             })
           } else {
             res.render("pages/cart", {
