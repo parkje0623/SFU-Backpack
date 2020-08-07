@@ -3,7 +3,7 @@ body {
 }
 .top-container {
   position: relative;
-  width: 1600px;
+  width: 2400px;
   height: 100px;
   background-color: #343a40;;
 }
@@ -55,7 +55,12 @@ body {
   margin-top: 20px;
   font-size: medium;
   font-family: sans-serif;
+<<<<<<< HEAD
+  position: relative;
+  left: 1500px;
+=======
   position: absolute;
+>>>>>>> 69e3e4d21ac5672d8bceb98ce275ab145ec033fd
 }
 
 .logfeature {
@@ -96,11 +101,21 @@ body {
 }
 .buying-menu {
   width: 100%;
-  position: absolute;
-  width: 1600px;
+  position: relative;
+  
   background-color: #343a40;
 
 }
+
+.container-fluid{
+  background-color: #343a40;
+  color: #20c997;
+}
+
+.navbar-nav .nav-item li a{
+  color: white;
+}
+
 
 .navigationDesktop {
   text-align: center;
