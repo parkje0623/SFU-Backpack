@@ -124,7 +124,11 @@ body {
   position: relative;
 
 }
+.navbar-toggler-icon{
+  background-color: #e5e5e2;
 
+  
+}
 .nav-buying-dropdown-menu a {
   font-family: monospace;
   font-weight: bold;

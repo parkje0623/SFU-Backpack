@@ -2222,6 +2222,7 @@ textarea.form-control {
 .is-valid ~ .valid-tooltip {
   display: block;
 }
+.condition_use{ font-size: 12px;}
 .warning {
   font-size: 15px;
   }
