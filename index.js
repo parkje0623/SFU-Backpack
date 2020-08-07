@@ -542,7 +542,7 @@ function isLogedin(req, res) {
 
 //add user to database with given information
 app.post("/adduser", (req, res) => {
-  var uid = req.body.uid
+  var uid = req.body.uid.trim();
   var uname = req.body.uname
   var uemail = req.body.uemail
   var upassword = req.body.upassword
