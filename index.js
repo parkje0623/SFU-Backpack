@@ -1600,7 +1600,7 @@ app.post("/updatepost", function (req, res) { // async function here
         geocoder.geocode(req.body.location, (err, data) => {
           if (err || !data.length) {
             erro = "Error: Invalid address"
-            res.redirect(`/updatepost/${postid}?`)
+            return res.redirect(`/updatepost/${postid}?`)
           }
 
         var path = req.file.location
