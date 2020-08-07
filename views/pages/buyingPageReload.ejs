@@ -5,6 +5,13 @@
     <title>Buy Page</title>
 
     <!-- BOOTSTRAP -->
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+      #link { color: #ffffff; } /* CSS link color */
+    </style>   
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -15,6 +22,9 @@
       integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
       crossorigin="anonymous"
     ></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -35,41 +45,61 @@
       rel="stylesheet"
     />
     <body>
-      <div class="top-container">
-        <nav class="search-bar">
-          <form>
-            <input
-              class="search-input"
-              type="text"
-              name='text'
-              placeholder="Insert course or bookname"
-              aria-label="Search.."
-            />
-            <button class="search-btn" formaction="/search" type="submit">Search</button>
-          </form>
-        </nav>
-        <!-- LOGIN FEATURE -->
-        <form>
-          <nav class="login-bar">
-            <%if( uname ===false){%>
-            <a href="/login">LOGIN</a>
-          <%}%>
+      <div class="container-fluid">
+	
+        <nav class="navbar navbar-expand-lg navbar-light ">
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02" color="text-white">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <%if( uname ===false){%>
+              <a class="nav-link" id="link" href="/login">LOGIN<span class="sr-only"></span></a>
+              <%}%>
+            </li>
             <%if( uname !=false){%>
-              <a class="logfeature" href="/auth/logout">LOGOUT</a>
-              <a class="mypage" href="/mypage"><%= uname %></a>
-              <a class="chatlist" href="/chatlist">message</a>
-              <a class="cart" href="/cart">Cart</a>
-          <%}%>
+            <li class="nav-item">
+              <a class="nav-link" id="link" href="/auth/logout">LOGOUT</a>
+            </li>
+            <%}%>
+            <%if( uname !=false){%>
+              <li class="nav-item">
+                <a class="nav-link" id="link" href="/mypage">MYPAGE</a>
+              </li>
+              <%}%>
+              <%if( uname !=false){%>
+                <li class="nav-item">
+                  <a class="nav-link" id="link" href="/chat">MESSAGE</a>
+                </li>
+                <%}%>
+                <%if( uname !=false){%>
+                  <li class="nav-item">
+                    <a class="nav-link" id="link" href="/cart">CART</a>
+                  </li>
+                  <%}%>
+                  <%if( admin == true){%>
 
-            <%if( admin == true){%>
-            <a class="DB" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
-          <%}%>
-          </nav>
-        </form>
-
-
-        <p class="logo-font" onclick="location.href='/mainpage'" >sfu-backpack</p>
+            <li class="nav-item">
+              <a class="nav-link disabled"  href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DATABASE</a>
+            </li>
+            <%}%>
+          </ul>
+      
+          <div class="mx-auto">
+            <a onclick="location.href='/mainpage'" class="navbar-brand">SFU-backpack</a>
+        </div>
+          
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" name='text'aria-label="Search.." placeholder="Insert course or bookname">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" formaction="/search">Search</button>
+          </form>
+        </div>
+      </nav>
       </div>
+
            <!-- Drop-down menu -->
            <div class="buying-menu">
             <div class="navigationDesktop">
