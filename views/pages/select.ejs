@@ -43,22 +43,8 @@
       href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .star-rating {
-        margin-left: 20px;
-      }
-      .averageRating-user {
-        margin-left: 20px;
-        font-size: 20px;
-        color:grey;
-      }
-      .review-about-user {
-        font-size: 20px;
-        color:grey;
-      }
-    
-    </style>
   <body>
+<<<<<<< HEAD
     <div class="container-fluid">
 	
       <nav class="navbar navbar-expand-lg navbar-light ">
@@ -95,6 +81,35 @@
                 </li>
                 <%}%>
                 <%if( admin == true){%>
+=======
+    <div class="top-container">
+      <nav class="search-bar">
+        <form>
+          <input
+            class="search-input"
+            type="text"
+            name='text'
+            placeholder="Insert course or bookname"
+            aria-label="Search.."
+          />
+          <button class="search-btn" formaction="/search" type="submit">Search</button>
+        </form>
+      </nav>
+      <!-- LOGIN FEATURE -->
+      <form>
+        <nav class="login-bar">
+          <%if( uname !=false){%>
+            <a class="logfeature" href="/auth/logout">LOGOUT</a>
+            <a class="mypage" href="/mypage">MYACCOUNT</a>
+            <a class="chatlist" href="/chatlist">message</a>
+            <a class="cart" href="/cart">Cart</a>
+          <%}%>
+          <%if( admin == true){%>
+          <a class="db" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DataBase</a>
+        <%}%>
+        </nav>
+      </form>
+>>>>>>> 69e3e4d21ac5672d8bceb98ce275ab145ec033fd
 
           <li class="nav-item">
             <a class="nav-link disabled"  id="link" href="/fpowefmopverldioqwvyuwedvyuqwgvuycsdbjhxcyuqwdyuqwbjhcxyuhgqweyu">DATABASE</a>
@@ -337,7 +352,7 @@
             <ul><span>Posted at: </span><%= r.timepost %></ul>
 
           </ul>
-        </u2>      
+        </u2>
     </ul>
 
     <form>
@@ -369,7 +384,7 @@
       <input type = "hidden" name=receiver value=<%= r.uid %>><br>
       <input type = "submit" value="Contact"><br>
     </form>
-  
+
 
 
     <h2> REVIEW </h2> <br>

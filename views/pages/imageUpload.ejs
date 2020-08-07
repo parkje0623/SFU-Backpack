@@ -2,8 +2,9 @@
 <html>
   <head>
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700"/> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> -->
     <link rel="stylesheet" type="text/css" href="./stylesheets/imageUpload.css"/>
+    <link rel="stylesheet" type="text/css" href="./stylesheets/bootstrapCopy.css"/>
     <!-- <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&display=swap" rel="stylesheet"/> -->
 
     <!-- Google fonts-->
@@ -132,8 +133,10 @@
                 <option> TRSS </option>
                 <option> URB </option>
                 <option> WL </option>
-                <option> OTHERS </option> </select><br/>
-              <select type="text" class="form-control" name="condition" required>
+               <option> OTHERS </option> </select><br/>
+              <input type="number" class="form-control" name="cost" value="" placeholder="COST" maxlength="20"/><br/>
+              <input type="text" class="form-control" name="location" value="" placeholder="LOCATION" maxlength="100" required /><br/>
+               <select type="text" class="form-control" name="condition" required>
                 <option value="" disabled selected hidden>Choose the Condition</option>
                 <option> Brand New </option>
                 <option> Fine </option>
@@ -196,9 +199,6 @@
                   </p>
                 </span> </a
               ><br/><br/>
-      
-              <input type="number" class="form-control" name="cost" value="" placeholder="COST" maxlength="20"/><br/>
-              <input type="text" class="form-control" name="location" value="" placeholder="LOCATION" maxlength="100" required /><br/>
               <textarea class="form-control" name="description" rows="4" cols="200" placeholder="DESCRIPTION" maxlength="300"></textarea><br />
               <input name="myImage" class="form-control" id="file-input" type="file"/><br/>
               <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
