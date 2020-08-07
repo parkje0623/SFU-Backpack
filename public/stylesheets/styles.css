@@ -51,7 +51,9 @@ body {
   font-size: medium;
   font-family: sans-serif;
   position: absolute;
+  left: 1500px;
 }
+
 .logfeature {
   position: absolute;
   left: 990px;
