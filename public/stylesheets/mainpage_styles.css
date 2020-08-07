@@ -2222,7 +2222,9 @@ textarea.form-control {
 .is-valid ~ .valid-tooltip {
   display: block;
 }
-
+.warning {
+  font-size: 15px;
+  }
 .was-validated .form-control:valid, .form-control.is-valid {
   border-color: #28a745;
   padding-right: calc(1.5em + 0.75rem);
