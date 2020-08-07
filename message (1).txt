@@ -59,7 +59,7 @@
                   <a class="nav-link" id="link" href="/mypage">MYPAGE</a>
                 </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="link" href="/chatlist">MESSAGE</a>
+                    <a class="nav-link" id="link" href="/chat">MESSAGE</a>
                   </li>
                     <li class="nav-item">
                       <a class="nav-link" id="link" href="/cart">CART</a>
@@ -115,7 +115,8 @@
         <% field.forEach(function(r) { %>
           <ul> <%= r.course %> &emsp;&emsp;&emsp; <%= r.bookname %></ul>
           <form class="supplies">
-        
+            <input type="text" name="uid" value="<%= r.uid %>" style="display: none"> </input>
+            <input type="text" name="bookname" value="<%= r.bookname%>" style="display:none"> </input>
             <button id="submit" type="submit" formaction="/select_page/<%= r.postid %>" formmethod="GET" class="find_post">SELECT</button>
           </form>
         <% }); %>
@@ -127,4 +128,3 @@
   </script>
 
 </html>
-
