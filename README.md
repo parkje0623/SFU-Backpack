@@ -34,3 +34,4 @@ SFU Students must sign-up and log-in to:
 SFU-Backpack Admin also have same accessibility as the clients.  
 Only administrator is capable of:
 - Deleting any of clients account/postings/reviews if found to be inappropriate (against the policy agreement).
+- [click here](https://www.youtube.com/watch?v=0QYlBqcJi1M&list=PL_wgNaB1d1j5RAg-ITCLRdeINRQGal_q-) for Admin Demo Video
