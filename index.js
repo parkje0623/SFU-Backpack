@@ -20,13 +20,13 @@ const { Pool } = require("pg")
 var cors = require('cors')
 var pool
 
-var NodeGeocoder = require('node-geocoder')   // map
+var NodeGeocoder = require('node-geocoder');   // map
 
 var options = {
   provider: 'google',
-  httpAdapter: 'https',
-  apiKey: "process.env.GEOCODER_API_KEY",
-  formatter: null
+  // httpAdapter: 'https',
+  // apiKey: "process.env.GEOCODER_API_KEY",
+  // formatter: null
 };
 
 var geocoder = NodeGeocoder(options); /// google map geocoding
