@@ -908,7 +908,7 @@ app.post("/mypage", (req, res) => {
 AWS.config.update({
   accessKeyId: AWS_ID,
   secretAccessKey: AWS_SECRET,
-  region: "Canada (Central)",
+  region: "us-west-2",
 })
 // initiate the storage
 const S3 = new AWS.S3()
@@ -918,7 +918,7 @@ const upload = multer({
   storage: multerS3({
     s3: S3,
     acl: "public-read",
-    bucket: "sfubackpack",
+    bucket: "backpacksfu",
 
     // Changing the file name to be unique (put the time and date instead of filename)
     key: function (req, file, cb) {
