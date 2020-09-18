@@ -25,7 +25,7 @@ var NodeGeocoder = require('node-geocoder');   // map
 var options = {
   provider: 'google',
   httpAdapter: 'https',
-  apiKey: "AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE",
+  apiKey: "process.env.GEOCODER_API_KEY",
   formatter: null
 };
 
@@ -1824,4 +1824,5 @@ app.post("/delete_cart", (req, res) => {
 })
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
+module.exports = geocoder;
 module.exports = app;
