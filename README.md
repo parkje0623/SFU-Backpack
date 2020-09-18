@@ -1,4 +1,4 @@
-# SFU-Backpack (Team Project) CHANGE CREDIT CARD IN HEROKU AND ENABLE MAINTENANCE MODE
+# SFU-Backpack (Team Project) CHANGE CREDIT CARD IN HEROKU AND ENABLE MAINTENANCE MODE ALSO, CHANGE THE AWS KEY TOWARDS MINE
 SFU-Backpack is created for undergraduate/graduate students at Simon Fraser University who wishes to sell/buy Textbooks or School Supplements.
 - (Currrently do not have live server opened)  
 - Visit SFU-Backpack [Here](https://sfu-backpack.herokuapp.com/mainpage)  
