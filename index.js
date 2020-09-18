@@ -25,7 +25,7 @@ var NodeGeocoder = require('node-geocoder');   // map
 var options = {
   provider: 'google',
   httpAdapter: 'https',
-  apiKey: "AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE",
+  apiKey: process.env.GEOCODER_API_KEY,
   formatter: null
 };
 
@@ -996,7 +996,8 @@ app.post("/upload", function (req, res) { // async function here
           msg: "Error: No File Selected!",
         })
       } else {
-        geocoder.geocode(req.body.location, (err, data) => {
+        //req.body.location+
+        geocoder.geocode('Maple Ridge, BC', (err, data) => {
           if (err || !data.length) {
             return res.render("pages/imageUpload", {
               // if no file was selected
