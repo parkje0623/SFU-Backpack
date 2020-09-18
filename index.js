@@ -10,8 +10,8 @@ const fs = require("fs")
 const AWS = require("aws-sdk")
 const bcrypt = require('bcrypt')
 const Crypto = require('crypto')
-const AWS_ID = AKIAI44EZNSIFUGUUODA
-const AWS_SECRET = 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
+// const AWS_ID = process.env.AWS_ACCESS_KEY_ID
+// const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY
 const EMAIL_ACCESS = process.env.EMAIL_PASS
 const saltRounds = 10;
 const PORT = process.env.PORT || 5000
@@ -906,8 +906,8 @@ app.post("/mypage", (req, res) => {
 
 // Setting up Amazon Storage
 AWS.config.update({
-  accessKeyId: AWS_ID,
-  secretAccessKey: AWS_SECRET,
+  accessKeyId: AKIAI44EZNSIFUGUUODA,
+  secretAccessKey: 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,
   region: "us-west-2",
 })
 // initiate the storage
