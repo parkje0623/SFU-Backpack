@@ -1,13 +1,29 @@
 # SFU-Backpack (Team Project)
 SFU-Backpack is created for undergraduate/graduate students at Simon Fraser University who wishes to sell/buy Textbooks or School Supplements.
 - (Currrently do not have live server opened)  
+- Visit SFU-Backpack [Here](https://sfu-backpack.herokuapp.com/mainpage)  
 
+## Web Application Demo Videos
+Watch the Demo Video Playlist [Here](https://www.youtube.com/watch?v=0QYlBqcJi1M&list=PL_wgNaB1d1j5RAg-ITCLRdeINRQGal_q-)  
+
+## Technologies
+Following Techonologies are used to create SFU-Backpack web application:
+- Design/Functions: **HTML/CSS/JavaScript**
+- HTTP Requests: **Node.js**
+- Database: **POSTGRESQL**
+- Test: **Mocha & Chai**
+
+## API  
+Following APIs are used to implement certain features:  
+- Session: Log-in/out  
+- AWS Storage: Storing pictures of items posted  
+- Google Map: Location
+
+## Tests
+Mocha and Chai are used to test the HTTP Requests (Functinoal requirements and SQL commands)
+- To view the testing file [click here](test/server-test.js) 
 
 ## Client
-Once live Heroku Server is re-opened, clients may access the web browser [Here](https://sfu-backpack.herokuapp.com/mainpage)  
-When server opens, change the readme to:  
-The target clients for this web application are undergraduate or graduate students at Simon Fraser Universities.  
-Clients may access the web browser [Here](https://sfu-backpack.herokuapp.com/mainpage)  
 SFU Students must sign-up and log-in to:
 - Post school supplements to sell (Possible to declare meet-up location by entering location when posting an item)
 - Contact seller to buy desirable items
@@ -16,5 +32,5 @@ SFU Students must sign-up and log-in to:
  
 ## Admin
 SFU-Backpack Admin also have same accessibility as the clients.  
-Admin have extra ability to:
-- Delete any of clients account/postings/reviews if found to be inappropriate (against the policy agreement).
+Only administrator is capable of:
+- Deleting any of clients account/postings/reviews if found to be inappropriate (against the policy agreement).
