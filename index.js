@@ -908,7 +908,7 @@ app.post("/mypage", (req, res) => {
 AWS.config.update({
   accessKeyId: AWS_ID,
   secretAccessKey: AWS_SECRET,
-  region: "Canada(Central)",
+  region: "Canada (Central)",
 })
 // initiate the storage
 const S3 = new AWS.S3()
