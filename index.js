@@ -998,12 +998,12 @@ app.post("/upload", function (req, res) { // async function here
       } else {
 
         geocoder.geocode(req.body.location, (err, data) => {
-          if (err || !data.length) {
-            return res.render("pages/imageUpload", {
-              // if no file was selected
-              msg: "Error: Invalid address",
-            })
-          }
+          // if (err || !data.length) {
+          //   return res.render("pages/imageUpload", {
+          //     // if no file was selected
+          //     msg: "Error: Invalid address",
+          //   })
+          // }
 
         var path = req.file.location
         var course = req.body.course.toLowerCase()
@@ -1824,5 +1824,4 @@ app.post("/delete_cart", (req, res) => {
 })
 
 server.listen(PORT, () => console.log(`Listening on ${PORT}`))
-module.exports = geocoder;
 module.exports = app;
