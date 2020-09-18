@@ -20,7 +20,7 @@ const { Pool } = require("pg")
 var cors = require('cors')
 var pool
 
-var NodeGeocoder = require('node-geocoder');   // map
+var NodeGeocoder = require('node-geocoder')   // map
 
 var options = {
   provider: 'google',
@@ -958,7 +958,7 @@ app.get("/upload", (req, res) => {
 
 const image_upload = upload.single("myImage")
 app.post("/upload", function (req, res) { // async function here
-  var location_set = req.body.location
+
   /* For Upload testing
   var path = req.body.path
   var course = req.body.course
@@ -997,7 +997,7 @@ app.post("/upload", function (req, res) { // async function here
         })
       } else {
 
-        geocoder.geocode(location_set, (err, data) => {
+        geocoder.geocode(req.body.location, (err, data) => {
           if (err || !data.length) {
             return res.render("pages/imageUpload", {
               // if no file was selected
