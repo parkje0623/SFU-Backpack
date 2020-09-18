@@ -29,8 +29,9 @@ Mocha and Chai are used to test the HTTP Requests (Functinoal requirements and S
 ## Client
 SFU Students must sign-up and log-in to:
 - Post school supplements to sell (Possible to declare meet-up location by entering location when posting an item)
-- Contact seller to buy desirable items
-- Write Review about certain seller
+- Contact seller to buy desirable items (Buyer can chat with the seller)
+- May add items to the cart
+- Write reviews to the seller
 - Report inappropriate posts/reviews to Admin
  
 ## Admin
