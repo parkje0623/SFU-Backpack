@@ -3,6 +3,8 @@ SFU-Backpack is created for undergraduate/graduate students at Simon Fraser Univ
 - (Currrently do not have live server opened)  
 - Visit SFU-Backpack [Here](https://sfu-backpack.herokuapp.com/mainpage)  
 
+## Participation
+
 ## Web Application Demo Videos
 Watch the Demo Video Playlist [Here](https://www.youtube.com/watch?v=0QYlBqcJi1M&list=PL_wgNaB1d1j5RAg-ITCLRdeINRQGal_q-)  
 
