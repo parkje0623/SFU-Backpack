@@ -958,7 +958,7 @@ app.get("/upload", (req, res) => {
 
 const image_upload = upload.single("myImage")
 app.post("/upload", function (req, res) { // async function here
-
+  var location_set = req.body.location
   /* For Upload testing
   var path = req.body.path
   var course = req.body.course
@@ -997,13 +997,13 @@ app.post("/upload", function (req, res) { // async function here
         })
       } else {
 
-        geocoder.geocode(req.body.location, (err, data) => {
-          // if (err || !data.length) {
-          //   return res.render("pages/imageUpload", {
-          //     // if no file was selected
-          //     msg: "Error: Invalid address",
-          //   })
-          // }
+        geocoder.geocode(location_set, (err, data) => {
+          if (err || !data.length) {
+            return res.render("pages/imageUpload", {
+              // if no file was selected
+              msg: "Error: Invalid address",
+            })
+          }
 
         var path = req.file.location
         var course = req.body.course.toLowerCase()
