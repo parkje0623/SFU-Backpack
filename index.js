@@ -906,8 +906,8 @@ app.post("/mypage", (req, res) => {
 
 // Setting up Amazon Storage
 AWS.config.update({
-  accessKeyId: AKIAI44EZNSIFUGUUODA,
-  secretAccessKey: 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,
+  accessKeyId: "AKIAI44EZNSIFUGUUODA",
+  secretAccessKey: "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",
   region: "us-west-2",
 })
 // initiate the storage
