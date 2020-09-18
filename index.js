@@ -29,8 +29,8 @@ var options = {
   formatter: null
 };
 
-//var geocoder = NodeGeocoder(options); /// google map geocoding
-var geocoder: google.maps.Geocoder;
+var geocoder = NodeGeocoder(options); /// google map geocoding
+
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
@@ -996,8 +996,8 @@ app.post("/upload", function (req, res) { // async function here
           msg: "Error: No File Selected!",
         })
       } else {
-
-        geocoder.geocode(req.body.location, (err, data) => {
+        //req.body.location
+        geocoder.geocode('Maple Ridge BC Canada', (err, data) => {
           if (err || !data.length) {
             return res.render("pages/imageUpload", {
               // if no file was selected
