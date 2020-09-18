@@ -24,13 +24,13 @@ var NodeGeocoder = require('node-geocoder');   // map
 
 var options = {
   provider: 'google',
-  // httpAdapter: 'https',
-  // apiKey: "process.env.GEOCODER_API_KEY",
-  // formatter: null
+  httpAdapter: 'https',
+  apiKey: "process.env.GEOCODER_API_KEY",
+  formatter: null
 };
 
-var geocoder = NodeGeocoder(options); /// google map geocoding
-
+//var geocoder = NodeGeocoder(options); /// google map geocoding
+var geocoder: google.maps.Geocoder;
 //user database access
 pool = new Pool({
   //connectionString:'postgres://postgres:SFU716!!qusrlgus@localhost/users' //-for keenan
@@ -764,7 +764,7 @@ app.post("/showpassword", (req, res) => {
                   var transporter = nodemailer.createTransport({
                     service: "gmail",
                     auth: {
-                      user: "cmpt276backpack@gmail.com",
+                      user: "parkje0623@gmail.com",
                       pass: EMAIL_ACCESS,
                     },
                   })
@@ -1144,7 +1144,7 @@ app.post("/report", (req, res) => {
         var transporter = nodemailer.createTransport({
           service: "gmail",
             auth: {
-              user: "cmpt276backpack@gmail.com",
+              user: "parkje0623@gmail.com",
               pass: EMAIL_ACCESS,
             },
         })
@@ -1226,7 +1226,7 @@ app.post("/sendEmail", (req, res) => {
             var transporter = nodemailer.createTransport({
               service: "gmail",
               auth: {
-                user: "cmpt276backpack@gmail.com",
+                user: "parkje0623@gmail.com",
                 pass: EMAIL_ACCESS,
               },
             })
