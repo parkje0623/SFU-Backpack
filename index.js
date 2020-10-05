@@ -24,8 +24,7 @@ const NodeGeocoder = require('node-geocoder');   // map
 
 const options = {
   provider: 'google',
-  // httpAdapter: 'https',
-  fetch: customFetchImplementation,
+  httpAdapter: 'https',
   apiKey: 'AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE',
   formatter: null
 };
