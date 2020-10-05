@@ -24,7 +24,8 @@ const NodeGeocoder = require('node-geocoder');   // map
 
 const options = {
   provider: 'google',
-  httpAdapter: 'https',
+  // httpAdapter: 'https',
+  fetch: customFetchImplementation,
   apiKey: 'AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE',
   formatter: null
 };
@@ -1000,7 +1001,7 @@ app.post("/upload", function (req, res) { // async function here
           if (err || !data.length) {
             return res.render("pages/imageUpload", {
               // if no file was selected
-              msg: "Error: Invalid address",
+              msg: err,
             })
           }
 
