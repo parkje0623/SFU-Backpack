@@ -996,8 +996,7 @@ app.post("/upload", function (req, res) { // async function here
           msg: "Error: No File Selected!",
         })
       } else {
-        //req.body.location+
-        geocoder.geocode('Maple Ridge, BC', (err, data) => {
+        geocoder.geocode(req.body.location.toLowerCase(), (err, data) => {
           if (err || !data.length) {
             return res.render("pages/imageUpload", {
               // if no file was selected
