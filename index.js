@@ -10,7 +10,7 @@ const fs = require("fs")
 const AWS = require("aws-sdk")
 const bcrypt = require('bcrypt')
 const Crypto = require('crypto')
-require('dotenv').config() 
+require('dotenv').config()
 // const AWS_ID = process.env.AWS_ACCESS_KEY_ID
 // const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY
 const EMAIL_ACCESS = process.env.EMAIL_PASS
@@ -26,7 +26,7 @@ var NodeGeocoder = require('node-geocoder');   // map
 var options = {
   provider: 'google',
   httpAdapter: 'https',
-  apiKey: process.env.GEOCODER_API_KEY,
+  apiKey: 'AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE',
   formatter: null
 };
 
