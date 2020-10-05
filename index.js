@@ -996,13 +996,19 @@ app.post("/upload", function (req, res) { // async function here
           msg: "Error: No File Selected!",
         })
       } else {
-        geocoder.geocode(req.body.location, (err, data) => {
+        geocoder.geocode({
+          'address': req.body.location,
+          'componentRestrictions': {
+            'country': 'CA'
+          }
+        }, (err, data) => {
           if (err || !data.length) {
             return res.render("pages/imageUpload", {
               // if no file was selected
               msg: err,
             })
           }
+
 
         var path = req.file.location
         var course = req.body.course.toLowerCase()
