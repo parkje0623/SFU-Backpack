@@ -10,6 +10,7 @@ const fs = require("fs")
 const AWS = require("aws-sdk")
 const bcrypt = require('bcrypt')
 const Crypto = require('crypto')
+require('dotenv').config() 
 // const AWS_ID = process.env.AWS_ACCESS_KEY_ID
 // const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY
 const EMAIL_ACCESS = process.env.EMAIL_PASS
