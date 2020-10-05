@@ -997,15 +997,15 @@ app.post("/upload", function (req, res) { // async function here
         })
       } else {
         geocoder.geocode({
-          'address': req.body.location,
-          'componentRestrictions': {
-            'country': 'CA'
+          address: req.body.location,
+          componentRestrictions: {
+            country: 'CA'
           }
         }, (err, data) => {
           if (err || !data.length) {
             return res.render("pages/imageUpload", {
               // if no file was selected
-              msg: err,
+              msg: "Invalid Address",
             })
           }
 

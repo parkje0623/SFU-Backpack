@@ -446,6 +446,9 @@
           var options = {
             zoom: 12,
             center: {lat: glat, lng: glng}    // set up map with location
+            componentRestrictions: {
+              country: 'CA'
+            }
           }
           //new map
         var map = new google.maps.Map(document.getElementById('map_selectpage'), options);
@@ -466,7 +469,7 @@
       </script>
 
       <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE&region=CA&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE&callback=initMap">
       </script>
 
 </html>

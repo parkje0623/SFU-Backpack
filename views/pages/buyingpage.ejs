@@ -358,6 +358,9 @@
             var options = {
               zoom: 12,
               center: {lat: 49.274897, lng: -122.993188}
+              componentRestrictions: {
+                country: 'CA'
+              }
             }
               //new map
             var map = new google.maps.Map(document.getElementById('map'), options);
@@ -395,7 +398,7 @@
       <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
 
           <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE&region=CA&callback=initMap">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE&callback=initMap">
         </script>
   </html>
 </html>
