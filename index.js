@@ -25,7 +25,7 @@ const NodeGeocoder = require('node-geocoder');   // map
 const options = {
   provider: 'google',
   httpAdapter: 'https',
-  apiKey: 'AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE',
+  apiKey: 'hidden',
   formatter: null
 };
 
@@ -906,8 +906,8 @@ app.post("/mypage", (req, res) => {
 
 // Setting up Amazon Storage
 AWS.config.update({
-  accessKeyId: "AKIAI44EZNSIFUGUUODA",
-  secretAccessKey: "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",
+  accessKeyId: "hidden",
+  secretAccessKey: "hidden",
   region: "us-west-2",
 })
 // initiate the storage
@@ -918,7 +918,7 @@ const upload = multer({
   storage: multerS3({
     s3: S3,
     acl: "public-read",
-    bucket: "backpacksfu",
+    bucket: "hidden",
 
     // Changing the file name to be unique (put the time and date instead of filename)
     key: function (req, file, cb) {
