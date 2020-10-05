@@ -10,7 +10,6 @@ const fs = require("fs")
 const AWS = require("aws-sdk")
 const bcrypt = require('bcrypt')
 const Crypto = require('crypto')
-require('dotenv').config()
 // const AWS_ID = process.env.AWS_ACCESS_KEY_ID
 // const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY
 const EMAIL_ACCESS = process.env.EMAIL_PASS
@@ -21,16 +20,16 @@ const { Pool } = require("pg")
 var cors = require('cors')
 var pool
 
-var NodeGeocoder = require('node-geocoder');   // map
+const NodeGeocoder = require('node-geocoder');   // map
 
-var options = {
+const options = {
   provider: 'google',
   httpAdapter: 'https',
-  apiKey: AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE,
+  apiKey: 'AIzaSyCtOdXVisgfJwqevIlmYAHcH8I9EZ5wzRE',
   formatter: null
 };
 
-var geocoder = NodeGeocoder(options); /// google map geocoding
+const geocoder = NodeGeocoder(options); /// google map geocoding
 
 //user database access
 pool = new Pool({
@@ -997,7 +996,7 @@ app.post("/upload", function (req, res) { // async function here
           msg: "Error: No File Selected!",
         })
       } else {
-        geocoder.geocode(req.body.location.toLowerCase(), (err, data) => {
+        geocoder.geocode(req.body.location, (err, data) => {
           if (err || !data.length) {
             return res.render("pages/imageUpload", {
               // if no file was selected
