@@ -1,7 +1,7 @@
-# SFU-Backpack (Team Project) CHANGE CREDIT CARD IN HEROKU AND ENABLE MAINTENANCE MODE ALSO, CHANGE THE AWS KEY TOWARDS MINE, LOOK AT backpack folder if I forget
+# SFU-Backpack (Team Project)
 SFU-Backpack is created for undergraduate/graduate students at Simon Fraser University who wishes to sell/buy Textbooks or School Supplements.
 - (Currrently do not have live server opened)  
-- Visit SFU-Backpack [Here](https://sfu-backpack.herokuapp.com/mainpage)  
+- Visit SFU-Backpack [Here](https://sfubackpack.herokuapp.com/mainpage)  
 
 ## Participation
 Wonder if I have to list what I did here
@@ -38,4 +38,4 @@ SFU Students must sign-up and log-in to:
 SFU-Backpack Admin also have same accessibility as the clients.  
 Only administrator is capable of:
 - Deleting any of clients account/postings/reviews if found to be inappropriate (against the policy agreement).
-- [click here](https://www.youtube.com/watch?v=0QYlBqcJi1M&list=PL_wgNaB1d1j5RAg-ITCLRdeINRQGal_q-) for Admin Demo Video
+- [click here](https://www.youtube.com/watch?v=-qan_3NTRdg&list=PL_wgNaB1d1j5RAg-ITCLRdeINRQGal_q-&index=7&ab_channel=backpack) for Admin Demo Video
