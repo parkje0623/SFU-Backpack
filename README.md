@@ -4,10 +4,14 @@ SFU-Backpack is created for undergraduate/graduate students at Simon Fraser Univ
 - Visit SFU-Backpack [Here](https://sfubackpack.herokuapp.com/mainpage)  
 
 ## Participation
-Wonder if I have to list what I did here
-
-## Web Application Demo Videos
-Watch the Demo Video Playlist [Here](https://www.youtube.com/watch?v=0QYlBqcJi1M&list=PL_wgNaB1d1j5RAg-ITCLRdeINRQGal_q-)  
+SFU-Backpack project began with an extension of my original idea of creating an E-commerce website.  
+I have mainly participated dealing with database to send/receive data from the website to POSTGRESQL through the Heroku server.  
+My **main tasks** in the project were as follows:  
+- **Creating a profile page** and all of its function within the page  
+- **Creating a review page** (gathering all reviews related to current user)   
+- **Ability to write reviews to other users ** 
+- **Admin. Features** (Ability to delete any posts/reviews/accounts)
+- **Testing the functions** of the each pages of the website (using Mocha & Chai)    
 
 ## Technologies
 Following Techonologies are used to create SFU-Backpack web application:
@@ -22,9 +26,8 @@ Following APIs are used to implement certain features:
 - AWS Storage: Storing pictures of items posted  
 - Google Map: Location
 
-## Tests
-Mocha and Chai are used to test the HTTP Requests (Functinoal requirements and SQL commands)
-- To view the testing file [click here](test/server-test.js) 
+## Web Application Demo Videos
+Watch the Demo Video Playlist [Here](https://www.youtube.com/watch?v=0QYlBqcJi1M&list=PL_wgNaB1d1j5RAg-ITCLRdeINRQGal_q-)  
 
 ## Client
 SFU Students must sign-up and log-in to:
