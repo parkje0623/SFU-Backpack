@@ -9,7 +9,7 @@ I have mainly participated dealing with database to send/receive data from the w
 My **main tasks** in the project were as follows:  
 - **Creating a profile page** and all of its function within the page  
 - **Creating a review page** (gathering all reviews related to current user)   
-- **Ability to write reviews to other users ** 
+- **Ability to write reviews to other users** 
 - **Admin. Features** (Ability to delete any posts/reviews/accounts)
 - **Testing the functions** of the each pages of the website (using Mocha & Chai)    
 
